@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from pypdf import PdfReader
 import json
 import os
+import re
 
 def get_districts_of_interest():
     districts_env = os.getenv("DISTRICTS_OF_INTEREST")
@@ -52,8 +53,21 @@ def parse_district_incidents(split_text, districts_of_interest):
                     else:
                         line_split = next_line.strip().split(" ")
                         cleaned_line = " ".join(line_split[2:]).strip()
+
+                        # example text at this point: 
+                        # "THEFT-ALL OTHER-$2,500 L/T $30,00006/02/2025 32XX HERRMANN DR"
                         if len(cleaned_line.split()) > 1:
-                            districts[district_number].append(cleaned_line)
+                            date_match = re.search(r"\d{1,2}/\d{1,2}/\d{4}", cleaned_line)
+                            if (not date_match):
+                                next_line_index += 1
+                                continue
+                            line_split_2 = cleaned_line.split(date_match.group())
+
+                            districts[district_number].append({
+                                "date": date_match.group(),
+                                "incident": line_split_2[0].strip(),
+                                "location": line_split_2[1].strip() if len(line_split_2) > 1 else ""
+                            })
                     next_line_index += 1
     return districts
 
@@ -79,6 +93,7 @@ def main():
     split_text = extracted_text.split("\n")
     print("Processing text to extract incidents for districts:", ", ".join(map(str, districts_of_interest)) + ".")
     districts = parse_district_incidents(split_text, districts_of_interest)
+
     for district_number, incidents in districts.items():
         print(f"District {district_number}: {len(incidents)} incidents")
     export_to_json(districts, "districts_incidents.json")
