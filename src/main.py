@@ -4,6 +4,7 @@ from pypdf import PdfReader
 import json
 import os
 import re
+import datetime
 
 def get_districts_of_interest():
     districts_env = os.getenv("DISTRICTS_OF_INTEREST")
@@ -75,6 +76,18 @@ def export_to_json(data, filename):
     with open(filename, "w") as json_file:
         json.dump(data, json_file, indent=4)
 
+def get_week_number_from_pdf_text(extracted_text):
+    # Try to find a date in the text and get its week number
+    date_match = re.search(r"\d{1,2}/\d{1,2}/\d{4}", extracted_text)
+    if date_match:
+        try:
+            date_obj = datetime.datetime.strptime(date_match.group(), "%m/%d/%Y")
+            return date_obj.isocalendar()[1]
+        except Exception:
+            pass
+    # fallback to current week if not found
+    return datetime.datetime.now().isocalendar()[1]
+
 def main():
     base_url = "https://www.garlandtx.gov"
     url = "https://www.garlandtx.gov/396/Crime-Statistics-Maps"
@@ -96,8 +109,13 @@ def main():
 
     for district_number, incidents in districts.items():
         print(f"District {district_number}: {len(incidents)} incidents")
-    export_to_json(districts, "districts_incidents.json")
-    print("Districts incidents exported to districts_incidents.json")
+    # Ensure export directory exists
+    export_dir = "exported-incidents"
+    os.makedirs(export_dir, exist_ok=True)
+    week_number = get_week_number_from_pdf_text(extracted_text)
+    export_filename = os.path.join(export_dir, f"districts_incidents_week_{week_number}.json")
+    export_to_json(districts, export_filename)
+    print(f"Districts incidents exported to {export_filename}")
 
 if __name__ == "__main__":
     main()
