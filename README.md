@@ -33,6 +33,12 @@ Example output:
 }
 ```
 
+### Long term goals
+
+- Be able to plot incidents on the map
+- Add a weekly email feature
+- Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
+
 ### Running project
 
 ```bash
