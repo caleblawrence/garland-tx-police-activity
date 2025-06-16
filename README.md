@@ -35,8 +35,8 @@ Example output:
 
 ### Long term goals
 
-- Be able to plot incidents on the map
-- Add a weekly email feature
+- Be able to plot incidents on a map
+- Add a weekly email feature with the map and list of incidents
 - Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
 
 ### Running project
