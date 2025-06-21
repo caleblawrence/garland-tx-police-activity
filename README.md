@@ -39,6 +39,13 @@ Example output:
 - Add a weekly email feature with the map and list of incidents
 - Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
 
+### Next task
+
+- Make the email recipient var a list and loop through it
+- Update code to have an .env.example and update .env vars readme
+- Make the email not just a json list and format it nicely
+- Map stuff
+
 ### Running project
 
 ```bash
