@@ -117,6 +117,24 @@ def main():
     export_to_json(districts, export_filename)
     print(f"Districts incidents exported to {export_filename}")
 
+    # Send the exported report via email
+    try:
+        from email_utils import send_email_with_file_contents
+        sender = os.getenv("EMAIL_SENDER")
+        recipient = os.getenv("EMAIL_RECIPIENT")
+        subject = f"Garland TX Police Activity Report - Week {week_number}"
+        send_email_with_file_contents(
+            sender,
+            recipient,
+            export_filename,
+            subject=subject,
+            mailjet_api_key=os.getenv("MAIL_JET_API_KEY"),
+            mailjet_api_secret=os.getenv("MAIL_JET_SECRET_KEY")
+        )
+        print(f"Report emailed to {recipient}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+
 if __name__ == "__main__":
     main()
 
