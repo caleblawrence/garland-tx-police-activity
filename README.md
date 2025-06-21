@@ -43,7 +43,6 @@ Example output:
 
 - Make the email recipient var a list and loop through it
 - Update code to have an .env.example and update .env vars readme
-- Make the email not just a json list and format it nicely
 - Map stuff
 
 ### Running project

@@ -88,6 +88,17 @@ def get_week_number_from_pdf_text(extracted_text):
     # fallback to current week if not found
     return datetime.datetime.now().isocalendar()[1]
 
+def format_incidents_as_text(districts, week_number):
+    lines = [f"Garland TX Police Activity Report - Week {week_number}", ""]
+    for district, incidents in districts.items():
+        lines.append(f"District {district} ({len(incidents)} incidents):")
+        if not incidents:
+            lines.append("  No incidents reported.")
+        for inc in incidents:
+            lines.append(f"  - {inc['date']}: {inc['incident']} @ {inc['location']}")
+        lines.append("")
+    return "\n".join(lines)
+
 def main():
     base_url = "https://www.garlandtx.gov"
     url = "https://www.garlandtx.gov/396/Crime-Statistics-Maps"
@@ -117,21 +128,27 @@ def main():
     export_to_json(districts, export_filename)
     print(f"Districts incidents exported to {export_filename}")
 
-    # Send the exported report via email
+    # Send the exported report via email (formatted as plain text, not JSON)
     try:
         from email_utils import send_email_with_file_contents
         sender = os.getenv("EMAIL_SENDER")
         recipient = os.getenv("EMAIL_RECIPIENT")
         subject = f"Garland TX Police Activity Report - Week {week_number}"
+        body = format_incidents_as_text(districts, week_number)
+        # Write the formatted body to a temp file for compatibility with email_utils
+        temp_body_file = os.path.join(export_dir, f"districts_incidents_week_{week_number}_formatted.txt")
+        with open(temp_body_file, "w") as f:
+            f.write(body)
         send_email_with_file_contents(
             sender,
             recipient,
-            export_filename,
+            temp_body_file,
             subject=subject,
             mailjet_api_key=os.getenv("MAIL_JET_API_KEY"),
             mailjet_api_secret=os.getenv("MAIL_JET_SECRET_KEY")
         )
         print(f"Report emailed to {recipient}")
+        os.remove(temp_body_file)
     except Exception as e:
         print(f"Failed to send email: {e}")
 
