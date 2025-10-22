@@ -1,4 +1,4 @@
-# garland-tx-police-activity
+# Garland TX Police Activity Aggregator
 
 This program downloads the previous week incident reports PDF from the Garland TX website and extracts text from the PDF file. It then goes through the text and pulls out the reports from the districts of interest and exports that data to a JSON file.
 
@@ -39,11 +39,11 @@ Example output:
 - Add a weekly email feature with the map and list of incidents
 - Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
 
-### Next task
+### Roadmap
 
 - Make the email recipient var a list and loop through it
 - Update code to have an .env.example and update .env vars readme
-- Map stuff
+- Map the incidents using a bounding box via the rough address it supplies
 
 ### Running project
 
