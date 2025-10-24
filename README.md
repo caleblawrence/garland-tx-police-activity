@@ -33,12 +33,6 @@ Example output:
 }
 ```
 
-### Long term goals
-
-- Be able to plot incidents on a map
-- Add a weekly email feature with the map and list of incidents
-- Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
-
 ### Mapping the data
 
 Below is a screenshot of the plotted incidents on a map. We roughly estimated the addresses by drawing a box between the beginning of the address range and the end of it.
@@ -51,6 +45,7 @@ Clicking on one of those blue boxes will show the full data we have on the incid
 
 ### Roadmap
 
+- Add a title to the page to indicate this is just the last weeks incidents
 - Fix some of the huge bounding boxes showing up due to address logic bugs
 - For anything set to "Address confidential" document it in its own section on the outputted map. Obviously we want to still service this incident to the user
 - Implement a top 10 incidents of the past 3 months (or something similar) that highlights more aggravated categories even in the past few weeks or months so that users have a better idea of whats going on even if something did not happen in the past week.
