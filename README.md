@@ -51,9 +51,9 @@ Clicking on one of those blue boxes will show the full data we have on the incid
 
 ### Roadmap
 
-- Make the email recipient var a list and loop through it
-- Update code to have an .env.example and update .env vars readme
 - For anything set to "Address confidential" document it in its own section on the outputted map. Obviously we want to still service this incident to the user
+- Implement a top 10 incidents of the past 3 months (or something similar) that highlights more aggravated categories even in the past few weeks or months so that users have a better idea of whats going on even if something did not happen in the past week.
+- Make the email recipient var a list and loop through it
 
 ### Running the project
 
