@@ -45,14 +45,11 @@ Example output:
 - Update code to have an .env.example and update .env vars readme
 - Map the incidents using a bounding box via the rough address it supplies
 
-### Running project
+### Running the project
+
+#### Web/PDF scrapper
 
 ```bash
+cd scrape-incidents
 pipenv run python src/main.py
-```
-
-### Install a new package
-
-```bash
-pipenv install requests
 ```
