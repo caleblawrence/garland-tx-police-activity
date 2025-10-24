@@ -1,0 +1,670 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.655295,
+              32.894231
+            ],
+            [
+              -96.6551,
+              32.894231
+            ],
+            [
+              -96.6551,
+              32.894235
+            ],
+            [
+              -96.655295,
+              32.894235
+            ],
+            [
+              -96.655295,
+              32.894231
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "20XX SHERWOOD DR Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "10/12/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6683679,
+              32.8851622
+            ],
+            [
+              -96.668217,
+              32.8851622
+            ],
+            [
+              -96.668217,
+              32.886515
+            ],
+            [
+              -96.6683679,
+              32.886515
+            ],
+            [
+              -96.6683679,
+              32.8851622
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "26XX MARKET ST Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "date": "10/12/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.65137,
+              32.8897
+            ],
+            [
+              -96.65058,
+              32.8897
+            ],
+            [
+              -96.65058,
+              32.890479
+            ],
+            [
+              -96.65137,
+              32.890479
+            ],
+            [
+              -96.65137,
+              32.8897
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "22XX SHARON DR Garland TX",
+        "incident": "ASSAULT-AGG-D/W",
+        "date": "10/12/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.65137,
+              32.8897
+            ],
+            [
+              -96.65058,
+              32.8897
+            ],
+            [
+              -96.65058,
+              32.890479
+            ],
+            [
+              -96.65137,
+              32.890479
+            ],
+            [
+              -96.65137,
+              32.8897
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "22XX SHARON DR Garland TX",
+        "incident": "ASSAULT-AGG-D/W",
+        "date": "10/12/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.623329,
+              32.8641921
+            ],
+            [
+              -96.6047962,
+              32.8641921
+            ],
+            [
+              -96.6047962,
+              32.88024
+            ],
+            [
+              -96.623329,
+              32.88024
+            ],
+            [
+              -96.623329,
+              32.8641921
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "29XX BROADWAY BLVD Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "10/14/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.610374,
+              32.8895486
+            ],
+            [
+              -96.610172,
+              32.8895486
+            ],
+            [
+              -96.610172,
+              32.890764
+            ],
+            [
+              -96.610374,
+              32.890764
+            ],
+            [
+              -96.610374,
+              32.8895486
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "24XX COUNTRY VALLEY RD Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "date": "10/17/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.621734,
+              32.8641921
+            ],
+            [
+              -96.6047962,
+              32.8641921
+            ],
+            [
+              -96.6047962,
+              32.87887
+            ],
+            [
+              -96.621734,
+              32.87887
+            ],
+            [
+              -96.621734,
+              32.8641921
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "30XX BROADWAY BLVD Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "10/18/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.659109,
+              32.86765
+            ],
+            [
+              -96.658006,
+              32.86765
+            ],
+            [
+              -96.658006,
+              32.867827
+            ],
+            [
+              -96.659109,
+              32.867827
+            ],
+            [
+              -96.659109,
+              32.86765
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "20XX COURT PL Garland TX",
+        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "date": "10/12/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.665669,
+              32.876198
+            ],
+            [
+              -96.6656687,
+              32.876198
+            ],
+            [
+              -96.6656687,
+              32.8766058
+            ],
+            [
+              -96.665669,
+              32.8766058
+            ],
+            [
+              -96.665669,
+              32.876198
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "36XX S SHILOH RD Garland TX",
+        "incident": "BURGLARY-VEH",
+        "date": "10/13/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6656673,
+              32.8655905
+            ],
+            [
+              -96.6655437,
+              32.8655905
+            ],
+            [
+              -96.6655437,
+              32.8782574
+            ],
+            [
+              -96.6656673,
+              32.8782574
+            ],
+            [
+              -96.6656673,
+              32.8655905
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "31XX S SHILOH RD Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "10/13/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.653426,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.863924
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "16XX NORTHWEST HWY Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "date": "10/14/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6821371,
+              32.8787992
+            ],
+            [
+              -96.656387,
+              32.8787992
+            ],
+            [
+              -96.656387,
+              32.878962
+            ],
+            [
+              -96.6821371,
+              32.878962
+            ],
+            [
+              -96.6821371,
+              32.8787992
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "19XX W KINGSLEY RD Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "10/14/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6876195,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8768974
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "122XX LBJ FRWY Garland TX",
+        "incident": "BURGLARY-VEH",
+        "date": "10/14/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.653426,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.863924
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "16XX NORTHWEST HWY Garland TX",
+        "incident": "BURGLARY-VEH",
+        "date": "10/15/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6876195,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8768974
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "114XX LBJ FRWY Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "10/17/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.653426,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.863924
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "16XX NORTHWEST HWY Garland TX",
+        "incident": "BURGLARY-VEH",
+        "date": "10/17/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6876195,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8768974
+            ],
+            [
+              -96.68661949999999,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8778974
+            ],
+            [
+              -96.6876195,
+              32.8768974
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "122XX LBJ FRWY Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "10/17/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.653426,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.863924
+            ],
+            [
+              -96.652353,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.864247
+            ],
+            [
+              -96.653426,
+              32.863924
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "16XX NORTHWEST HWY Garland TX",
+        "incident": "BURGLARY-VEH",
+        "date": "10/18/2025"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6605327,
+              32.8636767
+            ],
+            [
+              -96.6595327,
+              32.8636767
+            ],
+            [
+              -96.6595327,
+              32.864676700000004
+            ],
+            [
+              -96.6605327,
+              32.864676700000004
+            ],
+            [
+              -96.6605327,
+              32.8636767
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "address": "9XX NORTHWEST HWY Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "10/18/2025"
+      }
+    }
+  ]
+}

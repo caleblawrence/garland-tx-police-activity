@@ -1,58 +1,75 @@
 import fetch from "node-fetch";
 import * as turf from "@turf/turf";
+import week41Data from "../../exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
+import { writeFileSync } from "fs";
 
 const init = async () => {
-  // TODO: get these from file
-  var partialAddress = "22XX S SHILOH RD";
-  var fullAddress = getFullAddress(partialAddress);
+  var flatIncidentList = Object.entries(week41Data).map(([, feature]) => {
+    return feature.flatMap((incident) => {
+      return {
+        date: incident.date,
+        incident: incident.incident,
+        location: incident.location,
+      };
+    });
+  });
+  const flatList = flatIncidentList.flat(Infinity);
 
-  var beginningAddressRange = getAddressBeginning(fullAddress);
+  // Collect features for every address in flatList
+  const geojsonFeatures = [];
+  for (const item of flatList) {
+    if (
+      item &&
+      typeof item === "object" &&
+      "location" in item &&
+      "incident" in item &&
+      "date" in item
+    ) {
+      const partialAddress = item.location;
+      const fullAddress = getFullAddress(partialAddress);
+      const beginningAddressRange = getAddressBeginning(fullAddress);
+      const endingAddressRange = getAddressEnding(fullAddress);
+      const beginningLatLng = await getLatLng(beginningAddressRange);
+      const endingLatLng = await getLatLng(endingAddressRange);
 
-  console.log("beginningAddress:", beginningAddressRange);
-  var beginningLatLng = await getLatLng(beginningAddressRange);
-  console.log("beginningLatLng:", beginningLatLng);
-
-  var endingAddressRange = getAddressEnding(fullAddress);
-  console.log("endingAddress:", endingAddressRange);
-  var endingLatLng = await getLatLng(endingAddressRange);
-  console.log("endingLatLng:", endingLatLng);
-
-  // create bounding box
-  let bboxFeature;
-  // Check if both points are valid
-  if (
-    beginningLatLng &&
-    endingLatLng &&
-    beginningLatLng.lat === endingLatLng.lat &&
-    beginningLatLng.lng === endingLatLng.lng
-  ) {
-    console.warn(
-      "Warning: Beginning and ending geocoded points are identical. Creating artificial bounding box."
-    );
-    // Create a small box around the point (e.g., 0.0005 deg buffer ~50m)
-    const buffer = 0.0005;
-    const minLng = beginningLatLng.lng - buffer;
-    const maxLng = beginningLatLng.lng + buffer;
-    const minLat = beginningLatLng.lat - buffer;
-    const maxLat = beginningLatLng.lat + buffer;
-    bboxFeature = turf.bboxPolygon([minLng, minLat, maxLng, maxLat]);
-  } else if (beginningLatLng && endingLatLng) {
-    // Create Turf points
-    const point1 = turf.point([beginningLatLng.lng, beginningLatLng.lat]);
-    const point2 = turf.point([endingLatLng.lng, endingLatLng.lat]);
-    // Create a bounding box (envelope) from the two points
-    bboxFeature = turf.envelope(turf.featureCollection([point1, point2]));
-  } else {
-    console.error(
-      "Could not create bounding box: one or both geocoded points are null."
-    );
-    bboxFeature = null;
+      let bboxFeature = null;
+      if (
+        beginningLatLng &&
+        endingLatLng &&
+        beginningLatLng.lat === endingLatLng.lat &&
+        beginningLatLng.lng === endingLatLng.lng
+      ) {
+        const buffer = 0.0005;
+        const minLng = beginningLatLng.lng - buffer;
+        const maxLng = beginningLatLng.lng + buffer;
+        const minLat = beginningLatLng.lat - buffer;
+        const maxLat = beginningLatLng.lat + buffer;
+        bboxFeature = turf.bboxPolygon([minLng, minLat, maxLng, maxLat]);
+      } else if (beginningLatLng && endingLatLng) {
+        const point1 = turf.point([beginningLatLng.lng, beginningLatLng.lat]);
+        const point2 = turf.point([endingLatLng.lng, endingLatLng.lat]);
+        bboxFeature = turf.envelope(turf.featureCollection([point1, point2]));
+      }
+      if (bboxFeature) {
+        geojsonFeatures.push({
+          type: "Feature",
+          geometry: bboxFeature.geometry,
+          properties: {
+            address: fullAddress,
+            incident: item.incident,
+            date: item.date,
+          },
+        });
+      }
+    }
   }
 
-  // bboxFeature is a Polygon representing the bounding box
-  if (bboxFeature) {
-    console.log(JSON.stringify(bboxFeature));
-  }
+  // Save valid GeoJSON FeatureCollection
+  const geojson = {
+    type: "FeatureCollection",
+    features: geojsonFeatures,
+  };
+  writeFileSync("features.geojson", JSON.stringify(geojson, null, 2));
 };
 
 var getFullAddress = (partialAddress) => {
@@ -103,8 +120,7 @@ async function getLatLng(address) {
       headers: { "User-Agent": "geo-analysis-app/1.0" },
     });
     const data = await response.json();
-    console.log("Geocoding response:", data);
-    if (data && data.length > 0) {
+    if (Array.isArray(data) && data.length > 0) {
       return {
         lat: parseFloat(data[0].lat),
         lng: parseFloat(data[0].lon),
