@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import * as turf from "@turf/turf";
-import week41Data from "../../exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
+import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
 import { writeFileSync } from "fs";
 
 const init = async () => {

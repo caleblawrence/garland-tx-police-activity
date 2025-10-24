@@ -44,6 +44,7 @@ Example output:
 - Make the email recipient var a list and loop through it
 - Update code to have an .env.example and update .env vars readme
 - Map the incidents using a bounding box via the rough address it supplies
+- For anything set to "Address confidential" document it in its own section on the outputted map. obviouslly we want to still service this incident to the user
 
 ### Running the project
 

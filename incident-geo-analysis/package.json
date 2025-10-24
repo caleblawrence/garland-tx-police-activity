@@ -5,11 +5,13 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "serve": "http-server"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.0.0",
+    "http-server": "^14.1.1"
   },
   "author": "",
   "license": "ISC"
