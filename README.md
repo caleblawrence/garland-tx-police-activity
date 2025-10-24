@@ -39,12 +39,21 @@ Example output:
 - Add a weekly email feature with the map and list of incidents
 - Create a small backend where people can sign up for a weekly email and select the districts they are interested in.
 
+### Mapping the data
+
+Below is a screenshot of the plotted incidents on a map. We roughly estimated the addresses by drawing a box between the beginning of the address range and the end of it.
+
+![Screenshot of plotted incidents](plotted-incidents.png)
+
+Clicking on one of those blue boxes will show the full data we have on the incident:
+
+![Screenshot of plotted incidents](incident-more-info.png)
+
 ### Roadmap
 
 - Make the email recipient var a list and loop through it
 - Update code to have an .env.example and update .env vars readme
-- Map the incidents using a bounding box via the rough address it supplies
-- For anything set to "Address confidential" document it in its own section on the outputted map. obviouslly we want to still service this incident to the user
+- For anything set to "Address confidential" document it in its own section on the outputted map. Obviously we want to still service this incident to the user
 
 ### Running the project
 

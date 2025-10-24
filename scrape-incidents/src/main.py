@@ -9,7 +9,7 @@ import datetime
 def get_districts_of_interest():
     districts_env = os.getenv("DISTRICTS_OF_INTEREST")
     if not districts_env:
-        raise ValueError("DISTRICTS_OF_INTEREST environment variable not set. Please set it as a comma-separated list, e.g., '41,42,43,44'.")
+        return []
     try:
         return [int(x.strip()) for x in districts_env.split(",") if x.strip()]
     except Exception as e:
@@ -104,7 +104,7 @@ def main():
     url = "https://www.garlandtx.gov/396/Crime-Statistics-Maps"
     html_response = requests.get(url)
     soup = BeautifulSoup(html_response.text, "html.parser")
-    districts_of_interest = get_districts_of_interest()
+    
     previous_week_link = get_previous_week_pdf_url(soup)
     print("Downloading pdf from", base_url + previous_week_link + "...")
     pdf_filename = "previous_week_incident_report.pdf"
@@ -115,6 +115,17 @@ def main():
         os.remove(pdf_filename)
         print(f"Deleted {pdf_filename} after processing.")
     split_text = extracted_text.split("\n")
+
+    districts_of_interest = get_districts_of_interest()
+    if not districts_of_interest:
+        print("No specific districts provided, scanning for all districts in the document.")
+        all_districts = []
+        for line in split_text:
+            match = re.search(r"DISTRICT (\d+)", line)
+            if match:
+                all_districts.append(int(match.group(1)))
+        districts_of_interest = sorted(list(set(all_districts)))
+
     print("Processing text to extract incidents for districts:", ", ".join(map(str, districts_of_interest)) + ".")
     districts = parse_district_incidents(split_text, districts_of_interest)
 

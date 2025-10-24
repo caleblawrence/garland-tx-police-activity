@@ -1,7 +1,8 @@
 import fetch from "node-fetch";
 import * as turf from "@turf/turf";
 import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
+import ProgressBar from "progress";
 
 const init = async () => {
   var flatIncidentList = Object.entries(week41Data).map(([, feature]) => {
@@ -15,9 +16,17 @@ const init = async () => {
   });
   const flatList = flatIncidentList.flat(Infinity);
 
+  const bar = new ProgressBar("  mapping [:bar] :percent :etas", {
+    complete: "=",
+    incomplete: " ",
+    width: 20,
+    total: flatList.length,
+  });
+
   // Collect features for every address in flatList
   const geojsonFeatures = [];
   for (const item of flatList) {
+    bar.tick();
     if (
       item &&
       typeof item === "object" &&
@@ -27,6 +36,7 @@ const init = async () => {
     ) {
       const partialAddress = item.location;
       const fullAddress = getFullAddress(partialAddress);
+      console.log(`Mapping address: ${fullAddress}`);
       const beginningAddressRange = getAddressBeginning(fullAddress);
       const endingAddressRange = getAddressEnding(fullAddress);
       const beginningLatLng = await getLatLng(beginningAddressRange);
@@ -69,7 +79,13 @@ const init = async () => {
     type: "FeatureCollection",
     features: geojsonFeatures,
   };
-  writeFileSync("features.geojson", JSON.stringify(geojson, null, 2));
+  writeFileSync(
+    "incident-geo-analysis/dist/features.geojson",
+    JSON.stringify(geojson, null, 2)
+  );
+
+  const mapHtml = readFileSync("incident-geo-analysis/src/map.html", "utf-8");
+  writeFileSync("incident-geo-analysis/dist/index.html", mapHtml);
 };
 
 var getFullAddress = (partialAddress) => {
@@ -88,9 +104,9 @@ var getAddressBeginning = (address) => {
   // If not in '25XX' format, try to parse as a number
   const num = parseInt(firstPart, 10);
   if (!isNaN(num)) {
-    return num.toString().padStart(4, "0");
+    return address;
   }
-  return address.replace(firstPart, getAddressBeginning(firstPart));
+  return address;
 };
 
 var getAddressEnding = (address) => {
@@ -105,9 +121,9 @@ var getAddressEnding = (address) => {
   // If not in '25XX' format, try to parse as a number
   const num = parseInt(firstPart, 10);
   if (!isNaN(num)) {
-    return num.toString().padStart(4, "0");
+    return address;
   }
-  return address.replace(firstPart, getAddressEnding(firstPart));
+  return address;
 };
 
 async function getLatLng(address) {
