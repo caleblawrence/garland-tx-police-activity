@@ -59,7 +59,7 @@
   </head>
   <body>
     <div id="map"></div>
-    <h1 id="map-title">Last week's Garland, TX police incidents</h1>
+    <h1 id="map-title">Last week's Garland TX police incidents</h1>
     <div id="confidential-container">
       <h3>Confidential Addresses</h3>
       <div id="confidential-list" class="collapsed"></div>
@@ -67,7 +67,7 @@
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-      var map = L.map("map").setView([32.9125, -96.6417], 13); // Centered on Garland, TX
+      var map = L.map("map").setView([32.9125, -96.6417], 13); // Centered on Garland TX
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
@@ -78,7 +78,7 @@
       fetch("features.geojson")
         .then((response) => response.json())
         .then((data) => {
-          L.geoJSON(data, {
+          const geoJsonLayer = L.geoJSON(data, {
             onEachFeature: function (feature, layer) {
               if (feature.properties && feature.properties.address) {
                 layer.bindPopup(
@@ -89,6 +89,10 @@
               }
             },
           }).addTo(map);
+
+          if (data.features.length > 0) {
+            map.fitBounds(geoJsonLayer.getBounds());
+          }
         });
 
       // Load and display confidential addresses
