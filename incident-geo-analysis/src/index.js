@@ -1,10 +1,18 @@
 import fetch from "node-fetch";
 import * as turf from "@turf/turf";
 import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
-import { writeFileSync, readFileSync } from "fs";
+import { writeFileSync, readFileSync, mkdirSync } from "fs";
 import ProgressBar from "progress";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const projectRoot = path.resolve(__dirname, "..");
 
 const init = async () => {
+  mkdirSync(path.join(projectRoot, "dist"), { recursive: true });
   var flatIncidentList = Object.entries(week41Data).map(([, feature]) => {
     return feature.flatMap((incident) => {
       return {
@@ -25,6 +33,7 @@ const init = async () => {
 
   // Collect features for every address in flatList
   const geojsonFeatures = [];
+  const confidentialAddresses = [];
   for (const item of flatList) {
     bar.tick();
     if (
@@ -34,6 +43,10 @@ const init = async () => {
       "incident" in item &&
       "date" in item
     ) {
+      if (item.location === "ADDRESS CONFIDENTIAL") {
+        confidentialAddresses.push(item);
+        continue;
+      }
       const partialAddress = item.location;
       const fullAddress = getFullAddress(partialAddress);
       console.log(`Mapping address: ${fullAddress}`);
@@ -74,18 +87,24 @@ const init = async () => {
     }
   }
 
+  // Save confidential addresses
+  writeFileSync(
+    path.join(projectRoot, "dist/confidential.json"),
+    JSON.stringify(confidentialAddresses, null, 2)
+  );
+
   // Save valid GeoJSON FeatureCollection
   const geojson = {
     type: "FeatureCollection",
     features: geojsonFeatures,
   };
   writeFileSync(
-    "incident-geo-analysis/dist/features.geojson",
+    path.join(projectRoot, "dist/features.geojson"),
     JSON.stringify(geojson, null, 2)
   );
 
-  const mapHtml = readFileSync("incident-geo-analysis/src/map.html", "utf-8");
-  writeFileSync("incident-geo-analysis/dist/index.html", mapHtml);
+  const mapHtml = readFileSync(path.join(projectRoot, "src/map.html"), "utf-8");
+  writeFileSync(path.join(projectRoot, "dist/index.html"), mapHtml);
 };
 
 var getFullAddress = (partialAddress) => {
