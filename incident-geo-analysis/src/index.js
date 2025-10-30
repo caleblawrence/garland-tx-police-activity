@@ -71,7 +71,19 @@ const init = async () => {
       } else if (beginningLatLng && endingLatLng) {
         const point1 = turf.point([beginningLatLng.lng, beginningLatLng.lat]);
         const point2 = turf.point([endingLatLng.lng, endingLatLng.lat]);
-        bboxFeature = turf.envelope(turf.featureCollection([point1, point2]));
+        const distance = turf.distance(point1, point2, { units: "kilometers" });
+
+        // If the distance is too large, just buffer the first point.
+        if (distance > 2) {
+          const buffer = 0.001; // A slightly larger buffer for blocks
+          const minLng = beginningLatLng.lng - buffer;
+          const maxLng = beginningLatLng.lng + buffer;
+          const minLat = beginningLatLng.lat - buffer;
+          const maxLat = beginningLatLng.lat + buffer;
+          bboxFeature = turf.bboxPolygon([minLng, minLat, maxLng, maxLat]);
+        } else {
+          bboxFeature = turf.envelope(turf.featureCollection([point1, point2]));
+        }
       }
       if (bboxFeature) {
         geojsonFeatures.push({
@@ -117,7 +129,11 @@ var getAddressBeginning = (address) => {
   // Replace 'XX' or 'xx' with '00' to get the beginning of the range
   const match = firstPart.match(/^(\d+)[Xx]{2}$/);
   if (match) {
-    var beginning = match[1].padStart(2, "0") + "00";
+    const blockNumber = match[1];
+    // For single-digit blocks like '1XX', treat it as the 100 block.
+    // For multi-digit blocks, pad with '00'.
+    const beginning =
+      blockNumber.length > 1 ? blockNumber + "00" : blockNumber.padEnd(3, "0");
     return address.replace(firstPart, beginning);
   }
   // If not in '25XX' format, try to parse as a number
@@ -134,7 +150,11 @@ var getAddressEnding = (address) => {
   // Replace 'XX' or 'xx' with '99' to get the ending of the range
   const match = firstPart.match(/^(\d+)[Xx]{2}$/);
   if (match) {
-    var ending = match[1].padStart(2, "0") + "99";
+    const blockNumber = match[1];
+    // For single-digit blocks like '1XX', treat it as the 100 block (100-199).
+    // For multi-digit blocks, pad with '99'.
+    const ending =
+      blockNumber.length > 1 ? blockNumber + "99" : blockNumber.padEnd(3, "9");
     return address.replace(firstPart, ending);
   }
   // If not in '25XX' format, try to parse as a number

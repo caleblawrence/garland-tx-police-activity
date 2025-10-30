@@ -59,3 +59,14 @@ Clicking on one of those blue boxes will show the full data we have on the incid
 cd scrape-incidents
 pipenv run python src/main.py
 ```
+
+#### Map visualizer
+
+```bash
+cd incident-geo-analysis/src
+# run the program
+node index.js
+
+# run web server
+npm run serve
+```
