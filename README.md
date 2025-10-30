@@ -47,7 +47,6 @@ Clicking on one of those blue boxes will show the full data we have on the incid
 
 - Convert FE to React
 - Solidify the Readme and maybe convert the web scraping to TS so it can be triggered in a Vercel BE function or something
-- Fix some of the huge bounding boxes showing up due to address logic bugs
 - Implement a top 10 incidents of the past 3 months (or something similar) that highlights more aggravated categories even in the past few weeks or months so that users have a better idea of whats going on even if something did not happen in the past week.
 - Make the email recipient var a list and loop through it
 

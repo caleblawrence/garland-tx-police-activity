@@ -6,13 +6,17 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
+    "test": "vitest",
     "serve": "http-server"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",
-    "node-fetch": "^3.0.0",
     "http-server": "^14.1.1",
+    "node-fetch": "^3.0.0",
     "progress": "^2.0.3"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.1"
   },
   "author": "",
   "license": "ISC"
