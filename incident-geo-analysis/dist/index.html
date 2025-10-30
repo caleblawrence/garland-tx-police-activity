@@ -48,6 +48,20 @@
         cursor: pointer;
         user-select: none;
       }
+      .arrow {
+        display: inline-block;
+        margin-right: 8px;
+        border: solid black;
+        border-width: 0 2px 2px 0;
+        padding: 3px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        transition: transform 0.2s;
+      }
+      #confidential-header.expanded .arrow {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+      }
       .confidential-item {
         margin-bottom: 5px;
         font-size: 0.9em;
@@ -71,7 +85,9 @@
     <div id="map"></div>
     <h1 id="map-title">Last week's Garland TX police incidents</h1>
     <div id="confidential-container">
-      <h3>Confidential Addresses</h3>
+      <h3 id="confidential-header">
+        <span class="arrow"></span>Confidential Addresses
+      </h3>
       <div id="confidential-list" class="collapsed"></div>
     </div>
 
@@ -125,13 +141,13 @@
           });
         });
 
-      document
-        .querySelector("#confidential-container h3")
-        .addEventListener("click", () => {
-          document
-            .getElementById("confidential-list")
-            .classList.toggle("collapsed");
-        });
+      const confidentialHeader = document.getElementById("confidential-header");
+      confidentialHeader.addEventListener("click", () => {
+        document
+          .getElementById("confidential-list")
+          .classList.toggle("collapsed");
+        confidentialHeader.classList.toggle("expanded");
+      });
     </script>
   </body>
 </html>
