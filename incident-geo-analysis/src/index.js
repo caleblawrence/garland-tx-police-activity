@@ -5,7 +5,7 @@ import {
   getLatLng,
   createBoundingBox,
 } from "./geo.js";
-import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_41.json" assert { type: "json" };
+import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_43.json" assert { type: "json" };
 import { writeFileSync, readFileSync, mkdirSync } from "fs";
 import ProgressBar from "progress";
 import path from "path";
@@ -101,6 +101,11 @@ const main = async () => {
 
   const mapHtml = readFileSync(path.join(projectRoot, "src/map.html"), "utf-8");
   writeFileSync(path.join(projectRoot, "dist/index.html"), mapHtml);
+  const aboutHtml = readFileSync(
+    path.join(projectRoot, "src/about.html"),
+    "utf-8"
+  );
+  writeFileSync(path.join(projectRoot, "dist/about.html"), aboutHtml);
 };
 
 if (import.meta.url === `file://${process.argv[1]}`) {
