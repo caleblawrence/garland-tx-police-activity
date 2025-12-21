@@ -1,0 +1,24 @@
+{
+    "processed_weeks": {
+        "1": {
+            "week": 48,
+            "file_path": "/Users/caleblawrence/Projects/garland-tx-police-activity/scrape-incidents/exported-incidents/districts_incidents_week_48.json"
+        },
+        "2": {
+            "week": 22,
+            "file_path": "/Users/caleblawrence/Projects/garland-tx-police-activity/scrape-incidents/exported-incidents/districts_incidents_week_22.json"
+        },
+        "3": {
+            "week": 43,
+            "file_path": "/Users/caleblawrence/Projects/garland-tx-police-activity/scrape-incidents/exported-incidents/districts_incidents_week_43.json"
+        },
+        "4": {
+            "week": 23,
+            "file_path": "/Users/caleblawrence/Projects/garland-tx-police-activity/scrape-incidents/exported-incidents/districts_incidents_week_23.json"
+        },
+        "5": {
+            "week": 41,
+            "file_path": "/Users/caleblawrence/Projects/garland-tx-police-activity/scrape-incidents/exported-incidents/districts_incidents_week_41.json"
+        }
+    }
+}

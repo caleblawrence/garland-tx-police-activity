@@ -1,0 +1,25 @@
+[project]
+name = "garland_tx_data_analysis"
+version = "0.1.0"
+description = "garland-tx-data-analysis using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.108.0,<1.0.0",
+    "PyPDF2",
+    "requests"
+]
+
+[project.scripts]
+garland_tx_data_analysis = "garland_tx_data_analysis.main:run"
+run_crew = "garland_tx_data_analysis.main:run"
+train = "garland_tx_data_analysis.main:train"
+replay = "garland_tx_data_analysis.main:replay"
+test = "garland_tx_data_analysis.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

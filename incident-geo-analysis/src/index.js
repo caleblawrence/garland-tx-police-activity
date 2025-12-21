@@ -5,7 +5,7 @@ import {
   getLatLng,
   createBoundingBox,
 } from "./geo.js";
-import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_43.json" assert { type: "json" };
+import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_48.json" assert { type: "json" };
 import { writeFileSync, readFileSync, mkdirSync } from "fs";
 import ProgressBar from "progress";
 import path from "path";

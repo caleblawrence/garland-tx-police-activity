@@ -1,0 +1,24 @@
+download_pdf_task:
+  description: >
+    Download the weekly police incidents PDF from the public data website.
+    The URL for the PDF is 'https://www.garlandtx.gov/DocumentCenter/View/802/Previous-Week-Selected-Incident-Report-PDF?bidId='.
+  expected_output: >
+    The file path of the downloaded PDF.
+  agent: pdf_downloader
+
+extract_incidents_task:
+  description: >
+    Extract all incident data from the downloaded PDF file.
+    The PDF contains a table of police incidents.
+  expected_output: >
+    A list of incidents extracted from the PDF. The output should be a structured format that the data_formatter agent can process.
+  agent: incident_extractor
+
+format_data_task:
+  description: >
+    Convert the extracted incident data into JSON format.
+    For each incident, add a human-friendly description for the crime type.
+    For example, 'WBI' should be described as 'Willfully Causing Bodily Injury'.
+  expected_output: >
+    A JSON file containing the list of incidents, with each incident having a 'description' and a 'human_friendly_description'.
+  agent: data_formatter
