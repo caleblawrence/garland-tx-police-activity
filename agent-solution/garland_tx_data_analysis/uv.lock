@@ -817,7 +817,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "crewai", extras = ["tools"], specifier = ">=0.108.0,<1.0.0" },
+    { name = "crewai", extras = ["anthropic", "tools"], specifier = ">=0.108.0,<1.0.0" },
     { name = "pypdf2" },
     { name = "requests" },
 ]
