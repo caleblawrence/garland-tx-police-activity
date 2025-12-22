@@ -55,3 +55,9 @@ For support, questions, or feedback regarding the GarlandTxDataAnalysis Crew or 
 - [Chat with our docs](https://chatg.pt/DWjSBZn)
 
 Let's create wonders together with the power and simplicity of crewAI.
+
+### Running the tool tests
+
+```
+/Users/caleblawrence/.local/share/virtualenvs/agent-solution-vsmzV41H/bin/python -m pytest -s /Users/caleblawrence/Projects/garland-tx-police-activity/agent-solution/garland_tx_data_analysis/tests/test_custom_tool.py
+```

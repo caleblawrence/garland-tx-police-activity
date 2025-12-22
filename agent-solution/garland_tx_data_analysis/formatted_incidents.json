@@ -1,1 +1,405 @@
-[]
+[
+  {
+    "district": "DISTRICT 0",
+    "incidents": [
+      {
+        "beat": "0855",
+        "case_number": "2025R022894",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/08/2025",
+        "address": ""
+      },
+      {
+        "beat": "0",
+        "case_number": "2025R023007",
+        "offense": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "12/10/2025",
+        "address": "36XX OHENRY DR GARLAND"
+      },
+      {
+        "beat": "-1",
+        "case_number": "2025R023139",
+        "offense": "BURGLARY-VEH",
+        "date": "12/12/2025",
+        "address": "61XX HILLSDALE LN"
+      },
+      {
+        "beat": "-1",
+        "case_number": "2025R023155",
+        "offense": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
+        "date": "12/12/2025",
+        "address": "63XX N PRESIDENT GEORGE BUSH HWY"
+      },
+      {
+        "beat": "0030",
+        "case_number": "2025R023163",
+        "offense": "SEXUAL ASSLT-RAPE",
+        "date": "12/12/2025",
+        "address": "ADDRESS CONFIDENTIAL"
+      },
+      {
+        "beat": "0",
+        "case_number": "2025R023196",
+        "offense": "BURGLARY-BLDG",
+        "date": "12/13/2025",
+        "address": "35XX WALNUT ST"
+      }
+    ],
+    "total": 6
+  },
+  {
+    "district": "DISTRICT 21",
+    "incidents": [
+      {
+        "beat": "4",
+        "case_number": "2025R023031",
+        "offense": "BURGLARY-VEH",
+        "date": "12/10/2025",
+        "address": "34XX CROSSBOW LN"
+      },
+      {
+        "beat": "4",
+        "case_number": "2025R023201",
+        "offense": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "12/13/2025",
+        "address": "28XX ST GEORGE DR"
+      }
+    ],
+    "total": 2
+  },
+  {
+    "district": "DISTRICT 22",
+    "incidents": [
+      {
+        "beat": "2",
+        "case_number": "2025R022950",
+        "offense": "THEFT-MAIL <10 ADDRESSES",
+        "date": "12/09/2025",
+        "address": "60XX NAAMAN FOREST BLVD"
+      },
+      {
+        "beat": "2",
+        "case_number": "2025R023022",
+        "offense": "THEFT-MAIL <10 ADDRESSES",
+        "date": "12/10/2025",
+        "address": "62XX NAAMAN FOREST BLVD"
+      },
+      {
+        "beat": "2",
+        "case_number": "2025R023034",
+        "offense": "CRIMINAL MISCHIEF $100 L/T $750",
+        "date": "12/10/2025",
+        "address": "ARROWCREST LN"
+      },
+      {
+        "beat": "2",
+        "case_number": "",
+        "offense": "CRIMINAL MISCHIEF $750 L/T $2,500",
+        "date": "12/10/2025",
+        "address": "ARROWCREST LN"
+      },
+      {
+        "beat": "2",
+        "case_number": "2025R023083",
+        "offense": "THEFT BY CHECK-$30,000 L/T $150,000",
+        "date": "12/11/2025",
+        "address": "24XX ARAPAHO RD"
+      },
+      {
+        "beat": "2",
+        "case_number": "2025R023097",
+        "offense": "THEFT-MAIL <10 ADDRESSES",
+        "date": "12/11/2025",
+        "address": "62XX NAAMAN FOREST BLVD"
+      },
+      {
+        "beat": "2",
+        "case_number": "2025R023137",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/12/2025",
+        "address": "63XX NAAMAN FOREST BLVD"
+      }
+    ],
+    "total": 7
+  },
+  {
+    "district": "DISTRICT 23",
+    "incidents": [
+      {
+        "beat": "8",
+        "case_number": "2025R022923",
+        "offense": "THEFT-ALL OTHER-$30,000 L/T $150,000",
+        "date": "12/08/2025",
+        "address": "34XX WAGON WHEEL RD"
+      },
+      {
+        "beat": "8",
+        "case_number": "2025R023051",
+        "offense": "BURGLARY-VEH",
+        "date": "12/10/2025",
+        "address": "14XX BELT LINE RD"
+      }
+    ],
+    "total": 2
+  },
+  {
+    "district": "DISTRICT 24",
+    "incidents": [
+      {
+        "beat": "17",
+        "case_number": "2025R022871",
+        "offense": "BURGLARY-HAB",
+        "date": "12/07/2025",
+        "address": "42XX WINDSOR DR"
+      },
+      {
+        "beat": "17",
+        "case_number": "2025R022961",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/09/2025",
+        "address": "40XX GLENROSE DR"
+      },
+      {
+        "beat": "22",
+        "case_number": "2025R022974",
+        "offense": "THEFT-ALL OTHER-L/T $100",
+        "date": "12/09/2025",
+        "address": "35XX W WALNUT ST"
+      },
+      {
+        "beat": "22",
+        "case_number": "2025R023047",
+        "offense": "BURGLARY-BLDG",
+        "date": "12/10/2025",
+        "address": "2XX N FOREST CREST DR"
+      },
+      {
+        "beat": "22",
+        "case_number": "2025R023212",
+        "offense": "BURGLARY-VEH",
+        "date": "12/13/2025",
+        "address": "40XX FOREST LN"
+      },
+      {
+        "beat": "22",
+        "case_number": "2025R023218",
+        "offense": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$2,500 L/T $30,000",
+        "date": "12/13/2025",
+        "address": "40XX FOREST LN"
+      }
+    ],
+    "total": 6
+  },
+  {
+    "district": "DISTRICT 25",
+    "incidents": [
+      {
+        "beat": "19",
+        "case_number": "2025R022988",
+        "offense": "INFO-THEFT",
+        "date": "12/09/2025",
+        "address": "13XX N SHILOH RD"
+      },
+      {
+        "beat": "19",
+        "case_number": "2025R023055",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/10/2025",
+        "address": "19XX N JUPITER RD"
+      },
+      {
+        "beat": "20",
+        "case_number": "2025R023169",
+        "offense": "INFO-THEFT",
+        "date": "12/12/2025",
+        "address": "21XX W WALNUT ST"
+      },
+      {
+        "beat": "19",
+        "case_number": "2025R023202",
+        "offense": "BURGLARY-BLDG",
+        "date": "12/13/2025",
+        "address": "33XX W WALNUT ST"
+      }
+    ],
+    "total": 4
+  },
+  {
+    "district": "DISTRICT 26",
+    "incidents": [
+      {
+        "beat": "24",
+        "case_number": "2025R022874",
+        "offense": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "12/07/2025",
+        "address": "14XX W WALNUT ST"
+      },
+      {
+        "beat": "23",
+        "case_number": "2025R022933",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/08/2025",
+        "address": "29XX EDGEWOOD DR"
+      },
+      {
+        "beat": "23",
+        "case_number": "2025R022969",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/09/2025",
+        "address": "34XX W WALNUT ST"
+      },
+      {
+        "beat": "24",
+        "case_number": "2025R023124",
+        "offense": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "date": "12/11/2025",
+        "address": "14XX W WALNUT ST"
+      },
+      {
+        "beat": "23",
+        "case_number": "2025R023140",
+        "offense": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
+        "date": "12/12/2025",
+        "address": "30XX EDGEWOOD DR"
+      },
+      {
+        "beat": "23",
+        "case_number": "2025R023214",
+        "offense": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "date": "12/13/2025",
+        "address": "32XX FOREST LN"
+      }
+    ],
+    "total": 6
+  },
+  {
+    "district": "DISTRICT 31",
+    "incidents": [
+      {
+        "beat": "3",
+        "case_number": "2025R022998",
+        "offense": "THEFT OF SERVICE-L/T $100",
+        "date": "12/09/2025",
+        "address": "50XX N GEORGE BUSH RAMP"
+      },
+      {
+        "beat": "5",
+        "case_number": "2025R023017",
+        "offense": "BURGLARY-VEH",
+        "date": "12/10/2025",
+        "address": "48XX NAAMAN FOREST BLVD"
+      },
+      {
+        "beat": "46",
+        "case_number": "2025R023040",
+        "offense": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$750 L/T $2,500",
+        "date": "12/10/2025",
+        "address": "46XX SATURN RD"
+      },
+      {
+        "beat": "12",
+        "case_number": "2025R023117",
+        "offense": "CRIMINAL MISCHIEF $100 L/T $750",
+        "date": "12/11/2025",
+        "address": "7XX W BUCKINGHAM RD"
+      },
+      {
+        "beat": "11",
+        "case_number": "2025R023178",
+        "offense": "CRIMINAL MISCHIEF L/T $100",
+        "date": "12/12/2025",
+        "address": "4XX WILLOWCREST DR"
+      },
+      {
+        "beat": "6",
+        "case_number": "2025R023234",
+        "offense": "BURGLARY-BLDG",
+        "date": "12/13/2025",
+        "address": "34XX NAAMAN SCHOOL RD"
+      }
+    ],
+    "total": 6
+  },
+  {
+    "district": "DISTRICT 32",
+    "incidents": [
+      {
+        "beat": "13",
+        "case_number": "2025R022839",
+        "offense": "THEFT PROP < $2,500 2 / MORE PREV CONV",
+        "date": "12/07/2025",
+        "address": "31XX N GEORGE BUSH HWY"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R022840",
+        "offense": "THEFT PROP < $2,500 2 / MORE PREV CONV",
+        "date": "12/07/2025",
+        "address": "31XX N GEORGE BUSH HWY"
+      },
+      {
+        "beat": "14",
+        "case_number": "2025R022862",
+        "offense": "THEFT-ALL OTHER-$100 L/T $750",
+        "date": "12/07/2025",
+        "address": "29XX LAVON DR"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R022867",
+        "offense": "THEFT-ALL OTHER-L/T $100",
+        "date": "12/07/2025",
+        "address": "4XX TOWN CENTER BLVD"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R022890",
+        "offense": "CRIMINAL MISCHIEF $100 L/T $750",
+        "date": "12/08/2025",
+        "address": "41XX BUNKER HILL RD"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R022916",
+        "offense": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "12/08/2025",
+        "address": "2XX CONEFLOWER DR"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R023092",
+        "offense": "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000",
+        "date": "12/11/2025",
+        "address": "32XX N GEORGE BUSH RAMP"
+      },
+      {
+        "beat": "14",
+        "case_number": "2025R023093",
+        "offense": "INFO-IDENTITY THEFT",
+        "date": "12/11/2025",
+        "address": "15XX PLEASANT VALLEY RD"
+      },
+      {
+        "beat": "13",
+        "case_number": "2025R023098",
+        "offense": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "date": "12/11/2025",
+        "address": "1XX CEDAR SAGE DR"
+      }
+    ],
+    "total": 9
+  },
+  {
+    "district": "DISTRICT 33",
+    "incidents": [
+      {
+        "beat": "16",
+        "case_number": "2025R023210",
+        "offense": "THEFT-SHOPLIFTING-L/T $100",
+        "date": "12/13/2025",
+        "address": "11XX N COUNTRY CLUB RD"
+      }
+    ],
+    "total": 1
+  }
+]

@@ -47,8 +47,7 @@ class PDFIncidentExtractorTool(BaseTool):
                     # For now, we'll just return a dummy list of incidents.
                     lines = text.split('\\n')
                     for line in lines:
-                        if "WBI" in line: # Example line check
-                             incidents.append({"incident": line, "raw_description": "WBI"})
+                        incidents.append({"incident": line})
             return incidents
         except Exception as e:
             return f"Error extracting data from PDF: {e}"
@@ -56,7 +55,7 @@ class PDFIncidentExtractorTool(BaseTool):
 class IncidentFormattingToolInput(BaseModel):
     """Input schema for IncidentFormattingTool."""
     incidents: List[dict] = Field(..., description="A list of incident dictionaries to format.")
-    output_path: str = Field(..., description="The path to save the formatted JSON file.")
+    output_path: str = Field(default="formatted_incidents.json", description="The path to save the formatted JSON file.")
 
 class IncidentFormattingTool(BaseTool):
     name: str = "incident_formatting_tool"
@@ -64,20 +63,9 @@ class IncidentFormattingTool(BaseTool):
     args_schema: Type[BaseModel] = IncidentFormattingToolInput
 
     def _run(self, incidents: List[dict], output_path: str) -> str:
-        crime_map = {
-            "WBI": "Willfully Causing Bodily Injury"
-            # Add other mappings here
-        }
-        
-        formatted_incidents = []
-        for incident in incidents:
-            raw_desc = incident.get("raw_description")
-            incident['human_friendly_description'] = crime_map.get(raw_desc, "Unknown")
-            formatted_incidents.append(incident)
-
         try:
             with open(output_path, 'w') as f:
-                json.dump(formatted_incidents, f, indent=2)
+                json.dump(incidents, f, indent=2)
             return f"Incidents formatted and saved to {output_path}"
         except IOError as e:
             return f"Error saving formatted incidents: {e}"
