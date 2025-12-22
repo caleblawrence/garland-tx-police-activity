@@ -48,11 +48,9 @@ extract_incidents_task = Task(
 
 format_data_task = Task(
 	description="""Convert the extracted incident data into JSON format.
-	For each incident, add a human-friendly description for the crime type.
-	For example, 'WBI' should be described as 'Willfully Causing Bodily Injury'.""",
-	expected_output="""A JSON file containing the list of incidents, with each incident having a 'description' and a 'human_friendly_description'.""",
-	agent=data_formatter,
-	output_file='incidents.json'
+	Use the `incident_formatting_tool` to save the output to `incidents.json`.""",
+	expected_output="""A JSON file named `incidents.json` containing the list of incidents.""",
+	agent=data_formatter
 )
 
 # Create and export the crew
