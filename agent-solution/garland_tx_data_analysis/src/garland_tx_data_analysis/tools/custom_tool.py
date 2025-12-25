@@ -90,7 +90,7 @@ class PDFIncidentExtractorTool(BaseTool):
             return int(week_match.group(1))
         return None
 
-    def _run(self, pdf_path: str) -> dict:
+    def _run(self, pdf_path: str) -> str:
         extracted_text = self.extract_text_from_pdf(pdf_path)
         split_text = extracted_text.split("\n")
 
@@ -106,8 +106,25 @@ class PDFIncidentExtractorTool(BaseTool):
         combinedIncidents = []
         for district_number, incidents in districts.items():
             print(f"District {district_number}: {len(incidents)} incidents")
-            combinedIncidents.extend(incidents)
-        return combinedIncidents
+            for incident in incidents:
+                # Add district info to each incident
+                enhanced_incident = {
+                    "date": incident["date"],
+                    "incident": incident["incident"],
+                    "location": incident["location"],
+                    "district": district_number
+                }
+                combinedIncidents.append(enhanced_incident)
+        
+        # Save directly to JSON file
+        output_path = "formatted_incidents.json"
+        try:
+            with open(output_path, 'w') as f:
+                json.dump(combinedIncidents, f, indent=2)
+            print(f"Saved {len(combinedIncidents)} incidents to {output_path}")
+            return f"Successfully extracted and saved {len(combinedIncidents)} incidents to {output_path}"
+        except IOError as e:
+            return f"Error saving incidents to JSON: {e}"
 
 class IncidentFormattingToolInput(BaseModel):
     """Input schema for IncidentFormattingTool."""
