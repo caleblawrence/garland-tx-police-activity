@@ -197,3 +197,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 .vercel
+agent-solution/garland_tx_data_analysis/incidents.json
