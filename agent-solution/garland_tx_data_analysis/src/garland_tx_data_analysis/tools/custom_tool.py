@@ -1,9 +1,13 @@
 import json
 import requests
-import PyPDF2
+from pypdf import PdfReader
+import re
+import datetime
 from crewai.tools import BaseTool
-from typing import Type, List
+from typing import Type, List, Optional
 from pydantic import BaseModel, Field
+
+# No longer using pdfplumber since we're using the proven approach from main.py
 
 
 class FileDownloadToolInput(BaseModel):
@@ -35,22 +39,75 @@ class PDFIncidentExtractorTool(BaseTool):
     description: str = "Extracts incident data from a PDF file."
     args_schema: Type[BaseModel] = PDFIncidentExtractorToolInput
 
-    def _run(self, pdf_path: str) -> List[dict]:
-        incidents = []
-        try:
-            with open(pdf_path, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                for page in reader.pages:
-                    text = page.extract_text()
-                    # This is a placeholder for actual incident extraction logic.
-                    # You would need to parse the 'text' to identify and extract incident details.
-                    # For now, we'll just return a dummy list of incidents.
-                    lines = text.split('\\n')
-                    for line in lines:
-                        incidents.append({"incident": line})
-            return incidents
-        except Exception as e:
-            return f"Error extracting data from PDF: {e}"
+    def extract_text_from_pdf(self, filename):
+        reader = PdfReader(filename)
+        extracted_text = ""
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            extracted_text_on_page = page.extract_text()
+            extracted_text += extracted_text_on_page + "\n"
+        return extracted_text
+    
+    def parse_district_incidents(self, split_text, districts_of_interest):
+        districts = {}
+        for district in districts_of_interest:
+            district_number = str(district)
+            districts[district_number] = []
+            end_of_district = False
+            for line in split_text:
+                text_to_search_for = "DISTRICT " + str(district)
+                if text_to_search_for in line:
+                    next_line_index = split_text.index(line) + 1
+                    while not end_of_district and next_line_index < len(split_text):
+                        next_line = split_text[next_line_index]
+                        if "DISTRICT" in next_line:
+                            end_of_district = True
+                        else:
+                            line_split = next_line.strip().split(" ")
+                            cleaned_line = " ".join(line_split[2:]).strip()
+
+                            # example text at this point: 
+                            # "THEFT-ALL OTHER-$2,500 L/T $30,00006/02/2025 32XX HERRMANN DR"
+                            if len(cleaned_line.split()) > 1:
+                                date_match = re.search(r"\d{1,2}/\d{1,2}/\d{4}", cleaned_line)
+                                if (not date_match):
+                                    next_line_index += 1
+                                    continue
+                                line_split_2 = cleaned_line.split(date_match.group())
+
+                                districts[district_number].append({
+                                    "date": date_match.group(),
+                                    "incident": line_split_2[0].strip(),
+                                    "location": line_split_2[1].strip() if len(line_split_2) > 1 else ""
+                                })
+                        next_line_index += 1
+        return districts
+
+    def get_week_number_from_pdf_text(self, extracted_text):
+        # Simple implementation - you can enhance this based on your PDF format
+        week_match = re.search(r"week (\d+)", extracted_text.lower())
+        if week_match:
+            return int(week_match.group(1))
+        return None
+
+    def _run(self, pdf_path: str) -> dict:
+        extracted_text = self.extract_text_from_pdf(pdf_path)
+        split_text = extracted_text.split("\n")
+
+        all_districts = []
+        for line in split_text:
+            match = re.search(r"DISTRICT (\d+)", line)
+            if match:
+                all_districts.append(int(match.group(1)))
+        districts_of_interest = sorted(list(set(all_districts)))
+
+        districts = self.parse_district_incidents(split_text, districts_of_interest)
+
+        combinedIncidents = []
+        for district_number, incidents in districts.items():
+            print(f"District {district_number}: {len(incidents)} incidents")
+            combinedIncidents.extend(incidents)
+        return combinedIncidents
 
 class IncidentFormattingToolInput(BaseModel):
     """Input schema for IncidentFormattingTool."""
