@@ -1,9 +1,10 @@
 from crewai import Agent, Crew, Process, Task
-from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool
+from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool, JSONWriterTool
 
 # Instantiate tools
 download_tool = FileDownloadTool()
 pdf_extraction_tool = PDFIncidentExtractorTool()
+json_writer_tool = JSONWriterTool()
 
 # Create agents
 pdf_downloader = Agent(
@@ -25,6 +26,7 @@ data_formatter = Agent(
 	role='Data Formatter Agent',
 	goal='Convert extracted incident data into JSON format and add human-friendly descriptions.',
 	backstory='A meticulous agent with an eye for detail, it transforms raw data into a structured and enriched format with human-friendly incident names.',
+	tools=[json_writer_tool],
 	verbose=True
 )
 
@@ -47,14 +49,16 @@ extract_incidents_task = Task(
 
 format_data_task = Task(
 	description="""Convert the extracted incident data into JSON format and add human-friendly descriptions.
-	For each incident, add a human-friendly description of the incident type:
-	- Convert police codes like 'BURGLARY-VEH' to 'Vehicle Burglary'
-	- Convert 'THEFT-ALL OTHER' to 'Theft'  
-	- Convert 'UNAUTHORIZED USE MOTOR VEHICLE' to 'Vehicle Theft'
-	- Convert 'CRIMINAL MISCHIEF' to 'Vandalism'
-	- And similar conversions for other incident types to make them more readable
+	Use the json_writer_tool to write the incident data to a JSON file.
 	
-	Save the enhanced data to 'formatted_incidents.json'.""",
+	The tool will automatically add human-friendly descriptions for incident types:
+	- 'BURGLARY-VEH' becomes 'Vehicle Burglary'
+	- 'THEFT-ALL OTHER' becomes 'Theft'  
+	- 'UNAUTHORIZED USE MOTOR VEHICLE' becomes 'Vehicle Theft'
+	- 'CRIMINAL MISCHIEF' becomes 'Vandalism'
+	- And similar conversions for other incident types
+	
+	Use the json_writer_tool with the extracted incident data and save to 'formatted_incidents.json'.""",
 	expected_output='A JSON file named formatted_incidents.json containing all incidents with both original codes and human-friendly descriptions.',
 	agent=data_formatter
 )

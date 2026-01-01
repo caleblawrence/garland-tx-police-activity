@@ -118,3 +118,24 @@ class PDFIncidentExtractorTool(BaseTool):
         
         return combinedIncidents
 
+
+class JSONWriterToolInput(BaseModel):
+    """Input schema for JSONWriterTool."""
+    data: List[dict] = Field(..., description="The data to write to JSON file.")
+    file_path: str = Field(..., description="The path where to save the JSON file.")
+
+class JSONWriterTool(BaseTool):
+    name: str = "json_writer_tool"
+    description: str = "Writes data to a JSON file."
+    args_schema: Type[BaseModel] = JSONWriterToolInput
+
+    def _run(self, data: List[dict], file_path: str) -> str:
+        try:
+            # Write to JSON file
+            with open(file_path, 'w') as f:
+                json.dump(data, f, indent=2)
+            
+            return f"Successfully saved {len(data)} incidents to {file_path}"
+        except Exception as e:
+            return f"Error writing JSON file: {e}"
+
