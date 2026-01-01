@@ -128,10 +128,10 @@ class IncidentFormattingTool(BaseTool):
     description: str = "Formats incident data into JSON and adds human-friendly descriptions."
     args_schema: Type[BaseModel] = IncidentFormattingToolInput
 
-    def _run(self, incidents: List[dict], output_path: str) -> str:
+    def _run(self, incidents: List[dict], output_path: str) -> List[dict]:  # ← return enriched incidents!
         try:
             with open(output_path, 'w') as f:
                 json.dump(incidents, f, indent=2)
-            return f"Incidents formatted and saved to {output_path}"
+            return incidents  # ← return actual data, not just a message!
         except IOError as e:
-            return f"Error saving formatted incidents: {e}"
+            return [{"error": f"Error saving formatted incidents: {e}"}]
