@@ -118,20 +118,3 @@ class PDFIncidentExtractorTool(BaseTool):
         
         return combinedIncidents
 
-class IncidentFormattingToolInput(BaseModel):
-    """Input schema for IncidentFormattingTool."""
-    incidents: List[dict] = Field(..., description="A list of incident dictionaries to format.")
-    output_path: str = Field(default="formatted_incidents.json", description="The path to save the formatted JSON file.")
-
-class IncidentFormattingTool(BaseTool):
-    name: str = "incident_formatting_tool"
-    description: str = "Formats incident data into JSON and adds human-friendly descriptions."
-    args_schema: Type[BaseModel] = IncidentFormattingToolInput
-
-    def _run(self, incidents: List[dict], output_path: str) -> List[dict]:  # ← return enriched incidents!
-        try:
-            with open(output_path, 'w') as f:
-                json.dump(incidents, f, indent=2)
-            return incidents  # ← return actual data, not just a message!
-        except IOError as e:
-            return [{"error": f"Error saving formatted incidents: {e}"}]

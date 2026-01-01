@@ -1,10 +1,9 @@
 from crewai import Agent, Crew, Process, Task
-from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool, IncidentFormattingTool
+from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool
 
 # Instantiate tools
 download_tool = FileDownloadTool()
 pdf_extraction_tool = PDFIncidentExtractorTool()
-incident_formatting_tool = IncidentFormattingTool()
 
 # Create agents
 pdf_downloader = Agent(
@@ -26,7 +25,6 @@ data_formatter = Agent(
 	role='Data Formatter Agent',
 	goal='Convert extracted incident data into JSON format and add human-friendly descriptions.',
 	backstory='A meticulous agent with an eye for detail, it transforms raw data into a structured and enriched format with human-friendly incident names.',
-	ools=[incident_formatting_tool],
 	verbose=True
 )
 
