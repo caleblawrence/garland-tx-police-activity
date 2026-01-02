@@ -1,135 +1,122 @@
 [
   {
-    "date": "12/26/2025",
-    "incident_code": "THEFT-VEHICLE (NON-MOTOR VEH)-$30,000 L/T $150,000",
-    "incident_description": "Theft of Vehicle",
-    "location": "21XX SKILLMAN DR",
-    "district": 42
+    "incident_id": 1,
+    "date": "12/25/2025",
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "28XX DAIRY RD"
   },
   {
+    "incident_id": 2,
     "date": "12/26/2025",
-    "incident_code": "UNAUTHORIZED USE MOTOR VEHICLE",
-    "incident_description": "Vehicle Theft",
-    "location": "21XX SKILLMAN DR",
-    "district": 42
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "21XX SKILLMAN DR"
   },
   {
+    "incident_id": 3,
     "date": "12/26/2025",
-    "incident_code": "UNAUTHORIZED USE MOTOR VEHICLE",
-    "incident_description": "Vehicle Theft",
-    "location": "9XX E CENTERVILLE RD",
-    "district": 42
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "21XX SKILLMAN DR"
   },
   {
+    "incident_id": 4,
+    "date": "12/26/2025",
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "21XX SKILLMAN DR"
+  },
+  {
+    "incident_id": 5,
+    "date": "12/26/2025",
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "9XX E CENTERVILLE RD"
+  },
+  {
+    "incident_id": 6,
     "date": "12/27/2025",
-    "incident_code": "ASSAULT-AGG-D/W",
-    "incident_description": "Aggravated Assault with Deadly Weapon",
-    "location": "5XX VISTA DR",
-    "district": 42
+    "district": "42",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "5XX VISTA DR"
   },
   {
+    "incident_id": 7,
     "date": "12/22/2025",
-    "incident_code": "THEFT-MAIL <10 ADDRESSES",
-    "incident_description": "Theft of Mail",
-    "location": "15XX CLEAR POINT DR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "15XX CLEAR POINT DR"
   },
   {
+    "incident_id": 8,
     "date": "12/22/2025",
-    "incident_code": "THEFT-MOTOR VEHICLE-$30,000 L/T $150,000",
-    "incident_description": "Theft of Motor Vehicle",
-    "location": "122XX LBJ FRWY",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "122XX LBJ FRWY"
   },
   {
+    "incident_id": 9,
     "date": "12/22/2025",
-    "incident_code": "ASSAULT-AGG-D/W",
-    "incident_description": "Aggravated Assault with Deadly Weapon",
-    "location": "15XX W KINGSLEY RD",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "15XX W KINGSLEY RD"
   },
   {
+    "incident_id": 10,
     "date": "12/24/2025",
-    "incident_code": "CRIMINAL MISCHIEF $750 L/T $2,500",
-    "incident_description": "Vandalism",
-    "location": "15XX DOUGLAS DR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "15XX DOUGLAS DR"
   },
   {
+    "incident_id": 11,
     "date": "12/25/2025",
-    "incident_code": "BURGLARY-VEH",
-    "incident_description": "Vehicle Burglary",
-    "location": "15XX LEXINGTON DR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "15XX LEXINGTON DR"
   },
   {
+    "incident_id": 12,
     "date": "12/25/2025",
-    "incident_code": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-    "incident_description": "Vehicle Theft with Criminal Attempt",
-    "location": "15XX LEXINGTON DR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "15XX LEXINGTON DR"
   },
   {
+    "incident_id": 13,
     "date": "12/25/2025",
-    "incident_code": "CRIMINAL MISCHIEF $750 L/T $2,500",
-    "incident_description": "Vandalism",
-    "location": "36XX CARROLL CIR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "36XX CARROLL CIR"
   },
   {
+    "incident_id": 14,
     "date": "12/25/2025",
-    "incident_code": "THEFT-ALL OTHER-$100 L/T $750",
-    "incident_description": "Theft",
-    "location": "36XX CARROLL CIR",
-    "district": 43
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "36XX CARROLL CIR"
   },
   {
+    "incident_id": 15,
     "date": "12/21/2025",
-    "incident_code": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
-    "incident_description": "Vandalism",
-    "location": "9XX NORTHWEST HWY",
-    "district": 44
-  },
-  {
-    "date": "12/22/2025",
-    "incident_code": "BURGLARY-BLDG",
-    "incident_description": "Building Burglary",
-    "location": "12XX NORTHWEST HWY",
-    "district": 44
-  },
-  {
-    "date": "12/22/2025",
-    "incident_code": "ROBBERY - AGG - INDIV",
-    "incident_description": "Aggravated Robbery of Individual",
-    "location": "2XX W KINGSLEY RD",
-    "district": 44
-  },
-  {
-    "date": "12/21/2025",
-    "incident_code": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-    "incident_description": "Theft",
-    "location": "HARTFORD DR",
-    "district": 45
-  },
-  {
-    "date": "12/22/2025",
-    "incident_code": "CRIMINAL MISCHIEF $100 L/T $750",
-    "incident_description": "Vandalism",
-    "location": "3XX HOCKADAY AVE",
-    "district": 45
-  },
-  {
-    "date": "12/25/2025",
-    "incident_code": "BURGLARY-BLDG",
-    "incident_description": "Building Burglary",
-    "location": "33XX BROADWAY BLVD",
-    "district": 45
-  },
-  {
-    "date": "12/24/2025",
-    "incident_code": "THEFT-SHOPLIFTING-$100 L/T $750",
-    "incident_description": "Shoplifting",
-    "location": "18XX N GARLAND AVE",
-    "district": 45
+    "district": "43",
+    "incident_code": "",
+    "incident_description": "",
+    "location": "VARIOUS"
   }
 ]

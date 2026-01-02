@@ -40,10 +40,13 @@ download_pdf_task = Task(
 )
 
 extract_incidents_task = Task(
-	description="""Extract all incident data from the downloaded PDF file.
-	The PDF contains a table of police incidents organized by district.
-	Extract all incidents from all districts and pages in the PDF.""",
-	expected_output='A list of incidents extracted from the PDF with date, incident type, location, and district information.',
+	description="""Extract ALL incident data from the downloaded PDF file by processing every page sequentially.
+	The PDF contains a table of police incidents organized by district across multiple pages.
+	Process the entire document from beginning to end, ensuring you capture ALL incidents from ALL districts and ALL pages.
+	
+	Important: The PDF typically contains 100+ incidents across multiple districts (21, 22, 23, 31, 32, 33, 41, 42, 43, 44, etc.).
+	Make sure to process the complete document - do not stop early or skip districts.""",
+	expected_output='A comprehensive list containing ALL incidents extracted from the PDF (typically 100+ incidents) with date, incident type, location, and district information for each incident.',
 	agent=incident_extractor
 )
 
