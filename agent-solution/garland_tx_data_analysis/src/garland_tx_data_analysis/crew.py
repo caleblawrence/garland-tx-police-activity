@@ -40,28 +40,33 @@ download_pdf_task = Task(
 )
 
 extract_incidents_task = Task(
-    description="""Extract incident data from the downloaded PDF file by processing it in batches.
-    Process the PDF page by page or district by district, extracting incidents in smaller chunks.
+    description="""Process the PDF in batches of 30 incidents at a time.
     
-    For each batch of incidents (e.g., 20-30 incidents at a time):
-    1. Extract the incidents from that section
-    2. Immediately pass them to the data formatter for storage
-    3. Continue to the next batch
+    For each batch:
+    1. Extract up to 30 incidents from the current section of the PDF
+    2. Format the batch data as JSON
+    3. Immediately trigger storage of this batch
+    4. Continue to next section until entire PDF is processed
     
-    This approach prevents context overflow while ensuring all incidents are captured.""",
-    expected_output='Confirmation that all incidents have been processed and stored in batches.',
+    Work sequentially through the PDF, ensuring no incidents are skipped.
+    Track progress and report batch completion after each storage operation.""",
+    expected_output='Sequential batch processing with confirmation after each batch is stored.',
     agent=incident_extractor
 )
 
 format_data_task = Task(
-    description="""Store incident data in TinyDB database as it's received in batches.
-    Accept batched incident data and append it to the 'incidents.db' file.
+    description="""Store EVERY SINGLE incident provided - DO NOT filter, truncate, or remove any incidents.
     
-    Handle multiple calls to store different batches of incidents, ensuring:
-    - No data loss between batches
-    - Proper appending to existing database
-    - Unique record handling if needed""",
-    expected_output='Confirmation that each batch of incidents has been stored successfully.',
+    CRITICAL REQUIREMENTS:
+    1. Store ALL incidents provided, including incomplete ones
+    2. Do not make decisions about data quality - store everything as-is
+    3. Append to 'incidents.db' without losing existing data
+    4. Count and report the EXACT number of incidents provided vs stored
+    
+    If you receive 80 incidents, you must store exactly 80 incidents.
+    If you receive 90 incidents, you must store exactly 90 incidents.
+    NO FILTERING OR DATA LOSS IS ACCEPTABLE.""",
+    expected_output='Exact count confirmation: "Received X incidents, successfully stored X incidents"',
     agent=data_formatter
 )
 

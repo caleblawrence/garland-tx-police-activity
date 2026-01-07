@@ -135,11 +135,17 @@ class TinyDBWriterTool(BaseTool):
             # Initialize TinyDB database
             db = TinyDB(db_path)
             
-            # Clear existing data and insert new data
-            db.truncate()
+            # Add incident IDs to the data if they don't exist
+            existing_count = len(db.all())
+            for i, incident in enumerate(data):
+                if 'incident_id' not in incident:
+                    incident['incident_id'] = existing_count + i + 1
+            
+            # Append new data to existing database (don't truncate)
             db.insert_multiple(data)
             
-            return f"Successfully saved {len(data)} incidents to TinyDB database at {db_path}"
+            total_count = len(db.all())
+            return f"Successfully saved {len(data)} incidents to TinyDB database at {db_path}. Total incidents in database: {total_count}"
         except Exception as e:
             return f"Error writing to TinyDB database: {e}"
 
