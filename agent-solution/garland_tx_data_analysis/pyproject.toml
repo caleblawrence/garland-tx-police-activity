@@ -9,6 +9,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "PyPDF2",
     "requests",
+    "tinydb>=4.8.2",
 ]
 
 [project.scripts]

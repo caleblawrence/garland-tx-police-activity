@@ -1,122 +1,250 @@
 [
   {
-    "incident_id": 1,
+    "incident_id": 58,
+    "date": "12/24/2025",
+    "district": "41",
+    "incident_type": "ROBBERY-INDIV",
+    "human_friendly_description": "Robbery of Individual",
+    "location": "20XX S SHILOH RD"
+  },
+  {
+    "incident_id": 59,
+    "date": "12/26/2025",
+    "district": "41",
+    "incident_type": "CRIMINAL MISCHIEF $100 L/T $750",
+    "human_friendly_description": "Vandalism",
+    "location": "36XX W MILLER RD"
+  },
+  {
+    "incident_id": 60,
+    "date": "12/26/2025",
+    "district": "41",
+    "incident_type": "THEFT-ALL OTHER-$150,000 L/T $300,000",
+    "human_friendly_description": "Theft",
+    "location": "28XX S SHILOH RD"
+  },
+  {
+    "incident_id": 61,
+    "date": "12/27/2025",
+    "district": "41",
+    "incident_type": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
+    "human_friendly_description": "Vandalism",
+    "location": "14XX W KINGSLEY RD"
+  },
+  {
+    "incident_id": 62,
+    "date": "12/23/2025",
+    "district": "42",
+    "incident_type": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
+    "human_friendly_description": "Theft of Motor Vehicle Parts/Accessories",
+    "location": "21XX S FIRST ST"
+  },
+  {
+    "incident_id": 63,
+    "date": "12/23/2025",
+    "district": "42",
+    "incident_type": "BURGLARY-VEH",
+    "human_friendly_description": "Vehicle Burglary",
+    "location": "2XX CASCADE DR"
+  },
+  {
+    "incident_id": 64,
+    "date": "12/24/2025",
+    "district": "42",
+    "incident_type": "CRIMINAL MISCHIEF $100 L/T $750",
+    "human_friendly_description": "Vandalism",
+    "location": "1XX W KINGSLEY RD"
+  },
+  {
+    "incident_id": 65,
     "date": "12/25/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "CRIMINAL MISCHIEF $100 L/T $750",
+    "human_friendly_description": "Vandalism",
     "location": "28XX DAIRY RD"
   },
   {
-    "incident_id": 2,
+    "incident_id": 66,
     "date": "12/26/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "BURGLARY-BLDG",
+    "human_friendly_description": "Building Burglary",
     "location": "21XX SKILLMAN DR"
   },
   {
-    "incident_id": 3,
+    "incident_id": 67,
     "date": "12/26/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "THEFT-VEHICLE (NON-MOTOR VEH)-$30,000 L/T $150,000",
+    "human_friendly_description": "Vehicle Theft",
     "location": "21XX SKILLMAN DR"
   },
   {
-    "incident_id": 4,
+    "incident_id": 68,
     "date": "12/26/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "human_friendly_description": "Vehicle Theft",
     "location": "21XX SKILLMAN DR"
   },
   {
-    "incident_id": 5,
+    "incident_id": 69,
     "date": "12/26/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "human_friendly_description": "Vehicle Theft",
     "location": "9XX E CENTERVILLE RD"
   },
   {
-    "incident_id": 6,
+    "incident_id": 70,
     "date": "12/27/2025",
     "district": "42",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "ASSAULT-AGG-D/W",
+    "human_friendly_description": "Aggravated Assault with Deadly Weapon",
     "location": "5XX VISTA DR"
   },
   {
-    "incident_id": 7,
+    "incident_id": 71,
     "date": "12/22/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "THEFT-MAIL <10 ADDRESSES",
+    "human_friendly_description": "Mail Theft",
     "location": "15XX CLEAR POINT DR"
   },
   {
-    "incident_id": 8,
+    "incident_id": 72,
     "date": "12/22/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "THEFT-MOTOR VEHICLE-$30,000 L/T $150,000",
+    "human_friendly_description": "Theft of Motor Vehicle",
     "location": "122XX LBJ FRWY"
   },
   {
-    "incident_id": 9,
+    "incident_id": 73,
     "date": "12/22/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "ASSAULT-AGG-D/W",
+    "human_friendly_description": "Aggravated Assault with Deadly Weapon",
     "location": "15XX W KINGSLEY RD"
   },
   {
-    "incident_id": 10,
+    "incident_id": 74,
     "date": "12/24/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "human_friendly_description": "Vandalism",
     "location": "15XX DOUGLAS DR"
   },
   {
-    "incident_id": 11,
+    "incident_id": 75,
     "date": "12/25/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "BURGLARY-VEH",
+    "human_friendly_description": "Vehicle Burglary",
     "location": "15XX LEXINGTON DR"
   },
   {
-    "incident_id": 12,
+    "incident_id": 76,
     "date": "12/25/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
+    "human_friendly_description": "Vehicle Theft with Criminal Attempt",
     "location": "15XX LEXINGTON DR"
   },
   {
-    "incident_id": 13,
+    "incident_id": 77,
     "date": "12/25/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "human_friendly_description": "Vandalism",
     "location": "36XX CARROLL CIR"
   },
   {
-    "incident_id": 14,
+    "incident_id": 78,
     "date": "12/25/2025",
     "district": "43",
-    "incident_code": "",
-    "incident_description": "",
+    "incident_type": "THEFT-ALL OTHER-$100 L/T $750",
+    "human_friendly_description": "Theft",
     "location": "36XX CARROLL CIR"
   },
   {
-    "incident_id": 15,
+    "incident_id": 79,
     "date": "12/21/2025",
-    "district": "43",
-    "incident_code": "",
-    "incident_description": "",
-    "location": "VARIOUS"
+    "district": "44",
+    "incident_type": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
+    "human_friendly_description": "Vandalism",
+    "location": "9XX NORTHWEST HWY"
+  },
+  {
+    "incident_id": 80,
+    "date": "12/22/2025",
+    "district": "44",
+    "incident_type": "BURGLARY-BLDG",
+    "human_friendly_description": "Building Burglary",
+    "location": "12XX NORTHWEST HWY"
+  },
+  {
+    "incident_id": 81,
+    "date": "12/22/2025",
+    "district": "44",
+    "incident_type": "ROBBERY - AGG - INDIV",
+    "human_friendly_description": "Aggravated Robbery of Individual",
+    "location": "2XX W KINGSLEY RD"
+  },
+  {
+    "incident_id": 82,
+    "date": "12/21/2025",
+    "district": "45",
+    "incident_type": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+    "human_friendly_description": "Theft",
+    "location": "HARTFORD DR"
+  },
+  {
+    "incident_id": 83,
+    "date": "12/22/2025",
+    "district": "45",
+    "incident_type": "CRIMINAL MISCHIEF $100 L/T $750",
+    "human_friendly_description": "Vandalism",
+    "location": "3XX HOCKADAY AVE"
+  },
+  {
+    "incident_id": 84,
+    "date": "12/25/2025",
+    "district": "45",
+    "incident_type": "BURGLARY-BLDG",
+    "human_friendly_description": "Building Burglary",
+    "location": "33XX BROADWAY BLVD"
+  },
+  {
+    "incident_id": 85,
+    "date": "12/24/2025",
+    "district": "46",
+    "incident_type": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "human_friendly_description": "Shoplifting",
+    "location": "18XX MARKETPLACE DR"
+  },
+  {
+    "incident_id": 86,
+    "date": "12/25/2025",
+    "district": "46",
+    "incident_type": "THEFT-ALL OTHER-$100 L/T $750",
+    "human_friendly_description": "Theft",
+    "location": "46XX SATURN RD"
+  },
+  {
+    "incident_id": 87,
+    "date": "12/26/2025",
+    "district": "46",
+    "incident_type": "THEFT OF SERVICE-$100 L/T $750",
+    "human_friendly_description": "Theft of Service",
+    "location": "13XX W CENTERVILLE RD"
+  },
+  {
+    "incident_id": 88,
+    "date": "12/27/2025",
+    "district": "46",
+    "incident_type": "THEFT-ALL OTHER-$100 L/T $750",
+    "human_friendly_description": "Theft",
+    "location": "18XX MARKETPLACE DR"
   }
 ]

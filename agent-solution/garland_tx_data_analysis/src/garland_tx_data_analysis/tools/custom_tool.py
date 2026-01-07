@@ -6,6 +6,7 @@ import datetime
 from crewai.tools import BaseTool
 from typing import Type, List, Optional
 from pydantic import BaseModel, Field
+from tinydb import TinyDB
 
 # No longer using pdfplumber since we're using the proven approach from main.py
 
@@ -119,23 +120,26 @@ class PDFIncidentExtractorTool(BaseTool):
         return combinedIncidents
 
 
-class JSONWriterToolInput(BaseModel):
-    """Input schema for JSONWriterTool."""
-    data: List[dict] = Field(..., description="The data to write to JSON file.")
-    file_path: str = Field(..., description="The path where to save the JSON file.")
+class TinyDBWriterToolInput(BaseModel):
+    """Input schema for TinyDBWriterTool."""
+    data: List[dict] = Field(..., description="The data to write to TinyDB database.")
+    db_path: str = Field(..., description="The path where to save the TinyDB database.")
 
-class JSONWriterTool(BaseTool):
-    name: str = "json_writer_tool"
-    description: str = "Writes data to a JSON file."
-    args_schema: Type[BaseModel] = JSONWriterToolInput
+class TinyDBWriterTool(BaseTool):
+    name: str = "tinydb_writer_tool"
+    description: str = "Writes data to a TinyDB database."
+    args_schema: Type[BaseModel] = TinyDBWriterToolInput
 
-    def _run(self, data: List[dict], file_path: str) -> str:
+    def _run(self, data: List[dict], db_path: str) -> str:
         try:
-            # Write to JSON file
-            with open(file_path, 'w') as f:
-                json.dump(data, f, indent=2)
+            # Initialize TinyDB database
+            db = TinyDB(db_path)
             
-            return f"Successfully saved {len(data)} incidents to {file_path}"
+            # Clear existing data and insert new data
+            db.truncate()
+            db.insert_multiple(data)
+            
+            return f"Successfully saved {len(data)} incidents to TinyDB database at {db_path}"
         except Exception as e:
-            return f"Error writing JSON file: {e}"
+            return f"Error writing to TinyDB database: {e}"
 

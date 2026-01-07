@@ -1,10 +1,10 @@
 from crewai import Agent, Crew, Process, Task
-from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool, JSONWriterTool
+from garland_tx_data_analysis.tools.custom_tool import FileDownloadTool, PDFIncidentExtractorTool, TinyDBWriterTool
 
 # Instantiate tools
 download_tool = FileDownloadTool()
 pdf_extraction_tool = PDFIncidentExtractorTool()
-json_writer_tool = JSONWriterTool()
+tinydb_writer_tool = TinyDBWriterTool()
 
 # Create agents
 pdf_downloader = Agent(
@@ -24,9 +24,9 @@ incident_extractor = Agent(
 )
 data_formatter = Agent(
 	role='Data Formatter Agent',
-	goal='Convert extracted incident data into JSON format and add human-friendly descriptions.',
-	backstory='A meticulous agent with an eye for detail, it transforms raw data into a structured and enriched format with human-friendly incident names.',
-	tools=[json_writer_tool],
+	goal='Convert extracted incident data and store it in TinyDB database.',
+	backstory='A meticulous agent with an eye for detail, it transforms raw data into a structured format and stores it efficiently in a database.',
+	tools=[tinydb_writer_tool],
 	verbose=True
 )
 
@@ -40,30 +40,29 @@ download_pdf_task = Task(
 )
 
 extract_incidents_task = Task(
-	description="""Extract ALL incident data from the downloaded PDF file by processing every page sequentially.
-	The PDF contains a table of police incidents organized by district across multiple pages.
-	Process the entire document from beginning to end, ensuring you capture ALL incidents from ALL districts and ALL pages.
-	
-	Important: The PDF typically contains 100+ incidents across multiple districts (21, 22, 23, 31, 32, 33, 41, 42, 43, 44, etc.).
-	Make sure to process the complete document - do not stop early or skip districts.""",
-	expected_output='A comprehensive list containing ALL incidents extracted from the PDF (typically 100+ incidents) with date, incident type, location, and district information for each incident.',
-	agent=incident_extractor
+    description="""Extract incident data from the downloaded PDF file by processing it in batches.
+    Process the PDF page by page or district by district, extracting incidents in smaller chunks.
+    
+    For each batch of incidents (e.g., 20-30 incidents at a time):
+    1. Extract the incidents from that section
+    2. Immediately pass them to the data formatter for storage
+    3. Continue to the next batch
+    
+    This approach prevents context overflow while ensuring all incidents are captured.""",
+    expected_output='Confirmation that all incidents have been processed and stored in batches.',
+    agent=incident_extractor
 )
 
 format_data_task = Task(
-	description="""Convert the extracted incident data into JSON format and add human-friendly descriptions.
-	Use the json_writer_tool to write the incident data to a JSON file.
-	
-	The tool will automatically add human-friendly descriptions for incident types:
-	- 'BURGLARY-VEH' becomes 'Vehicle Burglary'
-	- 'THEFT-ALL OTHER' becomes 'Theft'  
-	- 'UNAUTHORIZED USE MOTOR VEHICLE' becomes 'Vehicle Theft'
-	- 'CRIMINAL MISCHIEF' becomes 'Vandalism'
-	- And similar conversions for other incident types
-	
-	Use the json_writer_tool with the extracted incident data and save to 'formatted_incidents.json'.""",
-	expected_output='A JSON file named formatted_incidents.json containing all incidents with both original codes and human-friendly descriptions.',
-	agent=data_formatter
+    description="""Store incident data in TinyDB database as it's received in batches.
+    Accept batched incident data and append it to the 'incidents.db' file.
+    
+    Handle multiple calls to store different batches of incidents, ensuring:
+    - No data loss between batches
+    - Proper appending to existing database
+    - Unique record handling if needed""",
+    expected_output='Confirmation that each batch of incidents has been stored successfully.',
+    agent=data_formatter
 )
 
 
