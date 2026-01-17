@@ -45,6 +45,8 @@ extract_incidents_task = Task(
     For each batch:
     1. Extract up to 30 incidents from the current section of the PDF
     2. Format the batch data as JSON
+    4. Convert verbose names like like "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000" to consise descripitions like "Motor Vehicle Theft"
+    and store that in a new field called 'short_description'
     3. Immediately trigger storage of this batch
     4. Continue to next section until entire PDF is processed
     
