@@ -1,179 +1,432 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Garland TX Police Incidents</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
     <style>
+      :root {
+        --bg: #0f172a;
+        --surface: rgba(255, 255, 255, 0.92);
+        --surface-strong: rgba(255, 255, 255, 0.98);
+        --border: rgba(15, 23, 42, 0.08);
+        --text: #0f172a;
+        --text-muted: #475569;
+        --accent: #dc2626;
+        --accent-soft: rgba(220, 38, 38, 0.18);
+        --shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.25),
+          0 2px 6px rgba(15, 23, 42, 0.06);
+        --radius: 14px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
       body {
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
-      }
-      .navbar {
-        background-color: rgba(51, 51, 51, 0.5);
-        overflow: hidden;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 1001;
-      }
-      .navbar a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-      }
-      .navbar a:hover {
-        background-color: #ddd;
-        color: black;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
       }
       #map {
         height: 100vh;
         width: 100%;
+        background: #e2e8f0;
       }
-      #map-title {
+
+      /* ---- Top navbar ---- */
+      .navbar {
         position: absolute;
-        top: 70px;
-        left: 60px;
-        z-index: 1000;
-        background: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        margin: 0;
-        font-size: 24px;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        z-index: 1001;
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
       }
+      .navbar a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 8px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        border-radius: 999px;
+        transition: background 0.15s, color 0.15s;
+      }
+      .navbar a:hover {
+        color: var(--text);
+        background: rgba(15, 23, 42, 0.05);
+      }
+      .navbar a.active {
+        color: white;
+        background: var(--text);
+      }
+
+      /* ---- Title card ---- */
+      #title-card {
+        position: absolute;
+        top: 76px;
+        left: 20px;
+        z-index: 1000;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        box-shadow: var(--shadow);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        max-width: 340px;
+      }
+      #title-card .eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      #title-card h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text);
+      }
+      #title-card .meta {
+        margin-top: 10px;
+        display: flex;
+        gap: 12px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      #title-card .meta b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+      }
+
+      /* ---- Confidential card ---- */
       #confidential-container {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 300px;
-        max-height: 400px;
-        background: rgba(255, 255, 255, 0.8);
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        max-height: 50vh;
         z-index: 1000;
-        overflow-y: auto;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
-      #confidential-container h3 {
-        margin-top: 0;
+      #confidential-header {
+        margin: 0;
+        padding: 14px 18px;
         cursor: pointer;
         user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        gap: 8px;
       }
-      .arrow {
-        display: inline-block;
-        margin-right: 8px;
-        border: solid black;
-        border-width: 0 2px 2px 0;
-        padding: 3px;
+      #confidential-header:hover {
+        background: rgba(15, 23, 42, 0.03);
+      }
+      #confidential-header .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #confidential-header .chev {
+        width: 8px;
+        height: 8px;
+        border-right: 2px solid var(--text-muted);
+        border-bottom: 2px solid var(--text-muted);
         transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
         transition: transform 0.2s;
       }
-      #confidential-header.expanded .arrow {
+      #confidential-header.expanded .chev {
         transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
       }
-      .confidential-item {
-        margin-bottom: 5px;
-        font-size: 0.9em;
+      #confidential-list {
+        padding: 0 18px 14px;
+        overflow-y: auto;
+        max-height: 40vh;
       }
       #confidential-list.collapsed {
         display: none;
       }
-      .incident-tooltip {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        font-weight: bold;
+      .confidential-item {
+        padding: 10px 0;
+        border-top: 1px solid var(--border);
         font-size: 12px;
-        color: black;
-        text-shadow: 1px 1px 3px white, -1px -1px 3px white, 1px -1px 3px white,
-          -1px 1px 3px white;
+        color: var(--text-muted);
       }
+      .confidential-item .ci-type {
+        color: var(--text);
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      /* ---- Incident tooltip on map ---- */
+      .incident-tooltip {
+        background: rgba(15, 23, 42, 0.92);
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .incident-tooltip::before {
+        border-top-color: rgba(15, 23, 42, 0.92) !important;
+      }
+
+      /* ---- Leaflet popup overrides ---- */
+      .leaflet-popup-content-wrapper {
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 0;
+      }
+      .leaflet-popup-content {
+        margin: 14px 18px;
+        font-size: 13px;
+        line-height: 1.5;
+        min-width: 220px;
+      }
+      .leaflet-popup-content .pop-type {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .leaflet-popup-content .pop-row {
+        display: flex;
+        gap: 6px;
+        color: var(--text-muted);
+      }
+      .leaflet-popup-content .pop-row b {
+        color: var(--text);
+        font-weight: 600;
+        min-width: 60px;
+      }
+      .leaflet-popup-tip {
+        box-shadow: var(--shadow);
+      }
+
       .leaflet-top.leaflet-left {
-        margin-top: 50px !important;
+        margin-top: 68px !important;
+        margin-left: 20px !important;
+      }
+      .leaflet-control-zoom {
+        border: 1px solid var(--border) !important;
+        border-radius: 10px !important;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .leaflet-control-zoom a {
+        background: var(--surface-strong) !important;
+        color: var(--text) !important;
+        border: none !important;
+        width: 34px !important;
+        height: 34px !important;
+        line-height: 34px !important;
+        font-weight: 500;
+      }
+      .leaflet-control-zoom a:hover {
+        background: rgba(15, 23, 42, 0.06) !important;
+      }
+      .leaflet-control-attribution {
+        background: rgba(255, 255, 255, 0.7) !important;
+        font-size: 10px !important;
+        border-radius: 6px;
+        padding: 2px 6px !important;
       }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <a href="map.html">Map</a>
+    <nav class="navbar">
+      <a href="index.html" class="active">Map</a>
       <a href="about.html">About</a>
-    </div>
+    </nav>
+
     <div id="map"></div>
-    <h1 id="map-title">Last week's Garland TX police incidents</h1>
-    <div id="confidential-container">
+
+    <div id="title-card">
+      <div class="eyebrow">Weekly Report</div>
+      <h1>Garland TX Police Incidents</h1>
+      <div class="meta">
+        <span class="badge"><span id="count">…</span> incidents</span>
+        <span id="date-range">—</span>
+      </div>
+    </div>
+
+    <aside id="confidential-container">
       <h3 id="confidential-header">
-        <span class="arrow"></span>Confidential Addresses
+        <span class="label">
+          <span>Confidential addresses</span>
+          <span class="badge" id="conf-count">0</span>
+        </span>
+        <span class="chev"></span>
       </h3>
       <div id="confidential-list" class="collapsed"></div>
-    </div>
+    </aside>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      var map = L.map("map").setView([32.9125, -96.6417], 13); // Centered on Garland TX
+      const map = L.map("map", { zoomControl: true }).setView(
+        [32.9125, -96.6417],
+        13
+      );
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "© OpenStreetMap",
-      }).addTo(map);
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          maxZoom: 19,
+          attribution:
+            '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: "abcd",
+        }
+      ).addTo(map);
 
-      // Load GeoJSON data
+      const polygonStyle = {
+        color: "#dc2626",
+        weight: 1.5,
+        opacity: 0.95,
+        fillColor: "#dc2626",
+        fillOpacity: 0.18,
+      };
+      const polygonHoverStyle = {
+        weight: 2.5,
+        fillOpacity: 0.35,
+      };
+
+      const fmtDate = (s) => {
+        const d = new Date(s);
+        return isNaN(d) ? s : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      };
+
       fetch("features.geojson")
-        .then((response) => response.json())
+        .then((r) => r.json())
         .then((data) => {
-          const geoJsonLayer = L.geoJSON(data, {
-            onEachFeature: function (feature, layer) {
-              if (feature.properties && feature.properties.address) {
-                layer.bindPopup(
-                  `<b>Address:</b> ${feature.properties.address}<br>` +
-                    `<b>Incident:</b> ${feature.properties.incident}<br>` +
-                    `<b>Date:</b> ${feature.properties.date}`
-                );
-              }
-              if (feature.properties && feature.properties.incident) {
-                layer.bindTooltip(feature.properties.incident, {
-                  permanent: true,
-                  direction: "center",
-                  className: "incident-tooltip",
-                });
-              }
+          const layer = L.geoJSON(data, {
+            style: () => polygonStyle,
+            onEachFeature: (feature, lyr) => {
+              const p = feature.properties || {};
+              const label = p.short_description || p.incident || "Incident";
+              const popup = [
+                `<div class="pop-type">${label}</div>`,
+                p.short_description && p.short_description !== p.incident
+                  ? `<div class="pop-row"><b>Detail</b><span>${p.incident}</span></div>`
+                  : "",
+                p.address
+                  ? `<div class="pop-row"><b>Address</b><span>${p.address}</span></div>`
+                  : "",
+                p.district
+                  ? `<div class="pop-row"><b>District</b><span>${p.district}</span></div>`
+                  : "",
+                p.date
+                  ? `<div class="pop-row"><b>Date</b><span>${p.date}</span></div>`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join("");
+              lyr.bindPopup(popup);
+              lyr.bindTooltip(label, {
+                direction: "top",
+                offset: [0, -4],
+                className: "incident-tooltip",
+              });
+              lyr.on("mouseover", function () {
+                this.setStyle(polygonHoverStyle);
+              });
+              lyr.on("mouseout", function () {
+                this.setStyle(polygonStyle);
+              });
             },
           }).addTo(map);
 
-          if (data.features.length > 0) {
-            map.fitBounds(geoJsonLayer.getBounds());
+          // Stats
+          const features = data.features || [];
+          document.getElementById("count").textContent = features.length;
+          const dates = features
+            .map((f) => f.properties && f.properties.date)
+            .filter(Boolean)
+            .map((d) => new Date(d))
+            .filter((d) => !isNaN(d))
+            .sort((a, b) => a - b);
+          if (dates.length) {
+            const first = dates[0];
+            const last = dates[dates.length - 1];
+            const rangeEl = document.getElementById("date-range");
+            rangeEl.textContent =
+              first.toDateString() === last.toDateString()
+                ? fmtDate(first)
+                : `${fmtDate(first)} – ${fmtDate(last)}`;
+          }
+
+          if (features.length > 0) {
+            map.fitBounds(layer.getBounds(), { padding: [60, 60] });
           }
         });
 
-      // Load and display confidential addresses
       fetch("confidential.json")
-        .then((response) => response.json())
-        .then((data) => {
-          const listElement = document.getElementById("confidential-list");
-          data.forEach((item) => {
-            const itemElement = document.createElement("div");
-            itemElement.className = "confidential-item";
-            itemElement.innerHTML = `<b>Incident:</b> ${item.incident}<br><b>Date:</b> ${item.date}`;
-            listElement.appendChild(itemElement);
+        .then((r) => r.json())
+        .then((items) => {
+          const list = document.getElementById("confidential-list");
+          document.getElementById("conf-count").textContent = items.length;
+          items.forEach((item) => {
+            const el = document.createElement("div");
+            el.className = "confidential-item";
+            el.innerHTML =
+              `<div class="ci-type">${item.short_description || item.incident}</div>` +
+              `<div>${item.date}${item.district ? " · District " + item.district : ""}</div>`;
+            list.appendChild(el);
           });
         });
 
-      const confidentialHeader = document.getElementById("confidential-header");
-      confidentialHeader.addEventListener("click", () => {
+      const header = document.getElementById("confidential-header");
+      header.addEventListener("click", () => {
         document
           .getElementById("confidential-list")
           .classList.toggle("collapsed");
-        confidentialHeader.classList.toggle("expanded");
+        header.classList.toggle("expanded");
       });
     </script>
   </body>

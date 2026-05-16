@@ -1,20 +1,18 @@
 import json
+import os
+import re
 import requests
 from pypdf import PdfReader
-import re
-import datetime
 from crewai.tools import BaseTool
-from typing import Type, List, Optional
+from typing import Type, List, Optional, Dict
 from pydantic import BaseModel, Field
 from tinydb import TinyDB
 
-# No longer using pdfplumber since we're using the proven approach from main.py
-
 
 class FileDownloadToolInput(BaseModel):
-    """Input schema for FileDownloadTool."""
     url: str = Field(..., description="The URL of the file to download.")
     save_path: str = Field(..., description="The local path to save the downloaded file.")
+
 
 class FileDownloadTool(BaseTool):
     name: str = "download_tool"
@@ -24,128 +22,181 @@ class FileDownloadTool(BaseTool):
     def _run(self, url: str, save_path: str) -> str:
         try:
             response = requests.get(url)
-            response.raise_for_status()  # Raise an exception for bad status codes
-            with open(save_path, 'wb') as f:
+            response.raise_for_status()
+            with open(save_path, "wb") as f:
                 f.write(response.content)
             return f"File downloaded successfully and saved at {save_path}"
         except requests.exceptions.RequestException as e:
             return f"Error downloading file: {e}"
 
+
+def _extract_text(pdf_path: str) -> str:
+    reader = PdfReader(pdf_path)
+    return "\n".join(page.extract_text() or "" for page in reader.pages)
+
+
+def _find_districts(lines: List[str]) -> List[int]:
+    seen = []
+    for line in lines:
+        m = re.search(r"DISTRICT (\d+)", line)
+        if m:
+            seen.append(int(m.group(1)))
+    return sorted(set(seen))
+
+
+def _parse_incidents(lines: List[str], districts: List[int]) -> List[dict]:
+    """Walk the lines once, tracking which district section we're in.
+
+    The PDF lists incidents under `DISTRICT NN` headers. We assign each
+    incident-bearing line to the most recent district header seen. This
+    avoids the previous bug where a per-district flag was never reset
+    and re-occurrences of a district header were silently skipped.
+    """
+    wanted = {str(d) for d in districts}
+    incidents: List[dict] = []
+    current_district: Optional[str] = None
+
+    header_re = re.compile(r"DISTRICT (\d+)")
+    date_re = re.compile(r"\d{1,2}/\d{1,2}/\d{4}")
+
+    for line in lines:
+        header_match = header_re.search(line)
+        if header_match:
+            current_district = header_match.group(1)
+            continue
+        if current_district is None or current_district not in wanted:
+            continue
+
+        tokens = line.strip().split()
+        if len(tokens) < 3:
+            continue
+        # Lines look like: " <row#> <report-id> INCIDENT-TYPE<DATE> <LOCATION>"
+        body = " ".join(tokens[2:]).strip()
+        date_match = date_re.search(body)
+        if not date_match:
+            continue
+        incident_type, _, location = body.partition(date_match.group())
+        incidents.append({
+            "district": current_district,
+            "date": date_match.group(),
+            "incident": incident_type.strip(),
+            "location": location.strip(),
+        })
+
+    return incidents
+
+
 class PDFIncidentExtractorToolInput(BaseModel):
-    """Input schema for PDFIncidentExtractorTool."""
     pdf_path: str = Field(..., description="The local path to the PDF file.")
+    output_json_path: str = Field(
+        "extracted_incidents.json",
+        description="Where to write the extracted incidents as JSON.",
+    )
+
 
 class PDFIncidentExtractorTool(BaseTool):
     name: str = "pdf_extraction_tool"
-    description: str = "Extracts incident data from a PDF file."
+    description: str = (
+        "Extracts every incident from a Garland police-incidents PDF and writes "
+        "them to a JSON file. Returns a short summary including the file path, "
+        "total count, per-district counts, and the unique incident types found."
+    )
     args_schema: Type[BaseModel] = PDFIncidentExtractorToolInput
 
-    def extract_text_from_pdf(self, filename):
-        reader = PdfReader(filename)
-        extracted_text = ""
-        for page_num in range(len(reader.pages)):
-            page = reader.pages[page_num]
-            extracted_text_on_page = page.extract_text()
-            extracted_text += extracted_text_on_page + "\n"
-        return extracted_text
-    
-    def parse_district_incidents(self, split_text, districts_of_interest):
-        districts = {}
-        for district in districts_of_interest:
-            district_number = str(district)
-            districts[district_number] = []
-            end_of_district = False
-            for line in split_text:
-                text_to_search_for = "DISTRICT " + str(district)
-                if text_to_search_for in line:
-                    next_line_index = split_text.index(line) + 1
-                    while not end_of_district and next_line_index < len(split_text):
-                        next_line = split_text[next_line_index]
-                        if "DISTRICT" in next_line:
-                            end_of_district = True
-                        else:
-                            line_split = next_line.strip().split(" ")
-                            cleaned_line = " ".join(line_split[2:]).strip()
+    def _run(self, pdf_path: str, output_json_path: str = "extracted_incidents.json") -> str:
+        text = _extract_text(pdf_path)
+        lines = text.split("\n")
+        districts = _find_districts(lines)
+        incidents = _parse_incidents(lines, districts)
 
-                            # example text at this point: 
-                            # "THEFT-ALL OTHER-$2,500 L/T $30,00006/02/2025 32XX HERRMANN DR"
-                            if len(cleaned_line.split()) > 1:
-                                date_match = re.search(r"\d{1,2}/\d{1,2}/\d{4}", cleaned_line)
-                                if (not date_match):
-                                    next_line_index += 1
-                                    continue
-                                line_split_2 = cleaned_line.split(date_match.group())
+        os.makedirs(os.path.dirname(os.path.abspath(output_json_path)) or ".", exist_ok=True)
+        with open(output_json_path, "w") as f:
+            json.dump(incidents, f, indent=2)
 
-                                districts[district_number].append({
-                                    "date": date_match.group(),
-                                    "incident": line_split_2[0].strip(),
-                                    "location": line_split_2[1].strip() if len(line_split_2) > 1 else ""
-                                })
-                        next_line_index += 1
-        return districts
+        per_district: Dict[str, int] = {}
+        for inc in incidents:
+            per_district[inc["district"]] = per_district.get(inc["district"], 0) + 1
+        unique_types = sorted({inc["incident"] for inc in incidents})
 
-    def get_week_number_from_pdf_text(self, extracted_text):
-        # Simple implementation - you can enhance this based on your PDF format
-        week_match = re.search(r"week (\d+)", extracted_text.lower())
-        if week_match:
-            return int(week_match.group(1))
-        return None
-
-    def _run(self, pdf_path: str) -> List[dict]:
-        extracted_text = self.extract_text_from_pdf(pdf_path)
-        split_text = extracted_text.split("\n")
-
-        all_districts = []
-        for line in split_text:
-            match = re.search(r"DISTRICT (\d+)", line)
-            if match:
-                all_districts.append(int(match.group(1)))
-        districts_of_interest = sorted(list(set(all_districts)))
-
-        districts = self.parse_district_incidents(split_text, districts_of_interest)
-
-        combinedIncidents = []
-        for district_number, incidents in districts.items():
-            print(f"District {district_number}: {len(incidents)} incidents")
-            for incident in incidents:
-                # Add district info to each incident
-                enhanced_incident = {
-                    "date": incident["date"],
-                    "incident": incident["incident"],
-                    "location": incident["location"],
-                    "district": district_number
-                }
-                combinedIncidents.append(enhanced_incident)
-        
-        return combinedIncidents
+        summary = {
+            "json_path": os.path.abspath(output_json_path),
+            "total_incidents": len(incidents),
+            "per_district_counts": per_district,
+            "unique_incident_types": unique_types,
+        }
+        return json.dumps(summary, indent=2)
 
 
 class TinyDBWriterToolInput(BaseModel):
-    """Input schema for TinyDBWriterTool."""
-    data: List[dict] = Field(..., description="The data to write to TinyDB database.")
-    db_path: str = Field(..., description="The path where to save the TinyDB database.")
+    json_path: str = Field(..., description="Path to the JSON file produced by pdf_extraction_tool.")
+    db_path: str = Field(..., description="Path to the TinyDB database file to append to.")
+    short_description_map: Dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Optional mapping from verbose incident type (exact string from the PDF) "
+            "to a concise human-friendly description, e.g. "
+            '{"THEFT-MOTOR VEHICLE-$2,500 L/T $30,000": "Motor Vehicle Theft"}.'
+        ),
+    )
+    enriched_json_path: str = Field(
+        "enriched_incidents.json",
+        description=(
+            "Where to write a flat JSON list of incidents enriched with "
+            "short_description. The geo-analysis step reads this file."
+        ),
+    )
+
 
 class TinyDBWriterTool(BaseTool):
     name: str = "tinydb_writer_tool"
-    description: str = "Writes data to a TinyDB database."
+    description: str = (
+        "Reads incidents from a JSON file, enriches each with a short_description "
+        "using the provided mapping, appends them to a TinyDB database, and writes "
+        "the enriched list back to JSON for downstream tools (e.g. the map "
+        "renderer). Stores every record — no filtering or batching."
+    )
     args_schema: Type[BaseModel] = TinyDBWriterToolInput
 
-    def _run(self, data: List[dict], db_path: str) -> str:
+    def _run(
+        self,
+        json_path: str,
+        db_path: str,
+        short_description_map: Optional[Dict[str, str]] = None,
+        enriched_json_path: str = "enriched_incidents.json",
+    ) -> str:
         try:
-            # Initialize TinyDB database
-            db = TinyDB(db_path)
-            
-            # Add incident IDs to the data if they don't exist
-            existing_count = len(db.all())
-            for i, incident in enumerate(data):
-                if 'incident_id' not in incident:
-                    incident['incident_id'] = existing_count + i + 1
-            
-            # Append new data to existing database (don't truncate)
-            db.insert_multiple(data)
-            
-            total_count = len(db.all())
-            return f"Successfully saved {len(data)} incidents to TinyDB database at {db_path}. Total incidents in database: {total_count}"
-        except Exception as e:
-            return f"Error writing to TinyDB database: {e}"
+            with open(json_path, "r") as f:
+                incidents = json.load(f)
+        except (OSError, json.JSONDecodeError) as e:
+            return f"Error reading incidents JSON at {json_path}: {e}"
 
+        mapping = short_description_map or {}
+        db = TinyDB(db_path)
+        existing_count = len(db.all())
+
+        enriched = []
+        for i, inc in enumerate(incidents, start=1):
+            record = dict(inc)
+            record["incident_id"] = existing_count + i
+            record["short_description"] = mapping.get(inc.get("incident", ""), inc.get("incident", ""))
+            enriched.append(record)
+
+        db.insert_multiple(enriched)
+        total = len(db.all())
+
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(enriched_json_path)) or ".", exist_ok=True)
+            with open(enriched_json_path, "w") as f:
+                json.dump(enriched, f, indent=2)
+        except OSError as e:
+            return (
+                f"Inserted {len(enriched)} into {db_path} (now {total} total) "
+                f"but failed to write enriched JSON to {enriched_json_path}: {e}"
+            )
+
+        return (
+            f"Read {len(incidents)} incidents from {json_path}. "
+            f"Inserted {len(enriched)} into {db_path}. "
+            f"Wrote enriched list to {os.path.abspath(enriched_json_path)}. "
+            f"DB now contains {total} total records."
+        )

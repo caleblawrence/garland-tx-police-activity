@@ -1,0 +1,722 @@
+[
+  {
+    "district": "21",
+    "date": "12/21/2025",
+    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
+    "location": "33XX COLLINS BLVD"
+  },
+  {
+    "district": "21",
+    "date": "12/22/2025",
+    "incident": "THEFT-MAIL <10 ADDRESSES",
+    "location": "34XX MOONGLOW DR"
+  },
+  {
+    "district": "21",
+    "date": "12/23/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "34XX CROSSBOW LN"
+  },
+  {
+    "district": "21",
+    "date": "12/24/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "64XX N JUPITER RD"
+  },
+  {
+    "district": "22",
+    "date": "12/21/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "60XX NAAMAN FOREST BLVD"
+  },
+  {
+    "district": "22",
+    "date": "12/21/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "62XX NAAMAN FOREST BLVD"
+  },
+  {
+    "district": "22",
+    "date": "12/21/2025",
+    "incident": "THEFT-MAIL <10 ADDRESSES",
+    "location": "62XX NAAMAN FOREST BLVD"
+  },
+  {
+    "district": "22",
+    "date": "12/22/2025",
+    "incident": "INFO-THEFT",
+    "location": "54XX N GEORGE BUSH RAMP"
+  },
+  {
+    "district": "22",
+    "date": "12/22/2025",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "22",
+    "date": "12/23/2025",
+    "incident": "THEFT OF MAIL <=5 NEGOTIABLE INSTRUMENTS IAT",
+    "location": "62XX NAAMAN FOREST BLVD"
+  },
+  {
+    "district": "22",
+    "date": "12/24/2025",
+    "incident": "BURGLARY-HAB-(CRIM ATT)",
+    "location": "39XX BRANDON PARK DR"
+  },
+  {
+    "district": "22",
+    "date": "12/24/2025",
+    "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "22",
+    "date": "12/27/2025",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "23",
+    "date": "12/22/2025",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "26XX WOODPARK DR"
+  },
+  {
+    "district": "23",
+    "date": "12/23/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "29XX BELT LINE RD"
+  },
+  {
+    "district": "23",
+    "date": "12/25/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "28XX BELT LINE RD"
+  },
+  {
+    "district": "23",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF L/T $100",
+    "location": "23XX W BUCKINGHAM RD"
+  },
+  {
+    "district": "23",
+    "date": "12/27/2025",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "28XX N GARLAND AVE"
+  },
+  {
+    "district": "23",
+    "date": "12/27/2025",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "14XX BELT LINE RD"
+  },
+  {
+    "district": "24",
+    "date": "12/22/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "7XX SHEPHERD DR"
+  },
+  {
+    "district": "24",
+    "date": "12/24/2025",
+    "incident": "SEXUAL ASSLT AGG RAPE CHILD",
+    "location": "ADDRESS CONFIDENTIAL"
+  },
+  {
+    "district": "24",
+    "date": "12/26/2025",
+    "incident": "BURGLARY-BLDG-(CRIM ATT)",
+    "location": "35XX WALNUT ST"
+  },
+  {
+    "district": "24",
+    "date": "12/27/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "41XX AMHERST DR"
+  },
+  {
+    "district": "24",
+    "date": "12/27/2025",
+    "incident": "THEFT-FIREARM",
+    "location": "46XX WINDSOR DR"
+  },
+  {
+    "district": "25",
+    "date": "12/23/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "14XX W BUCKINGHAM RD"
+  },
+  {
+    "district": "25",
+    "date": "12/24/2025",
+    "incident": "ROBBERY - AGG - INDIV",
+    "location": "32XX W BUCKINGHAM RD"
+  },
+  {
+    "district": "25",
+    "date": "12/25/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "21XX W WALNUT ST"
+  },
+  {
+    "district": "26",
+    "date": "12/21/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "32XX FOREST LN"
+  },
+  {
+    "district": "26",
+    "date": "12/22/2025",
+    "incident": "INFO-THEFT",
+    "location": "14XX W WALNUT ST"
+  },
+  {
+    "district": "27",
+    "date": "12/21/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "16XX KINGS RD"
+  },
+  {
+    "district": "27",
+    "date": "12/21/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "16XX KINGS RD"
+  },
+  {
+    "district": "27",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "31XX W MILLER RD"
+  },
+  {
+    "district": "27",
+    "date": "12/23/2025",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "18XX S GARLAND AVE"
+  },
+  {
+    "district": "27",
+    "date": "12/25/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "39XX CAVALIER DR"
+  },
+  {
+    "district": "27",
+    "date": "12/26/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "36XX MILLER PARK DR"
+  },
+  {
+    "district": "31",
+    "date": "12/21/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "25XX BROOK CREST DR"
+  },
+  {
+    "district": "31",
+    "date": "12/21/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "31",
+    "date": "12/22/2025",
+    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+    "location": "60XX GLEN ABBEY CT"
+  },
+  {
+    "district": "31",
+    "date": "12/22/2025",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "31",
+    "date": "12/23/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "31",
+    "date": "12/24/2025",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "7XX AMBROSE CT"
+  },
+  {
+    "district": "31",
+    "date": "12/27/2025",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "49XX N GEORGE BUSH RAMP"
+  },
+  {
+    "district": "31",
+    "date": "12/27/2025",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "53XX N GARLAND AVE"
+  },
+  {
+    "district": "32",
+    "date": "12/22/2025",
+    "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
+    "location": "2XX CEDAR SAGE DR"
+  },
+  {
+    "district": "32",
+    "date": "12/22/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "23XX LAVON DR"
+  },
+  {
+    "district": "32",
+    "date": "12/23/2025",
+    "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
+    "location": "2XX CEDAR SAGE DR"
+  },
+  {
+    "district": "33",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
+    "location": "24XX BELLBROOK LN"
+  },
+  {
+    "district": "33",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "14XX MERIDIAN WY"
+  },
+  {
+    "district": "34",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "3XX N SIXTH ST"
+  },
+  {
+    "district": "34",
+    "date": "12/26/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "5XX SYLVAN DR"
+  },
+  {
+    "district": "34",
+    "date": "12/26/2025",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "16XX S GARLAND AVE"
+  },
+  {
+    "district": "35",
+    "date": "12/24/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "15XX SHOREHAVEN DR"
+  },
+  {
+    "district": "36",
+    "date": "12/21/2025",
+    "incident": "INJURY TO A CHILD-(CRIM NEGL)",
+    "location": "ADDRESS CONFIDENTIAL"
+  },
+  {
+    "district": "36",
+    "date": "12/25/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "18XX S GLENBROOK DR"
+  },
+  {
+    "district": "37",
+    "date": "12/23/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "2XX SENECA DR"
+  },
+  {
+    "district": "37",
+    "date": "12/26/2025",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "17XX RUSTIC LN"
+  },
+  {
+    "district": "37",
+    "date": "12/27/2025",
+    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+    "location": "15XX THRUSH CT"
+  },
+  {
+    "district": "41",
+    "date": "12/24/2025",
+    "incident": "ROBBERY-INDIV",
+    "location": "20XX S SHILOH RD"
+  },
+  {
+    "district": "41",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "36XX W MILLER RD"
+  },
+  {
+    "district": "41",
+    "date": "12/26/2025",
+    "incident": "THEFT-ALL OTHER-$150,000 L/T $300,000",
+    "location": "28XX S SHILOH RD"
+  },
+  {
+    "district": "41",
+    "date": "12/27/2025",
+    "incident": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
+    "location": "14XX W KINGSLEY RD"
+  },
+  {
+    "district": "42",
+    "date": "12/23/2025",
+    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
+    "location": "21XX S FIRST ST"
+  },
+  {
+    "district": "42",
+    "date": "12/23/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "2XX CASCADE DR"
+  },
+  {
+    "district": "42",
+    "date": "12/24/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "1XX W KINGSLEY RD"
+  },
+  {
+    "district": "42",
+    "date": "12/25/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "28XX DAIRY RD"
+  },
+  {
+    "district": "42",
+    "date": "12/26/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "21XX SKILLMAN DR"
+  },
+  {
+    "district": "42",
+    "date": "12/26/2025",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$30,000 L/T $150,000",
+    "location": "21XX SKILLMAN DR"
+  },
+  {
+    "district": "42",
+    "date": "12/26/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "21XX SKILLMAN DR"
+  },
+  {
+    "district": "42",
+    "date": "12/26/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "9XX E CENTERVILLE RD"
+  },
+  {
+    "district": "42",
+    "date": "12/27/2025",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "5XX VISTA DR"
+  },
+  {
+    "district": "43",
+    "date": "12/22/2025",
+    "incident": "THEFT-MAIL <10 ADDRESSES",
+    "location": "15XX CLEAR POINT DR"
+  },
+  {
+    "district": "43",
+    "date": "12/22/2025",
+    "incident": "THEFT-MOTOR VEHICLE-$30,000 L/T $150,000",
+    "location": "122XX LBJ FRWY"
+  },
+  {
+    "district": "43",
+    "date": "12/22/2025",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "15XX W KINGSLEY RD"
+  },
+  {
+    "district": "43",
+    "date": "12/24/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "15XX DOUGLAS DR"
+  },
+  {
+    "district": "43",
+    "date": "12/25/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "15XX LEXINGTON DR"
+  },
+  {
+    "district": "43",
+    "date": "12/25/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
+    "location": "15XX LEXINGTON DR"
+  },
+  {
+    "district": "43",
+    "date": "12/25/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "36XX CARROLL CIR"
+  },
+  {
+    "district": "43",
+    "date": "12/25/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "36XX CARROLL CIR"
+  },
+  {
+    "district": "44",
+    "date": "12/21/2025",
+    "incident": "CRIMINAL MISCHIEF $2,500 L/T $30,000",
+    "location": "9XX NORTHWEST HWY"
+  },
+  {
+    "district": "44",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "12XX NORTHWEST HWY"
+  },
+  {
+    "district": "44",
+    "date": "12/22/2025",
+    "incident": "ROBBERY - AGG - INDIV",
+    "location": "2XX W KINGSLEY RD"
+  },
+  {
+    "district": "45",
+    "date": "12/21/2025",
+    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+    "location": "HARTFORD DR"
+  },
+  {
+    "district": "45",
+    "date": "12/22/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "3XX HOCKADAY AVE"
+  },
+  {
+    "district": "45",
+    "date": "12/25/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "33XX BROADWAY BLVD"
+  },
+  {
+    "district": "46",
+    "date": "12/24/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "18XX MARKETPLACE DR"
+  },
+  {
+    "district": "46",
+    "date": "12/25/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "46XX SATURN RD"
+  },
+  {
+    "district": "46",
+    "date": "12/26/2025",
+    "incident": "THEFT OF SERVICE-$100 L/T $750",
+    "location": "13XX W CENTERVILLE RD"
+  },
+  {
+    "district": "46",
+    "date": "12/27/2025",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "18XX MARKETPLACE DR"
+  },
+  {
+    "district": "51",
+    "date": "12/21/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "55XX VALLEY MILLS DR"
+  },
+  {
+    "district": "51",
+    "date": "12/22/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "3XX CLEARFIELD DR"
+  },
+  {
+    "district": "51",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-HAB",
+    "location": "5XX SANTA CRUZ DR"
+  },
+  {
+    "district": "51",
+    "date": "12/22/2025",
+    "incident": "SEXUAL ASSLT-RAPE",
+    "location": "ADDRESS CONFIDENTIAL"
+  },
+  {
+    "district": "51",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "50XX LEAMEADOW DR"
+  },
+  {
+    "district": "51",
+    "date": "12/23/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "3XX BIRCHWOOD DR"
+  },
+  {
+    "district": "52",
+    "date": "12/21/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "51XX I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/21/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/22/2025",
+    "incident": "THEFT-MAIL <10 ADDRESSES",
+    "location": "5XX TRAIL VIEW LN"
+  },
+  {
+    "district": "52",
+    "date": "12/22/2025",
+    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/23/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/24/2025",
+    "incident": "BURGLARY-BLDG-(CRIM ATT)",
+    "location": "57XX BROADWAY BLVD"
+  },
+  {
+    "district": "52",
+    "date": "12/26/2025",
+    "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/27/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "52",
+    "date": "12/27/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "5XX W I30 FRWY"
+  },
+  {
+    "district": "53",
+    "date": "12/22/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "15XX REDBIRD DR"
+  },
+  {
+    "district": "53",
+    "date": "12/23/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "43XX BROADWAY BLVD"
+  },
+  {
+    "district": "53",
+    "date": "12/24/2025",
+    "incident": "CRIMINAL MISCHIEF L/T $100",
+    "location": "48XX BROADWAY BLVD"
+  },
+  {
+    "district": "53",
+    "date": "12/25/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "40XX BROADWAY BLVD"
+  },
+  {
+    "district": "53",
+    "date": "12/27/2025",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "7XX WAIKIKI DR"
+  },
+  {
+    "district": "54",
+    "date": "12/24/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "59XX BROADWAY BLVD"
+  },
+  {
+    "district": "54",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "34XX SHORESIDE DR"
+  },
+  {
+    "district": "54",
+    "date": "12/27/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "25XX I30 FRWY"
+  },
+  {
+    "district": "55",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-VEH",
+    "location": "43XX MARTINDALE DR"
+  },
+  {
+    "district": "55",
+    "date": "12/22/2025",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "62XX BROADWAY BLVD"
+  },
+  {
+    "district": "55",
+    "date": "12/22/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "27XX DOVE MEADOW DR"
+  },
+  {
+    "district": "55",
+    "date": "12/24/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "40XX BOBTOWN RD"
+  },
+  {
+    "district": "55",
+    "date": "12/26/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "40XX BOBTOWN RD"
+  },
+  {
+    "district": "56",
+    "date": "12/21/2025",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "9XX E I30 FRWY"
+  },
+  {
+    "district": "56",
+    "date": "12/22/2025",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "62XX LAKE HUBBARD PKWY"
+  },
+  {
+    "district": "56",
+    "date": "12/22/2025",
+    "incident": "BURGLARY-BLDG",
+    "location": "43XX POINT BLVD"
+  },
+  {
+    "district": "56",
+    "date": "12/22/2025",
+    "incident": "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000",
+    "location": "43XX POINT BLVD"
+  }
+]

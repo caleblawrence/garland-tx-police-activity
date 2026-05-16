@@ -5,8 +5,7 @@ import {
   getLatLng,
   createBoundingBox,
 } from "./geo.js";
-import week41Data from "../../scrape-incidents/exported-incidents/districts_incidents_week_48.json" assert { type: "json" };
-import { writeFileSync, readFileSync, mkdirSync } from "fs";
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from "fs";
 import ProgressBar from "progress";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -15,18 +14,60 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const projectRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(projectRoot, "..");
+
+const AGENT_DATA_DIR = path.join(
+  repoRoot,
+  "agent-solution",
+  "garland_tx_data_analysis"
+);
+
+// Prefer the enriched list (has short_description) and fall back to the raw
+// extractor output if the formatter hasn't run yet.
+const candidatePaths = process.env.INCIDENTS_JSON_PATH
+  ? [path.resolve(process.env.INCIDENTS_JSON_PATH)]
+  : [
+      path.join(AGENT_DATA_DIR, "enriched_incidents.json"),
+      path.join(AGENT_DATA_DIR, "extracted_incidents.json"),
+    ];
+
+const incidentsPath = candidatePaths.find((p) => existsSync(p));
+
+if (!incidentsPath) {
+  console.error(
+    `Incidents JSON not found. Tried:\n${candidatePaths.map((p) => "  " + p).join("\n")}\n` +
+      `Run the agent crew first (cd agent-solution/garland_tx_data_analysis && crewai run) ` +
+      `or set INCIDENTS_JSON_PATH to point at a JSON file.`
+  );
+  process.exit(1);
+}
+
+const rawData = JSON.parse(readFileSync(incidentsPath, "utf-8"));
+
+const normalizeIncidents = (data) => {
+  // Accept either the flat list emitted by the agent crew or the legacy
+  // {districtNumber: [incident, ...]} shape from the old scrape pipeline.
+  const rows = Array.isArray(data) ? data : Object.values(data).flat();
+  return rows
+    .filter(
+      (item) =>
+        item &&
+        typeof item === "object" &&
+        "location" in item &&
+        "incident" in item &&
+        "date" in item
+    )
+    .map(({ date, incident, location, short_description, district }) => ({
+      date,
+      incident,
+      location,
+      district,
+      short_description: short_description || incident,
+    }));
+};
 
 const processIncidents = async (data) => {
-  const flatIncidentList = Object.entries(data).map(([, feature]) => {
-    return feature.flatMap((incident) => {
-      return {
-        date: incident.date,
-        incident: incident.incident,
-        location: incident.location,
-      };
-    });
-  });
-  const flatList = flatIncidentList.flat(Infinity);
+  const flatList = normalizeIncidents(data);
 
   const bar = new ProgressBar("  mapping [:bar] :percent :etas", {
     complete: "=",
@@ -39,38 +80,26 @@ const processIncidents = async (data) => {
   const confidentialAddresses = [];
   for (const item of flatList) {
     bar.tick();
-    if (
-      item &&
-      typeof item === "object" &&
-      "location" in item &&
-      "incident" in item &&
-      "date" in item
-    ) {
-      if (item.location === "ADDRESS CONFIDENTIAL") {
-        confidentialAddresses.push(item);
-        continue;
-      }
-      const partialAddress = item.location;
-      const fullAddress = getFullAddress(partialAddress);
-      console.log(`Mapping address: ${fullAddress}`);
-      const beginningAddressRange = getAddressBeginning(fullAddress);
-      const endingAddressRange = getAddressEnding(fullAddress);
-      const beginningLatLng = await getLatLng(beginningAddressRange);
-      const endingLatLng = await getLatLng(endingAddressRange);
-
-      const bboxFeature = createBoundingBox(beginningLatLng, endingLatLng);
-
-      if (bboxFeature) {
-        geojsonFeatures.push({
-          type: "Feature",
-          geometry: bboxFeature.geometry,
-          properties: {
-            address: fullAddress,
-            incident: item.incident,
-            date: item.date,
-          },
-        });
-      }
+    if (item.location === "ADDRESS CONFIDENTIAL") {
+      confidentialAddresses.push(item);
+      continue;
+    }
+    const fullAddress = getFullAddress(item.location);
+    const beginningLatLng = await getLatLng(getAddressBeginning(fullAddress));
+    const endingLatLng = await getLatLng(getAddressEnding(fullAddress));
+    const bboxFeature = createBoundingBox(beginningLatLng, endingLatLng);
+    if (bboxFeature) {
+      geojsonFeatures.push({
+        type: "Feature",
+        geometry: bboxFeature.geometry,
+        properties: {
+          address: fullAddress,
+          incident: item.incident,
+          short_description: item.short_description,
+          district: item.district,
+          date: item.date,
+        },
+      });
     }
   }
   return { geojsonFeatures, confidentialAddresses };
@@ -79,8 +108,9 @@ const processIncidents = async (data) => {
 const main = async () => {
   mkdirSync(path.join(projectRoot, "dist"), { recursive: true });
 
+  console.log(`Reading incidents from ${incidentsPath}`);
   const { geojsonFeatures, confidentialAddresses } = await processIncidents(
-    week41Data
+    rawData
   );
 
   // Save confidential addresses

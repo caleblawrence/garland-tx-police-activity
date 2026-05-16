@@ -1,22 +1,23 @@
 [
   {
-    "date": "12/01/2025",
-    "incident": "SEXUAL ASSLT CHILD",
-    "location": "ADDRESS CONFIDENTIAL"
+    "date": "12/24/2025",
+    "incident": "SEXUAL ASSLT AGG RAPE CHILD",
+    "location": "ADDRESS CONFIDENTIAL",
+    "district": "24",
+    "short_description": "SEXUAL ASSLT AGG RAPE CHILD"
   },
   {
-    "date": "12/05/2025",
-    "incident": "INJURY TO A CHILD-BI",
-    "location": "ADDRESS CONFIDENTIAL"
+    "date": "12/21/2025",
+    "incident": "INJURY TO A CHILD-(CRIM NEGL)",
+    "location": "ADDRESS CONFIDENTIAL",
+    "district": "36",
+    "short_description": "INJURY TO A CHILD-(CRIM NEGL)"
   },
   {
-    "date": "12/05/2025",
-    "incident": "SEXUAL ASSLT CHILD",
-    "location": "ADDRESS CONFIDENTIAL"
-  },
-  {
-    "date": "12/04/2025",
-    "incident": "INJURY TO A CHILD-BI",
-    "location": "ADDRESS CONFIDENTIAL"
+    "date": "12/22/2025",
+    "incident": "SEXUAL ASSLT-RAPE",
+    "location": "ADDRESS CONFIDENTIAL",
+    "district": "51",
+    "short_description": "SEXUAL ASSLT-RAPE"
   }
 ]
