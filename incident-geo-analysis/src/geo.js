@@ -87,9 +87,25 @@ async function nominatimLookup(address, attempt = 1) {
   lastRequestAt = Date.now();
 
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
-  const response = await fetch(url, {
-    headers: { "User-Agent": "garland-tx-police-activity/1.0" },
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  let response;
+  try {
+    response = await fetch(url, {
+      headers: { "User-Agent": "garland-tx-police-activity/1.0" },
+      signal: controller.signal,
+    });
+  } catch (err) {
+    clearTimeout(timer);
+    if (attempt >= 3) {
+      console.warn(`Nominatim fetch failed after ${attempt} attempts: ${address} (${err.message})`);
+      return null;
+    }
+    console.warn(`Nominatim fetch error for "${address}" (${err.message}), retrying`);
+    await sleep(2000 * attempt);
+    return nominatimLookup(address, attempt + 1);
+  }
+  clearTimeout(timer);
 
   if (response.status === 429 || response.status === 503) {
     if (attempt >= 3) {
