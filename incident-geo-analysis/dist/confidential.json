@@ -4,7 +4,7 @@
     "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "22",
-    "short_description": "Injury to Child - Bodily Injury"
+    "short_description": "Injury to a Child"
   },
   {
     "date": "05/04/2026",
@@ -18,13 +18,13 @@
     "incident": "SEXUAL ASSLT-RAPE-(CRIM ATT)",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "36",
-    "short_description": "Sexual Assault - Rape - Criminal Attempt"
+    "short_description": "Sexual Assault - Rape Attempt"
   },
   {
     "date": "05/05/2026",
     "incident": "BURGLARY-HAB W/INT TO COMMIT SEX ASSLT",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "55",
-    "short_description": "Burglary with Intent to Commit Sexual Assault"
+    "short_description": "Habitation Burglary with Intent to Commit Sexual Assault"
   }
 ]

@@ -33,7 +33,7 @@
       "properties": {
         "address": "22XX KNIGHTHOOD LN Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "22",
         "date": "05/03/2026"
       }
@@ -70,7 +70,7 @@
       "properties": {
         "address": "21XX W CAMPBELL RD Garland TX",
         "incident": "CRIMINAL MISCHIEF L/T $100",
-        "short_description": "Criminal Mischief (Under $100)",
+        "short_description": "Vandalism (Under $100)",
         "district": "22",
         "date": "05/03/2026"
       }
@@ -144,7 +144,7 @@
       "properties": {
         "address": "17XX LOOKOUT DR Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "22",
         "date": "05/05/2026"
       }
@@ -181,7 +181,7 @@
       "properties": {
         "address": "72XX TELECOM PKWY Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "22",
         "date": "05/05/2026"
       }
@@ -218,7 +218,7 @@
       "properties": {
         "address": "23XX KNIGHTHOOD LN Garland TX",
         "incident": "CRIMINAL MISCHIEF L/T $100",
-        "short_description": "Criminal Mischief (Under $100)",
+        "short_description": "Vandalism (Under $100)",
         "district": "22",
         "date": "05/07/2026"
       }
@@ -255,7 +255,7 @@
       "properties": {
         "address": "21XX N JUPITER RD Garland TX",
         "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-        "short_description": "Criminal Mischief ($750-$2,500)",
+        "short_description": "Vandalism ($750-$2,500)",
         "district": "23",
         "date": "05/04/2026"
       }
@@ -292,7 +292,7 @@
       "properties": {
         "address": "21XX N JUPITER RD Garland TX",
         "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-        "short_description": "Theft of Property with Prior Convictions",
+        "short_description": "Theft of Property (Repeat Offense)",
         "district": "23",
         "date": "05/06/2026"
       }
@@ -329,7 +329,7 @@
       "properties": {
         "address": "21XX N JUPITER RD Garland TX",
         "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-        "short_description": "Theft of Property with Prior Convictions",
+        "short_description": "Theft of Property (Repeat Offense)",
         "district": "23",
         "date": "05/06/2026"
       }
@@ -366,7 +366,7 @@
       "properties": {
         "address": "21XX N JUPITER RD Garland TX",
         "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-        "short_description": "Theft of Property with Prior Convictions",
+        "short_description": "Theft of Property (Repeat Offense)",
         "district": "23",
         "date": "05/06/2026"
       }
@@ -440,7 +440,7 @@
       "properties": {
         "address": "35XX FOREST LN Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
+        "short_description": "Aggravated Assault with Deadly Weapon",
         "district": "24",
         "date": "05/03/2026"
       }
@@ -551,7 +551,7 @@
       "properties": {
         "address": "40XX AMHERST DR Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft - Other (Under $100)",
+        "short_description": "Theft (Under $100)",
         "district": "24",
         "date": "05/08/2026"
       }
@@ -588,7 +588,7 @@
       "properties": {
         "address": "23XX W BUCKINGHAM RD Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "25",
         "date": "05/05/2026"
       }
@@ -625,7 +625,7 @@
       "properties": {
         "address": "21XX W WALNUT ST Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "25",
         "date": "05/06/2026"
       }
@@ -847,7 +847,7 @@
       "properties": {
         "address": "12XX S SHILOH RD Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
+        "short_description": "Aggravated Assault with Deadly Weapon",
         "district": "27",
         "date": "05/03/2026"
       }
@@ -884,7 +884,7 @@
       "properties": {
         "address": " Garland TX",
         "incident": "THEFT-ALL OTHER-$30,000 L/T $150,000",
-        "short_description": "Theft - Other ($30,000-$150,000)",
+        "short_description": "Theft ($30,000-$150,000)",
         "district": "27",
         "date": "05/04/2026"
       }
@@ -921,7 +921,7 @@
       "properties": {
         "address": "13XX ORIOLE LN Garland TX",
         "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-        "short_description": "Theft - Other ($2,500-$30,000)",
+        "short_description": "Theft ($2,500-$30,000)",
         "district": "27",
         "date": "05/05/2026"
       }
@@ -995,7 +995,7 @@
       "properties": {
         "address": "48XX NAAMAN FOREST BLVD Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "31",
         "date": "05/05/2026"
       }
@@ -1143,7 +1143,7 @@
       "properties": {
         "address": "45XX FOREST BEND CT Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft - Other (Under $100)",
+        "short_description": "Theft (Under $100)",
         "district": "31",
         "date": "05/07/2026"
       }
@@ -1291,7 +1291,7 @@
       "properties": {
         "address": "36XX CASTLE DR Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "33",
         "date": "05/05/2026"
       }
@@ -1550,7 +1550,7 @@
       "properties": {
         "address": " Garland TX",
         "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-        "short_description": "Theft - Other ($2,500-$30,000)",
+        "short_description": "Theft ($2,500-$30,000)",
         "district": "37",
         "date": "05/07/2026"
       }
@@ -1661,7 +1661,7 @@
       "properties": {
         "address": "13XX GREENWOOD DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "41",
         "date": "05/07/2026"
       }
@@ -1698,7 +1698,7 @@
       "properties": {
         "address": "20XX RIDGECREST DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "41",
         "date": "05/08/2026"
       }
@@ -1735,7 +1735,7 @@
       "properties": {
         "address": "13XX W MILLER RD Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "42",
         "date": "05/03/2026"
       }
@@ -1846,7 +1846,7 @@
       "properties": {
         "address": "17XX NORTHWEST HWY Garland TX",
         "incident": "INJURY TO AN ELDERLY PERSON-BI",
-        "short_description": "Injury to Elderly Person - Bodily Injury",
+        "short_description": "Injury to an Elderly Person",
         "district": "43",
         "date": "05/04/2026"
       }
@@ -1883,7 +1883,7 @@
       "properties": {
         "address": "40XX GREENWAY DR Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "43",
         "date": "05/08/2026"
       }
@@ -1920,7 +1920,7 @@
       "properties": {
         "address": "6XX MOUNT VERNON PL Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft - Other ($100-$750)",
+        "short_description": "Theft ($100-$750)",
         "district": "45",
         "date": "05/08/2026"
       }
@@ -1957,7 +1957,7 @@
       "properties": {
         "address": "42XX DUCK CREEK DR Garland TX",
         "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
-        "short_description": "Theft - Other ($750-$2,500)",
+        "short_description": "Theft ($750-$2,500)",
         "district": "45",
         "date": "05/09/2026"
       }
@@ -1994,7 +1994,7 @@
       "properties": {
         "address": "42XX DUCK CREEK DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-        "short_description": "Criminal Mischief ($750-$2,500)",
+        "short_description": "Vandalism ($750-$2,500)",
         "district": "45",
         "date": "05/09/2026"
       }
@@ -2253,7 +2253,7 @@
       "properties": {
         "address": "4XX VALLEY PARK DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
+        "short_description": "Aggravated Assault with Deadly Weapon",
         "district": "51",
         "date": "05/05/2026"
       }
@@ -2290,7 +2290,7 @@
       "properties": {
         "address": " Garland TX",
         "incident": "THEFT-ALL OTHER-OVER $300,000",
-        "short_description": "Theft - Other (Over $300,000)",
+        "short_description": "Theft (Over $300,000)",
         "district": "51",
         "date": "05/06/2026"
       }
@@ -2327,7 +2327,7 @@
       "properties": {
         "address": " Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "53",
         "date": "05/03/2026"
       }
@@ -2364,7 +2364,7 @@
       "properties": {
         "address": " Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "53",
         "date": "05/03/2026"
       }
@@ -2438,7 +2438,7 @@
       "properties": {
         "address": "65XX DUCK CREEK DR Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft - Other (Under $100)",
+        "short_description": "Theft (Under $100)",
         "district": "53",
         "date": "05/06/2026"
       }
@@ -2549,7 +2549,7 @@
       "properties": {
         "address": "8XX LAGUNA DR Garland TX",
         "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
-        "short_description": "Theft - Other ($750-$2,500)",
+        "short_description": "Theft ($750-$2,500)",
         "district": "53",
         "date": "05/08/2026"
       }
@@ -2623,7 +2623,7 @@
       "properties": {
         "address": "7XX CREEKWATER LN Garland TX",
         "incident": "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000",
-        "short_description": "Motor Vehicle Theft ($2,500-$30,000)",
+        "short_description": "Motor Vehicle Theft",
         "district": "54",
         "date": "05/04/2026"
       }
@@ -2660,7 +2660,7 @@
       "properties": {
         "address": "10XX BRISTOL CT Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "54",
         "date": "05/05/2026"
       }
@@ -2771,7 +2771,7 @@
       "properties": {
         "address": "51XX WELBECK CT Garland TX",
         "incident": "BURGLARY-HAB W/INT TO COMMIT ASSLT-BI OR THREAT",
-        "short_description": "Burglary with Intent to Assault",
+        "short_description": "Habitation Burglary with Intent to Assault",
         "district": "54",
         "date": "05/09/2026"
       }
@@ -2808,7 +2808,7 @@
       "properties": {
         "address": "57XX DIANA DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Criminal Mischief ($100-$750)",
+        "short_description": "Vandalism ($100-$750)",
         "district": "55",
         "date": "05/07/2026"
       }
