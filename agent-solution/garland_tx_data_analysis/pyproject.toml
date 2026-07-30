@@ -7,17 +7,20 @@ requires-python = ">=3.10,<3.13"
 dependencies = [
     "crewai[anthropic,tools]>=0.108.0,<1.0.0",
     "pydantic>=2.12.5",
-    "PyPDF2",
+    # custom_tool.py imports `pypdf`. PyPDF2 was declared here instead — its
+    # deprecated predecessor — and the real import only resolved because a
+    # transitive dependency happened to pull pypdf in.
+    "pypdf>=5",
     "requests",
     "tinydb>=4.8.2",
 ]
 
+[dependency-groups]
+dev = ["pytest>=8"]
+
 [project.scripts]
 garland_tx_data_analysis = "garland_tx_data_analysis.main:run"
 run_crew = "garland_tx_data_analysis.main:run"
-train = "garland_tx_data_analysis.main:train"
-replay = "garland_tx_data_analysis.main:replay"
-test = "garland_tx_data_analysis.main:test"
 
 [build-system]
 requires = ["hatchling"]
