@@ -51,7 +51,10 @@ const normalizeIncidents = (data) => {
         "incident" in item &&
         "date" in item
     )
-    .map(({ date, incident, location, short_description, district }) => ({
+    .map(({ date, incident, location, short_description, district }, i) => ({
+      // Stable within a build, and the key the incident list uses to pan the
+      // map to the matching box.
+      id: i,
       date,
       incident,
       location,
@@ -95,6 +98,7 @@ const processIncidents = async (data) => {
       type: "Feature",
       geometry: bboxFeature.geometry,
       properties: {
+        id: item.id,
         address: getFullAddress(item.location),
         incident: item.incident,
         short_description: item.short_description,
@@ -103,14 +107,14 @@ const processIncidents = async (data) => {
       },
     });
   }
-  return { geojsonFeatures, confidentialAddresses, unmappable };
+  return { geojsonFeatures, confidentialAddresses, unmappable, flatList };
 };
 
 const main = async () => {
   mkdirSync(path.join(projectRoot, "dist"), { recursive: true });
 
   console.log(`Reading incidents from ${incidentsPath}`);
-  const { geojsonFeatures, confidentialAddresses, unmappable } =
+  const { geojsonFeatures, confidentialAddresses, unmappable, flatList } =
     await processIncidents(rawData);
 
   console.log(
@@ -133,6 +137,29 @@ const main = async () => {
   writeFileSync(
     path.join(projectRoot, "dist/unmappable.json"),
     JSON.stringify(unmappable, null, 2)
+  );
+
+  // Every incident in the report, mapped or not, for the browsable list. The
+  // status tells the list which rows can pan the map and which can't.
+  const mappedIds = new Set(geojsonFeatures.map((f) => f.properties.id));
+  const confidentialIds = new Set(confidentialAddresses.map((i) => i.id));
+  const allIncidents = [...flatList]
+    .sort((a, b) => {
+      const byDate = new Date(a.date) - new Date(b.date);
+      if (byDate) return byDate;
+      return String(a.district).localeCompare(String(b.district));
+    })
+    .map((item) => ({
+      ...item,
+      status: mappedIds.has(item.id)
+        ? "mapped"
+        : confidentialIds.has(item.id)
+          ? "confidential"
+          : "unmappable",
+    }));
+  writeFileSync(
+    path.join(projectRoot, "dist/incidents.json"),
+    JSON.stringify(allIncidents, null, 2)
   );
 
   // Save valid GeoJSON FeatureCollection

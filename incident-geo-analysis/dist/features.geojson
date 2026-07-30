@@ -31,6 +31,7 @@
         ]
       },
       "properties": {
+        "id": 1,
         "address": "34XX AQUARIUS CIR Garland TX",
         "incident": "OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE",
         "short_description": "Unauthorized Vehicle Use",
@@ -68,6 +69,7 @@
         ]
       },
       "properties": {
+        "id": 2,
         "address": "31XX ABBEY CT Garland TX",
         "incident": "BURGLARY-HAB",
         "short_description": "Residential Burglary",
@@ -105,6 +107,7 @@
         ]
       },
       "properties": {
+        "id": 3,
         "address": "23XX APOLLO RD Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -142,6 +145,7 @@
         ]
       },
       "properties": {
+        "id": 4,
         "address": "23XX APOLLO RD Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -179,6 +183,7 @@
         ]
       },
       "properties": {
+        "id": 5,
         "address": "54XX NAAMAN FOREST BLVD Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
@@ -216,6 +221,7 @@
         ]
       },
       "properties": {
+        "id": 6,
         "address": "21XX N JUPITER RD Garland TX",
         "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
         "short_description": "Shoplifting",
@@ -253,6 +259,7 @@
         ]
       },
       "properties": {
+        "id": 9,
         "address": "35XX W WALNUT ST Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
@@ -290,6 +297,7 @@
         ]
       },
       "properties": {
+        "id": 10,
         "address": "5XX EASY ST Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -327,6 +335,7 @@
         ]
       },
       "properties": {
+        "id": 11,
         "address": "37XX W BUCKINGHAM RD Garland TX",
         "incident": "BURGLARY-VEH-ATTACHED PARTS OR ACCESSORIES",
         "short_description": "Vehicle Parts Burglary",
@@ -364,6 +373,7 @@
         ]
       },
       "properties": {
+        "id": 12,
         "address": "37XX W WALNUT ST Garland TX",
         "incident": "OTHER AGENCY- THEFT-FIREARM",
         "short_description": "Firearm Theft",
@@ -401,6 +411,7 @@
         ]
       },
       "properties": {
+        "id": 13,
         "address": "38XX WALNUT PARK CIR Garland TX",
         "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
         "short_description": "Motor Vehicle Parts Theft",
@@ -438,6 +449,7 @@
         ]
       },
       "properties": {
+        "id": 14,
         "address": "40XX BUCKNELL DR Garland TX",
         "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
         "short_description": "Unauthorized Vehicle Use",
@@ -475,6 +487,7 @@
         ]
       },
       "properties": {
+        "id": 15,
         "address": "43XX UPLAND WY Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -512,6 +525,7 @@
         ]
       },
       "properties": {
+        "id": 16,
         "address": "42XX UPLAND WY Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -549,6 +563,7 @@
         ]
       },
       "properties": {
+        "id": 17,
         "address": "14XX MONTERREY DR Garland TX",
         "incident": "INFO-THEFT",
         "short_description": "Theft Report",
@@ -586,6 +601,7 @@
         ]
       },
       "properties": {
+        "id": 18,
         "address": "1XX S BARNES DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
@@ -623,6 +639,7 @@
         ]
       },
       "properties": {
+        "id": 19,
         "address": "30XX EDGEWOOD DR Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
@@ -660,6 +677,7 @@
         ]
       },
       "properties": {
+        "id": 21,
         "address": "16XX KINGS RD Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -697,6 +715,7 @@
         ]
       },
       "properties": {
+        "id": 23,
         "address": "38XX MILLER PARK DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
         "short_description": "Aggravated Assault with Weapon",
@@ -734,6 +753,7 @@
         ]
       },
       "properties": {
+        "id": 24,
         "address": "18XX S GARLAND AVE Garland TX",
         "incident": "THEFT-SHOPLIFTING-L/T $100",
         "short_description": "Shoplifting",
@@ -771,6 +791,7 @@
         ]
       },
       "properties": {
+        "id": 26,
         "address": "53XX N GARLAND AVE Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -808,6 +829,7 @@
         ]
       },
       "properties": {
+        "id": 27,
         "address": "3XX E BUCKINGHAM RD Garland TX",
         "incident": "CRIMINAL MISCHIEF L/T $100",
         "short_description": "Vandalism",
@@ -845,6 +867,7 @@
         ]
       },
       "properties": {
+        "id": 28,
         "address": "7XX HORSESHOE DR Garland TX",
         "incident": "ROBBERY-BUSINESS",
         "short_description": "Business Robbery",
@@ -882,6 +905,7 @@
         ]
       },
       "properties": {
+        "id": 29,
         "address": "3XX CEDAR SAGE DR Garland TX",
         "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
         "short_description": "Theft",
@@ -919,6 +943,7 @@
         ]
       },
       "properties": {
+        "id": 30,
         "address": "1XX CEDAR SAGE DR Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -956,6 +981,7 @@
         ]
       },
       "properties": {
+        "id": 31,
         "address": "42XX BUNKER HILL RD Garland TX",
         "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
         "short_description": "Vandalism",
@@ -993,6 +1019,7 @@
         ]
       },
       "properties": {
+        "id": 32,
         "address": "3XX TOWN CENTER BLVD Garland TX",
         "incident": "THEFT OF SERVICE-L/T $100",
         "short_description": "Service Theft",
@@ -1030,6 +1057,7 @@
         ]
       },
       "properties": {
+        "id": 33,
         "address": "2XX CEDAR SAGE DR Garland TX",
         "incident": "THEFT OF SERVICE-$100 L/T $750",
         "short_description": "Service Theft",
@@ -1067,6 +1095,7 @@
         ]
       },
       "properties": {
+        "id": 34,
         "address": "26XX LAVON DR Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
@@ -1104,6 +1133,7 @@
         ]
       },
       "properties": {
+        "id": 35,
         "address": "1XX CEDAR SAGE DR Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -1141,6 +1171,7 @@
         ]
       },
       "properties": {
+        "id": 36,
         "address": "6XX BEEBALM LN Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -1178,6 +1209,7 @@
         ]
       },
       "properties": {
+        "id": 38,
         "address": "33XX FIREWHEEL PKWY Garland TX",
         "incident": "THEFT-FROM PERSON-OTHER",
         "short_description": "Theft from Person",
@@ -1215,6 +1247,7 @@
         ]
       },
       "properties": {
+        "id": 39,
         "address": "22XX HANNAH LN Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
@@ -1252,6 +1285,7 @@
         ]
       },
       "properties": {
+        "id": 40,
         "address": "16XX S GARLAND AVE Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
         "short_description": "Theft",
@@ -1289,6 +1323,7 @@
         ]
       },
       "properties": {
+        "id": 41,
         "address": "10XX WYLAND DR Garland TX",
         "incident": "INFO-THEFT",
         "short_description": "Theft Report",
@@ -1326,6 +1361,7 @@
         ]
       },
       "properties": {
+        "id": 43,
         "address": "11XX BAY SHORE DR Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -1363,6 +1399,7 @@
         ]
       },
       "properties": {
+        "id": 44,
         "address": "9XX BAY SHORE DR Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -1400,6 +1437,7 @@
         ]
       },
       "properties": {
+        "id": 45,
         "address": "9XX BAY SHORE DR Garland TX",
         "incident": "THEFT-FIREARM",
         "short_description": "Firearm Theft",
@@ -1437,6 +1475,7 @@
         ]
       },
       "properties": {
+        "id": 47,
         "address": "14XX WHIPPOORWILL DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
         "short_description": "Aggravated Assault with Weapon",
@@ -1474,6 +1513,7 @@
         ]
       },
       "properties": {
+        "id": 48,
         "address": "11XX CUERO DR Garland TX",
         "incident": "BURGLARY-HAB",
         "short_description": "Residential Burglary",
@@ -1511,6 +1551,7 @@
         ]
       },
       "properties": {
+        "id": 49,
         "address": "29XX NATIONAL CT Garland TX",
         "incident": "THEFT CATALYTIC CONVERTER <30K TO REPLACE",
         "short_description": "Catalytic Converter Theft",
@@ -1548,6 +1589,7 @@
         ]
       },
       "properties": {
+        "id": 51,
         "address": "23XX EXECUTIVE DR Garland TX",
         "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
         "short_description": "Mail Fraud Report",
@@ -1585,6 +1627,7 @@
         ]
       },
       "properties": {
+        "id": 53,
         "address": "27XX WIMBLEDON CT Garland TX",
         "incident": "ASSAULT-AGG-D/W",
         "short_description": "Aggravated Assault with Weapon",
@@ -1622,6 +1665,7 @@
         ]
       },
       "properties": {
+        "id": 54,
         "address": "27XX WIMBLEDON CT Garland TX",
         "incident": "ASSAULT-AGG-D/W",
         "short_description": "Aggravated Assault with Weapon",
@@ -1659,6 +1703,7 @@
         ]
       },
       "properties": {
+        "id": 55,
         "address": "24XX HIGHDALE DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
@@ -1696,6 +1741,7 @@
         ]
       },
       "properties": {
+        "id": 56,
         "address": "10XX E CENTERVILLE RD Garland TX",
         "incident": "INFO-IDENTITY THEFT",
         "short_description": "Identity Theft Report",
@@ -1733,6 +1779,7 @@
         ]
       },
       "properties": {
+        "id": 57,
         "address": "6XX KEEN DR Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
@@ -1770,6 +1817,7 @@
         ]
       },
       "properties": {
+        "id": 59,
         "address": "6XX KEEN DR Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
@@ -1807,6 +1855,7 @@
         ]
       },
       "properties": {
+        "id": 60,
         "address": "6XX KEEN DR Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
@@ -1844,6 +1893,7 @@
         ]
       },
       "properties": {
+        "id": 61,
         "address": "15XX W KINGSLEY RD Garland TX",
         "incident": "INFO-VEH THEFT",
         "short_description": "Vehicle Theft Report",
@@ -1881,6 +1931,7 @@
         ]
       },
       "properties": {
+        "id": 66,
         "address": "18XX NORTHWEST HWY Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
@@ -1918,6 +1969,7 @@
         ]
       },
       "properties": {
+        "id": 67,
         "address": "18XX NORTHWEST HWY Garland TX",
         "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
         "short_description": "Unauthorized Vehicle Use",
@@ -1955,6 +2007,7 @@
         ]
       },
       "properties": {
+        "id": 68,
         "address": "42XX DUCK CREEK DR Garland TX",
         "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
         "short_description": "Theft",
@@ -1992,6 +2045,7 @@
         ]
       },
       "properties": {
+        "id": 69,
         "address": "15XX MERRIMAC TRL Garland TX",
         "incident": "INFO-IDENTITY THEFT",
         "short_description": "Identity Theft Report",
@@ -2029,6 +2083,7 @@
         ]
       },
       "properties": {
+        "id": 70,
         "address": "3XX XAVIER DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
@@ -2066,6 +2121,7 @@
         ]
       },
       "properties": {
+        "id": 71,
         "address": "18XX MARKETPLACE DR Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -2103,6 +2159,7 @@
         ]
       },
       "properties": {
+        "id": 72,
         "address": "18XX MARKETPLACE DR Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
@@ -2140,6 +2197,7 @@
         ]
       },
       "properties": {
+        "id": 73,
         "address": "18XX MARKETPLACE DR Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
@@ -2177,6 +2235,7 @@
         ]
       },
       "properties": {
+        "id": 74,
         "address": "53XX CREEK CT Garland TX",
         "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
         "short_description": "Unauthorized Vehicle Use",
@@ -2214,6 +2273,7 @@
         ]
       },
       "properties": {
+        "id": 75,
         "address": "5XX W I30 FRWY Garland TX",
         "incident": "THEFT-SHOPLIFTING-L/T $100",
         "short_description": "Shoplifting",
@@ -2251,6 +2311,7 @@
         ]
       },
       "properties": {
+        "id": 76,
         "address": "58XX BROADWAY BLVD Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
         "short_description": "Theft",
@@ -2288,6 +2349,7 @@
         ]
       },
       "properties": {
+        "id": 77,
         "address": "5XX W I30 FRWY Garland TX",
         "incident": "THEFT-SHOPLIFTING-L/T $100",
         "short_description": "Shoplifting",
@@ -2325,6 +2387,7 @@
         ]
       },
       "properties": {
+        "id": 78,
         "address": "40XX BROADWAY BLVD Garland TX",
         "incident": "THEFT OF SERVICE-L/T $100",
         "short_description": "Service Theft",
@@ -2362,6 +2425,7 @@
         ]
       },
       "properties": {
+        "id": 79,
         "address": "51XX LONGHORN TRL Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -2399,6 +2463,7 @@
         ]
       },
       "properties": {
+        "id": 80,
         "address": "51XX LONGHORN TRL Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -2436,6 +2501,7 @@
         ]
       },
       "properties": {
+        "id": 81,
         "address": "50XX STAGECOACH LN Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -2473,6 +2539,7 @@
         ]
       },
       "properties": {
+        "id": 82,
         "address": "52XX LONGHORN TRL Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -2510,6 +2577,7 @@
         ]
       },
       "properties": {
+        "id": 83,
         "address": "52XX LONGHORN TRL Garland TX",
         "incident": "BURGLARY-VEH",
         "short_description": "Vehicle Burglary",
@@ -2547,6 +2615,7 @@
         ]
       },
       "properties": {
+        "id": 84,
         "address": "42XX BROADWAY BLVD Garland TX",
         "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
         "short_description": "Vehicle Theft",
@@ -2584,6 +2653,7 @@
         ]
       },
       "properties": {
+        "id": 85,
         "address": "41XX BROADWAY BLVD Garland TX",
         "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
@@ -2621,6 +2691,7 @@
         ]
       },
       "properties": {
+        "id": 86,
         "address": "51XX PRESTON TRL Garland TX",
         "incident": "CRIMINAL MISCHIEF L/T $100",
         "short_description": "Vandalism",
@@ -2658,6 +2729,7 @@
         ]
       },
       "properties": {
+        "id": 87,
         "address": "34XX BOBTOWN RD Garland TX",
         "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$750 L/T $2,500",
         "short_description": "Motor Vehicle Parts Theft",
@@ -2695,6 +2767,7 @@
         ]
       },
       "properties": {
+        "id": 88,
         "address": "37XX EASTON MEADOWS DR Garland TX",
         "incident": "THEFT-ALL OTHER-L/T $100",
         "short_description": "Theft",
@@ -2732,6 +2805,7 @@
         ]
       },
       "properties": {
+        "id": 90,
         "address": "36XX EASTON MEADOWS DR Garland TX",
         "incident": "ROBBERY - AGG - INDIV",
         "short_description": "Aggravated Robbery",
@@ -2769,6 +2843,7 @@
         ]
       },
       "properties": {
+        "id": 91,
         "address": "47XX CARLTON CT Garland TX",
         "incident": "INFO-IDENTITY THEFT",
         "short_description": "Identity Theft Report",
@@ -2806,6 +2881,7 @@
         ]
       },
       "properties": {
+        "id": 92,
         "address": "57XX BROADWAY BLVD Garland TX",
         "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
         "short_description": "Theft",
@@ -2843,6 +2919,7 @@
         ]
       },
       "properties": {
+        "id": 93,
         "address": "35XX BOBTOWN RD Garland TX",
         "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$100 L/T $750",
         "short_description": "Motor Vehicle Parts Theft",
@@ -2880,6 +2957,7 @@
         ]
       },
       "properties": {
+        "id": 94,
         "address": "42XX BOBTOWN RD Garland TX",
         "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
         "short_description": "Unauthorized Vehicle Use",
@@ -2917,6 +2995,7 @@
         ]
       },
       "properties": {
+        "id": 95,
         "address": "28XX GUTHRIE RD Garland TX",
         "incident": "THEFT-MAIL <10 ADDRESSES",
         "short_description": "Mail Theft",
@@ -2954,6 +3033,7 @@
         ]
       },
       "properties": {
+        "id": 96,
         "address": "4XX W I30 FRWY Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
