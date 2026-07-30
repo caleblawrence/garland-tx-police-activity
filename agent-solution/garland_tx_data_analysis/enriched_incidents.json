@@ -1,786 +1,786 @@
 [
   {
-    "district": "22",
-    "date": "05/03/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "22XX KNIGHTHOOD LN",
-    "incident_id": 247,
-    "short_description": "Vandalism ($100-$750)"
+    "district": "21",
+    "date": "07/13/2026",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "66XX LAKE SHORE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Identity Theft Report"
+  },
+  {
+    "district": "21",
+    "date": "07/17/2026",
+    "incident": "OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "34XX AQUARIUS CIR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "21",
+    "date": "07/17/2026",
+    "incident": "BURGLARY-HAB",
+    "location": "31XX ABBEY CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Residential Burglary"
   },
   {
     "district": "22",
-    "date": "05/03/2026",
-    "incident": "CRIMINAL MISCHIEF L/T $100",
-    "location": "21XX W CAMPBELL RD",
-    "incident_id": 248,
-    "short_description": "Vandalism (Under $100)"
-  },
-  {
-    "district": "22",
-    "date": "05/05/2026",
+    "date": "07/16/2026",
     "incident": "BURGLARY-VEH",
-    "location": "54XX NAAMAN FOREST BLVD",
-    "incident_id": 249,
+    "location": "23XX APOLLO RD",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Vehicle Burglary"
   },
   {
     "district": "22",
-    "date": "05/05/2026",
+    "date": "07/16/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "23XX APOLLO RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "22",
+    "date": "07/16/2026",
     "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "17XX LOOKOUT DR",
-    "incident_id": 250,
-    "short_description": "Theft ($100-$750)"
+    "location": "54XX NAAMAN FOREST BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
   },
   {
-    "district": "22",
-    "date": "05/05/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "72XX TELECOM PKWY",
-    "incident_id": 251,
-    "short_description": "Theft ($100-$750)"
+    "district": "23",
+    "date": "07/13/2026",
+    "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
+    "location": "21XX N JUPITER RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
   },
   {
-    "district": "22",
-    "date": "05/07/2026",
-    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-    "location": "71XX GEORGE BUSH SERVICE RD",
-    "incident_id": 252,
-    "short_description": "Theft ($2,500-$30,000)"
+    "district": "23",
+    "date": "07/15/2026",
+    "incident": "SEXUAL ASSLT-RAPE",
+    "location": "ADDRESS CONFIDENTIAL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Sexual Assault"
   },
   {
-    "district": "22",
-    "date": "05/07/2026",
-    "incident": "CRIMINAL MISCHIEF L/T $100",
-    "location": "23XX KNIGHTHOOD LN",
-    "incident_id": 253,
-    "short_description": "Vandalism (Under $100)"
-  },
-  {
-    "district": "22",
-    "date": "05/08/2026",
+    "district": "23",
+    "date": "07/18/2026",
     "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
-    "incident_id": 254,
-    "short_description": "Injury to a Child"
-  },
-  {
-    "district": "23",
-    "date": "05/04/2026",
-    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-    "location": "21XX N JUPITER RD",
-    "incident_id": 255,
-    "short_description": "Vandalism ($750-$2,500)"
-  },
-  {
-    "district": "23",
-    "date": "05/06/2026",
-    "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-    "location": "21XX N JUPITER RD",
-    "incident_id": 256,
-    "short_description": "Theft of Property (Repeat Offense)"
-  },
-  {
-    "district": "23",
-    "date": "05/06/2026",
-    "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-    "location": "21XX N JUPITER RD",
-    "incident_id": 257,
-    "short_description": "Theft of Property (Repeat Offense)"
-  },
-  {
-    "district": "23",
-    "date": "05/06/2026",
-    "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-    "location": "21XX N JUPITER RD",
-    "incident_id": 258,
-    "short_description": "Theft of Property (Repeat Offense)"
-  },
-  {
-    "district": "23",
-    "date": "05/08/2026",
-    "incident": "ROBBERY-INDIV",
-    "location": "22XX WINDY DR",
-    "incident_id": 259,
-    "short_description": "Robbery - Individual"
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Child Injury"
   },
   {
     "district": "24",
-    "date": "05/03/2026",
-    "incident": "ASSAULT-AGG-D/W",
-    "location": "35XX FOREST LN",
-    "incident_id": 260,
-    "short_description": "Aggravated Assault with Deadly Weapon"
-  },
-  {
-    "district": "24",
-    "date": "05/04/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-    "location": "44XX W WALNUT ST",
-    "incident_id": 261,
-    "short_description": "Unauthorized Use of Motor Vehicle"
-  },
-  {
-    "district": "24",
-    "date": "05/06/2026",
-    "incident": "BURGLARY-HAB",
-    "location": "10XX CREST PARK DR",
-    "incident_id": 262,
-    "short_description": "Habitation Burglary"
-  },
-  {
-    "district": "24",
-    "date": "05/08/2026",
-    "incident": "THEFT-ALL OTHER-L/T $100",
-    "location": "40XX AMHERST DR",
-    "incident_id": 263,
-    "short_description": "Theft (Under $100)"
-  },
-  {
-    "district": "25",
-    "date": "05/05/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "23XX W BUCKINGHAM RD",
-    "incident_id": 264,
-    "short_description": "Theft ($100-$750)"
-  },
-  {
-    "district": "25",
-    "date": "05/06/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "21XX W WALNUT ST",
-    "incident_id": 265,
-    "short_description": "Theft ($100-$750)"
-  },
-  {
-    "district": "25",
-    "date": "05/08/2026",
-    "incident": "BURGLARY-VEH",
-    "location": "6XX WARREN DR",
-    "incident_id": 266,
-    "short_description": "Vehicle Burglary"
-  },
-  {
-    "district": "26",
-    "date": "05/06/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-    "location": "3XX S JUPITER RD",
-    "incident_id": 267,
-    "short_description": "Unauthorized Use of Motor Vehicle"
-  },
-  {
-    "district": "26",
-    "date": "05/07/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-    "location": "31XX EDGEWOOD DR",
-    "incident_id": 268,
-    "short_description": "Unauthorized Use of Motor Vehicle - Criminal Attempt"
-  },
-  {
-    "district": "26",
-    "date": "05/08/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-    "location": "27XX W WALNUT ST",
-    "incident_id": 269,
-    "short_description": "Unauthorized Use of Motor Vehicle"
-  },
-  {
-    "district": "26",
-    "date": "05/09/2026",
+    "date": "07/12/2026",
     "incident": "BURGLARY-BLDG",
-    "location": "14XX FOREST LN",
-    "incident_id": 270,
+    "location": "35XX W WALNUT ST",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Building Burglary"
   },
   {
-    "district": "27",
-    "date": "05/03/2026",
-    "incident": "ASSAULT-AGG-D/W",
-    "location": "12XX S SHILOH RD",
-    "incident_id": 271,
-    "short_description": "Aggravated Assault with Deadly Weapon"
+    "district": "24",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "5XX EASY ST",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "24",
+    "date": "07/16/2026",
+    "incident": "BURGLARY-VEH-ATTACHED PARTS OR ACCESSORIES",
+    "location": "37XX W BUCKINGHAM RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Parts Burglary"
+  },
+  {
+    "district": "24",
+    "date": "07/17/2026",
+    "incident": "OTHER AGENCY- THEFT-FIREARM",
+    "location": "37XX W WALNUT ST",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Firearm Theft"
+  },
+  {
+    "district": "24",
+    "date": "07/17/2026",
+    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
+    "location": "38XX WALNUT PARK CIR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Motor Vehicle Parts Theft"
+  },
+  {
+    "district": "24",
+    "date": "07/18/2026",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "40XX BUCKNELL DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "24",
+    "date": "07/18/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "43XX UPLAND WY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "24",
+    "date": "07/18/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "42XX UPLAND WY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "25",
+    "date": "07/15/2026",
+    "incident": "INFO-THEFT",
+    "location": "14XX MONTERREY DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft Report"
+  },
+  {
+    "district": "26",
+    "date": "07/12/2026",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "1XX S BARNES DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
+  },
+  {
+    "district": "26",
+    "date": "07/15/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "30XX EDGEWOOD DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Building Burglary"
+  },
+  {
+    "district": "26",
+    "date": "07/18/2026",
+    "incident": "INJURY TO A CHILD-BI",
+    "location": "ADDRESS CONFIDENTIAL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Child Injury"
   },
   {
     "district": "27",
-    "date": "05/04/2026",
-    "incident": "THEFT-ALL OTHER-$30,000 L/T $150,000",
-    "location": "",
-    "incident_id": 272,
-    "short_description": "Theft ($30,000-$150,000)"
+    "date": "07/13/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "16XX KINGS RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
   },
   {
     "district": "27",
-    "date": "05/05/2026",
+    "date": "07/16/2026",
     "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-    "location": "13XX ORIOLE LN",
-    "incident_id": 273,
-    "short_description": "Theft ($2,500-$30,000)"
+    "location": "",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
   },
   {
     "district": "27",
-    "date": "05/07/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-    "location": "14XX REDBUD LN",
-    "incident_id": 274,
-    "short_description": "Unauthorized Use of Motor Vehicle - Criminal Attempt"
+    "date": "07/16/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "38XX MILLER PARK DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Assault with Weapon"
+  },
+  {
+    "district": "27",
+    "date": "07/16/2026",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "18XX S GARLAND AVE",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
   },
   {
     "district": "31",
-    "date": "05/05/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "48XX NAAMAN FOREST BLVD",
-    "incident_id": 275,
-    "short_description": "Theft ($100-$750)"
+    "date": "07/12/2026",
+    "incident": "BURGLARY-HAB",
+    "location": "50XX N GEORGE BUSH SVC",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Residential Burglary"
   },
   {
     "district": "31",
-    "date": "05/06/2026",
+    "date": "07/14/2026",
     "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
     "location": "53XX N GARLAND AVE",
-    "incident_id": 276,
-    "short_description": "Shoplifting ($100-$750)"
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
   },
   {
     "district": "31",
-    "date": "05/06/2026",
-    "incident": "BURGLARY-HAB",
-    "location": "23XX SYLVAN DR",
-    "incident_id": 277,
-    "short_description": "Habitation Burglary"
-  },
-  {
-    "district": "31",
-    "date": "05/06/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "3XX LADYFERN WY",
-    "incident_id": 278,
-    "short_description": "Identity Theft Information"
-  },
-  {
-    "district": "31",
-    "date": "05/07/2026",
-    "incident": "THEFT-ALL OTHER-L/T $100",
-    "location": "45XX FOREST BEND CT",
-    "incident_id": 279,
-    "short_description": "Theft (Under $100)"
+    "date": "07/17/2026",
+    "incident": "CRIMINAL MISCHIEF L/T $100",
+    "location": "3XX E BUCKINGHAM RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
   },
   {
     "district": "32",
-    "date": "05/03/2026",
-    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "date": "07/12/2026",
+    "incident": "ROBBERY-BUSINESS",
     "location": "7XX HORSESHOE DR",
-    "incident_id": 280,
-    "short_description": "Shoplifting (Under $100)"
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Business Robbery"
   },
   {
     "district": "32",
-    "date": "05/04/2026",
+    "date": "07/12/2026",
+    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+    "location": "3XX CEDAR SAGE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "32",
+    "date": "07/13/2026",
     "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
     "location": "1XX CEDAR SAGE DR",
-    "incident_id": 281,
-    "short_description": "Shoplifting ($100-$750)"
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
   },
   {
     "district": "32",
-    "date": "05/06/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "27XX ROMAN WY",
-    "incident_id": 282,
-    "short_description": "Identity Theft Information"
+    "date": "07/15/2026",
+    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+    "location": "42XX BUNKER HILL RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
   },
   {
-    "district": "33",
-    "date": "05/04/2026",
-    "incident": "SEXUAL ASSLT-RAPE",
-    "location": "ADDRESS CONFIDENTIAL",
-    "incident_id": 283,
-    "short_description": "Sexual Assault - Rape"
+    "district": "32",
+    "date": "07/15/2026",
+    "incident": "THEFT OF SERVICE-L/T $100",
+    "location": "3XX TOWN CENTER BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Service Theft"
   },
   {
-    "district": "33",
-    "date": "05/05/2026",
+    "district": "32",
+    "date": "07/15/2026",
+    "incident": "THEFT OF SERVICE-$100 L/T $750",
+    "location": "2XX CEDAR SAGE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Service Theft"
+  },
+  {
+    "district": "32",
+    "date": "07/15/2026",
     "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "36XX CASTLE DR",
-    "incident_id": 284,
-    "short_description": "Theft ($100-$750)"
+    "location": "26XX LAVON DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "32",
+    "date": "07/16/2026",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "1XX CEDAR SAGE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "32",
+    "date": "07/17/2026",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "6XX BEEBALM LN",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "32",
+    "date": "07/17/2026",
+    "incident": "MURDER",
+    "location": "3XX RIVER FERN AVE",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Homicide"
+  },
+  {
+    "district": "32",
+    "date": "07/18/2026",
+    "incident": "THEFT-FROM PERSON-OTHER",
+    "location": "33XX FIREWHEEL PKWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft from Person"
+  },
+  {
+    "district": "33",
+    "date": "07/14/2026",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "22XX HANNAH LN",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
   },
   {
     "district": "34",
-    "date": "05/06/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "8XX DENT ST",
-    "incident_id": 285,
-    "short_description": "Identity Theft Information"
+    "date": "07/15/2026",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "16XX S GARLAND AVE",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
   },
   {
     "district": "34",
-    "date": "05/06/2026",
+    "date": "07/16/2026",
+    "incident": "INFO-THEFT",
+    "location": "10XX WYLAND DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft Report"
+  },
+  {
+    "district": "35",
+    "date": "07/13/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "14XX STATE HIGHWAY 66 HWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Building Burglary"
+  },
+  {
+    "district": "35",
+    "date": "07/16/2026",
     "incident": "BURGLARY-VEH",
-    "location": "",
-    "incident_id": 286,
+    "location": "11XX BAY SHORE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Vehicle Burglary"
   },
   {
     "district": "35",
-    "date": "05/07/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "2XX RIVER BIRCH TRL",
-    "incident_id": 287,
-    "short_description": "Identity Theft Information"
+    "date": "07/16/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "9XX BAY SHORE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "35",
+    "date": "07/16/2026",
+    "incident": "THEFT-FIREARM",
+    "location": "9XX BAY SHORE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Firearm Theft"
   },
   {
     "district": "36",
-    "date": "05/07/2026",
-    "incident": "SEXUAL ASSLT-RAPE-(CRIM ATT)",
-    "location": "ADDRESS CONFIDENTIAL",
-    "incident_id": 288,
-    "short_description": "Sexual Assault - Rape Attempt"
-  },
-  {
-    "district": "36",
-    "date": "05/08/2026",
-    "incident": "INFO-VEH THEFT",
-    "location": "2XX 2ND ST",
-    "incident_id": 289,
-    "short_description": "Vehicle Theft Information"
-  },
-  {
-    "district": "37",
-    "date": "05/03/2026",
-    "incident": "ROBBERY-INDIV",
-    "location": "9XX STATE HIGHWAY 66 HWY",
-    "incident_id": 290,
-    "short_description": "Robbery - Individual"
-  },
-  {
-    "district": "37",
-    "date": "05/03/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-    "location": "9XX STATE HIGHWAY 66 HWY",
-    "incident_id": 291,
-    "short_description": "Unauthorized Use of Motor Vehicle - Criminal Attempt"
-  },
-  {
-    "district": "37",
-    "date": "05/04/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "16XX S FIRST ST",
-    "incident_id": 292,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "37",
-    "date": "05/04/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "14XX DOVE DR",
-    "incident_id": 293,
-    "short_description": "Identity Theft Information"
-  },
-  {
-    "district": "37",
-    "date": "05/06/2026",
+    "date": "07/14/2026",
     "incident": "BURGLARY-BLDG",
-    "location": "24XX E CENTERVILLE RD",
-    "incident_id": 294,
+    "location": "18XX S FIRST ST",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Building Burglary"
   },
   {
     "district": "37",
-    "date": "05/07/2026",
-    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-    "location": "",
-    "incident_id": 295,
-    "short_description": "Theft ($2,500-$30,000)"
+    "date": "07/13/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "14XX WHIPPOORWILL DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Assault with Weapon"
   },
   {
     "district": "37",
-    "date": "05/09/2026",
-    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-    "location": "18XX S FIRST ST",
-    "incident_id": 296,
-    "short_description": "Shoplifting ($100-$750)"
+    "date": "07/17/2026",
+    "incident": "BURGLARY-HAB",
+    "location": "11XX CUERO DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Residential Burglary"
   },
   {
     "district": "41",
-    "date": "05/05/2026",
-    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$2,500 L/T $30,000",
-    "location": "30XX S GARLAND AVE",
-    "incident_id": 297,
-    "short_description": "Motor Vehicle Parts Theft ($2,500-$30,000)"
+    "date": "07/13/2026",
+    "incident": "THEFT CATALYTIC CONVERTER <30K TO REPLACE",
+    "location": "29XX NATIONAL CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Catalytic Converter Theft"
   },
   {
     "district": "41",
-    "date": "05/06/2026",
-    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$750 L/T $2,500",
-    "location": "33XX W MILLER RD",
-    "incident_id": 298,
-    "short_description": "Motor Vehicle Parts Theft ($750-$2,500)"
+    "date": "07/14/2026",
+    "incident": "THEFT-FROM PERSON-OTHER",
+    "location": "29XX S JUPITER RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft from Person"
   },
   {
     "district": "41",
-    "date": "05/07/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "13XX GREENWOOD DR",
-    "incident_id": 299,
-    "short_description": "Vandalism ($100-$750)"
+    "date": "07/16/2026",
+    "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
+    "location": "23XX EXECUTIVE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Mail Fraud Report"
   },
   {
     "district": "41",
-    "date": "05/08/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "20XX RIDGECREST DR",
-    "incident_id": 300,
-    "short_description": "Vandalism ($100-$750)"
+    "date": "07/16/2026",
+    "incident": "OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "41",
+    "date": "07/17/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "27XX WIMBLEDON CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Assault with Weapon"
+  },
+  {
+    "district": "41",
+    "date": "07/17/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "27XX WIMBLEDON CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Assault with Weapon"
   },
   {
     "district": "42",
-    "date": "05/03/2026",
+    "date": "07/13/2026",
     "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "13XX W MILLER RD",
-    "incident_id": 301,
-    "short_description": "Vandalism ($100-$750)"
+    "location": "24XX HIGHDALE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
   },
   {
     "district": "42",
-    "date": "05/04/2026",
-    "incident": "ROBBERY - AGG - INDIV",
-    "location": "9XX W MILLER RD",
-    "incident_id": 302,
-    "short_description": "Aggravated Robbery - Individual"
-  },
-  {
-    "district": "42",
-    "date": "05/08/2026",
+    "date": "07/14/2026",
     "incident": "INFO-IDENTITY THEFT",
-    "location": "14XX BENTWOOD DR",
-    "incident_id": 303,
-    "short_description": "Identity Theft Information"
+    "location": "10XX E CENTERVILLE RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Identity Theft Report"
+  },
+  {
+    "district": "42",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "6XX KEEN DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Building Burglary"
+  },
+  {
+    "district": "42",
+    "date": "07/15/2026",
+    "incident": "INFO-THEFT",
+    "location": "30XX S FIRST ST",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft Report"
+  },
+  {
+    "district": "42",
+    "date": "07/18/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "6XX KEEN DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Building Burglary"
+  },
+  {
+    "district": "42",
+    "date": "07/18/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "6XX KEEN DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Building Burglary"
   },
   {
     "district": "43",
-    "date": "05/04/2026",
+    "date": "07/12/2026",
+    "incident": "INFO-VEH THEFT",
+    "location": "15XX W KINGSLEY RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Theft Report"
+  },
+  {
+    "district": "43",
+    "date": "07/13/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "114XX LBJ FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Assault with Weapon"
+  },
+  {
+    "district": "43",
+    "date": "07/13/2026",
+    "incident": "SEXUAL ASSLT-RAPE",
+    "location": "ADDRESS CONFIDENTIAL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Sexual Assault"
+  },
+  {
+    "district": "43",
+    "date": "07/14/2026",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
+    "location": "122XX LBJ FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Theft"
+  },
+  {
+    "district": "43",
+    "date": "07/14/2026",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
+    "location": "122XX LBJ FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Theft"
+  },
+  {
+    "district": "43",
+    "date": "07/17/2026",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "18XX NORTHWEST HWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "43",
+    "date": "07/17/2026",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "18XX NORTHWEST HWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "45",
+    "date": "07/12/2026",
+    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+    "location": "42XX DUCK CREEK DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "45",
+    "date": "07/16/2026",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "15XX MERRIMAC TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Identity Theft Report"
+  },
+  {
+    "district": "45",
+    "date": "07/17/2026",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "3XX XAVIER DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
+  },
+  {
+    "district": "46",
+    "date": "07/14/2026",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "18XX MARKETPLACE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "46",
+    "date": "07/14/2026",
+    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+    "location": "18XX MARKETPLACE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "46",
+    "date": "07/17/2026",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "18XX MARKETPLACE DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "51",
+    "date": "07/17/2026",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
+    "location": "53XX CREEK CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "52",
+    "date": "07/14/2026",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "5XX W I30 FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "52",
+    "date": "07/15/2026",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "58XX BROADWAY BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "52",
+    "date": "07/17/2026",
+    "incident": "THEFT-SHOPLIFTING-L/T $100",
+    "location": "5XX W I30 FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Shoplifting"
+  },
+  {
+    "district": "53",
+    "date": "07/13/2026",
+    "incident": "THEFT OF SERVICE-L/T $100",
+    "location": "40XX BROADWAY BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Service Theft"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "51XX LONGHORN TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "51XX LONGHORN TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "50XX STAGECOACH LN",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "52XX LONGHORN TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "52XX LONGHORN TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
+    "location": "42XX BROADWAY BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Theft"
+  },
+  {
+    "district": "53",
+    "date": "07/14/2026",
+    "incident": "THEFT-ALL OTHER-$100 L/T $750",
+    "location": "41XX BROADWAY BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "53",
+    "date": "07/16/2026",
+    "incident": "CRIMINAL MISCHIEF L/T $100",
+    "location": "51XX PRESTON TRL",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
+  },
+  {
+    "district": "54",
+    "date": "07/12/2026",
+    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$750 L/T $2,500",
+    "location": "34XX BOBTOWN RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Motor Vehicle Parts Theft"
+  },
+  {
+    "district": "54",
+    "date": "07/12/2026",
+    "incident": "THEFT-ALL OTHER-L/T $100",
+    "location": "37XX EASTON MEADOWS DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "54",
+    "date": "07/12/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "60XX I30 FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "district": "54",
+    "date": "07/13/2026",
+    "incident": "ROBBERY - AGG - INDIV",
+    "location": "36XX EASTON MEADOWS DR",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Aggravated Robbery"
+  },
+  {
+    "district": "54",
+    "date": "07/13/2026",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "47XX CARLTON CT",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Identity Theft Report"
+  },
+  {
+    "district": "54",
+    "date": "07/14/2026",
+    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+    "location": "57XX BROADWAY BLVD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Theft"
+  },
+  {
+    "district": "54",
+    "date": "07/18/2026",
+    "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$100 L/T $750",
+    "location": "35XX BOBTOWN RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Motor Vehicle Parts Theft"
+  },
+  {
+    "district": "55",
+    "date": "07/15/2026",
+    "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "42XX BOBTOWN RD",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "district": "55",
+    "date": "07/16/2026",
     "incident": "THEFT-MAIL <10 ADDRESSES",
-    "location": "17XX MAYFIELD AVE",
-    "incident_id": 304,
+    "location": "28XX GUTHRIE RD",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Mail Theft"
   },
   {
-    "district": "43",
-    "date": "05/04/2026",
+    "district": "55",
+    "date": "07/18/2026",
+    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+    "location": "4XX W I30 FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Vandalism"
+  },
+  {
+    "district": "56",
+    "date": "07/14/2026",
     "incident": "INJURY TO AN ELDERLY PERSON-BI",
-    "location": "17XX NORTHWEST HWY",
-    "incident_id": 305,
-    "short_description": "Injury to an Elderly Person"
-  },
-  {
-    "district": "43",
-    "date": "05/08/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "40XX GREENWAY DR",
-    "incident_id": 306,
-    "short_description": "Theft ($100-$750)"
-  },
-  {
-    "district": "45",
-    "date": "05/08/2026",
-    "incident": "THEFT-ALL OTHER-$100 L/T $750",
-    "location": "6XX MOUNT VERNON PL",
-    "incident_id": 307,
-    "short_description": "Theft ($100-$750)"
-  },
-  {
-    "district": "45",
-    "date": "05/09/2026",
-    "incident": "ROBBERY-INDIV",
-    "location": "5XX W I30 FRWY",
-    "incident_id": 308,
-    "short_description": "Robbery - Individual"
-  },
-  {
-    "district": "45",
-    "date": "05/09/2026",
-    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
-    "location": "42XX DUCK CREEK DR",
-    "incident_id": 309,
-    "short_description": "Theft ($750-$2,500)"
-  },
-  {
-    "district": "45",
-    "date": "05/09/2026",
-    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-    "location": "42XX DUCK CREEK DR",
-    "incident_id": 310,
-    "short_description": "Vandalism ($750-$2,500)"
-  },
-  {
-    "district": "46",
-    "date": "05/05/2026",
-    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-    "location": "18XX MARKETPLACE DR",
-    "incident_id": 311,
-    "short_description": "Shoplifting ($100-$750)"
-  },
-  {
-    "district": "46",
-    "date": "05/05/2026",
-    "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-    "location": "18XX MARKETPLACE DR",
-    "incident_id": 312,
-    "short_description": "Shoplifting ($100-$750)"
-  },
-  {
-    "district": "46",
-    "date": "05/09/2026",
-    "incident": "THEFT OF SERVICE-$100 L/T $750",
-    "location": "44XX SATURN RD",
-    "incident_id": 313,
-    "short_description": "Theft of Service ($100-$750)"
-  },
-  {
-    "district": "51",
-    "date": "05/03/2026",
-    "incident": "INFO-AUTO THEFT ABANDONED VEHICLE",
-    "location": "",
-    "incident_id": 314,
-    "short_description": "Abandoned Vehicle Information"
-  },
-  {
-    "district": "51",
-    "date": "05/04/2026",
-    "incident": "BURGLARY-VEH-ATTACHED PARTS OR ACCESSORIES",
-    "location": "8XX W CENTERVILLE RD",
-    "incident_id": 315,
-    "short_description": "Vehicle Parts Burglary"
-  },
-  {
-    "district": "51",
-    "date": "05/04/2026",
-    "incident": "BURGLARY-VEH-ATTACHED PARTS OR ACCESSORIES",
-    "location": "8XX W CENTERVILLE RD",
-    "incident_id": 316,
-    "short_description": "Vehicle Parts Burglary"
-  },
-  {
-    "district": "51",
-    "date": "05/05/2026",
-    "incident": "ASSAULT-AGG-D/W",
-    "location": "4XX VALLEY PARK DR",
-    "incident_id": 317,
-    "short_description": "Aggravated Assault with Deadly Weapon"
-  },
-  {
-    "district": "51",
-    "date": "05/06/2026",
-    "incident": "THEFT-ALL OTHER-OVER $300,000",
-    "location": "",
-    "incident_id": 318,
-    "short_description": "Theft (Over $300,000)"
-  },
-  {
-    "district": "52",
-    "date": "05/04/2026",
-    "incident": "THEFT-SHOPLIFTING-L/T $100",
-    "location": "5XX W I30 FRWY",
-    "incident_id": 319,
-    "short_description": "Shoplifting (Under $100)"
-  },
-  {
-    "district": "52",
-    "date": "05/07/2026",
-    "incident": "INFO-VEH THEFT",
-    "location": "61XX CYPRESS POINT DR",
-    "incident_id": 320,
-    "short_description": "Vehicle Theft Information"
-  },
-  {
-    "district": "53",
-    "date": "05/03/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "",
-    "incident_id": 321,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "53",
-    "date": "05/03/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "",
-    "incident_id": 322,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "53",
-    "date": "05/05/2026",
-    "incident": "BURGLARY-HAB",
-    "location": "7XX GATEWOOD RD",
-    "incident_id": 323,
-    "short_description": "Habitation Burglary"
-  },
-  {
-    "district": "53",
-    "date": "05/06/2026",
-    "incident": "THEFT-ALL OTHER-L/T $100",
-    "location": "65XX DUCK CREEK DR",
-    "incident_id": 324,
-    "short_description": "Theft (Under $100)"
-  },
-  {
-    "district": "53",
-    "date": "05/07/2026",
-    "incident": "BURGLARY-VEH",
-    "location": "59XX DUCK CREEK DR",
-    "incident_id": 325,
-    "short_description": "Vehicle Burglary"
-  },
-  {
-    "district": "53",
-    "date": "05/08/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "46XX PARKHAVEN DR",
-    "incident_id": 326,
-    "short_description": "Identity Theft Information"
-  },
-  {
-    "district": "53",
-    "date": "05/08/2026",
-    "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
-    "location": "8XX LAGUNA DR",
-    "incident_id": 327,
-    "short_description": "Theft ($750-$2,500)"
-  },
-  {
-    "district": "54",
-    "date": "05/04/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "51XX WELBECK CT",
-    "incident_id": 328,
-    "short_description": "Identity Theft Information"
-  },
-  {
-    "district": "54",
-    "date": "05/04/2026",
-    "incident": "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000",
-    "location": "7XX CREEKWATER LN",
-    "incident_id": 329,
-    "short_description": "Motor Vehicle Theft"
-  },
-  {
-    "district": "54",
-    "date": "05/05/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "10XX BRISTOL CT",
-    "incident_id": 330,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "54",
-    "date": "05/05/2026",
-    "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-    "location": "",
-    "incident_id": 331,
-    "short_description": "Unauthorized Use of Motor Vehicle - Criminal Attempt"
-  },
-  {
-    "district": "54",
-    "date": "05/06/2026",
-    "incident": "BURGLARY-BLDG",
-    "location": "54XX SANDSTONE DR",
-    "incident_id": 332,
-    "short_description": "Building Burglary"
-  },
-  {
-    "district": "54",
-    "date": "05/07/2026",
-    "incident": "INFO-IDENTITY THEFT",
-    "location": "52XX WEDGEWOOD DR",
-    "incident_id": 333,
-    "short_description": "Identity Theft Information"
-  },
-  {
-    "district": "54",
-    "date": "05/07/2026",
-    "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-    "location": "26XX I30 FRWY",
-    "incident_id": 334,
-    "short_description": "Vandalism ($750-$2,500)"
-  },
-  {
-    "district": "54",
-    "date": "05/08/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "26XX I30 FRWY",
-    "incident_id": 335,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "54",
-    "date": "05/09/2026",
-    "incident": "BURGLARY-HAB W/INT TO COMMIT ASSLT-BI OR THREAT",
-    "location": "51XX WELBECK CT",
-    "incident_id": 336,
-    "short_description": "Habitation Burglary with Intent to Assault"
-  },
-  {
-    "district": "55",
-    "date": "05/03/2026",
-    "incident": "BURGLARY-VEH-(CRIM ATT)",
-    "location": "70XX JACK FRANZEN DR",
-    "incident_id": 337,
-    "short_description": "Vehicle Burglary - Criminal Attempt"
-  },
-  {
-    "district": "55",
-    "date": "05/05/2026",
-    "incident": "BURGLARY-HAB W/INT TO COMMIT SEX ASSLT",
-    "location": "ADDRESS CONFIDENTIAL",
-    "incident_id": 338,
-    "short_description": "Habitation Burglary with Intent to Commit Sexual Assault"
-  },
-  {
-    "district": "55",
-    "date": "05/05/2026",
-    "incident": "CRIMINAL MISCHIEF L/T $100",
-    "location": "2XX E I30 FRWY",
-    "incident_id": 339,
-    "short_description": "Vandalism (Under $100)"
-  },
-  {
-    "district": "55",
-    "date": "05/07/2026",
-    "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-    "location": "57XX DIANA DR",
-    "incident_id": 340,
-    "short_description": "Vandalism ($100-$750)"
-  },
-  {
-    "district": "56",
-    "date": "05/04/2026",
-    "incident": "BURGLARY-VEH",
-    "location": "42XX BASS PRO DR",
-    "incident_id": 341,
-    "short_description": "Vehicle Burglary"
-  },
-  {
-    "district": "56",
-    "date": "05/05/2026",
-    "incident": "BURGLARY-BLDG",
-    "location": "93XX I30 FRWY",
-    "incident_id": 342,
-    "short_description": "Building Burglary"
-  },
-  {
-    "district": "56",
-    "date": "05/08/2026",
-    "incident": "BURGLARY-VEH-(CRIM ATT)",
-    "location": "50XX ZION RD",
-    "incident_id": 343,
-    "short_description": "Vehicle Burglary - Criminal Attempt"
-  },
-  {
-    "district": "56",
-    "date": "05/09/2026",
-    "incident": "THEFT PROP < $2,500 2 / MORE PREV CONV",
-    "location": "8XX E I30 FRWY",
-    "incident_id": 344,
-    "short_description": "Theft of Property (Repeat Offense)"
+    "location": "134XX I30 FRWY",
+    "report_period": "07/12/2026 - 07/18/2026",
+    "short_description": "Elderly Person Injury"
   }
 ]

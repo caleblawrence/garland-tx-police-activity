@@ -1,30 +1,30 @@
 [
   {
-    "date": "05/08/2026",
-    "incident": "INJURY TO A CHILD-BI",
-    "location": "ADDRESS CONFIDENTIAL",
-    "district": "22",
-    "short_description": "Injury to a Child"
-  },
-  {
-    "date": "05/04/2026",
+    "date": "07/15/2026",
     "incident": "SEXUAL ASSLT-RAPE",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "33",
-    "short_description": "Sexual Assault - Rape"
+    "district": "23",
+    "short_description": "Sexual Assault"
   },
   {
-    "date": "05/07/2026",
-    "incident": "SEXUAL ASSLT-RAPE-(CRIM ATT)",
+    "date": "07/18/2026",
+    "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "36",
-    "short_description": "Sexual Assault - Rape Attempt"
+    "district": "23",
+    "short_description": "Child Injury"
   },
   {
-    "date": "05/05/2026",
-    "incident": "BURGLARY-HAB W/INT TO COMMIT SEX ASSLT",
+    "date": "07/18/2026",
+    "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "55",
-    "short_description": "Habitation Burglary with Intent to Commit Sexual Assault"
+    "district": "26",
+    "short_description": "Child Injury"
+  },
+  {
+    "date": "07/13/2026",
+    "incident": "SEXUAL ASSLT-RAPE",
+    "location": "ADDRESS CONFIDENTIAL",
+    "district": "43",
+    "short_description": "Sexual Assault"
   }
 ]
