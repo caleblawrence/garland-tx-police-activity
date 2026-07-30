@@ -83,24 +83,19 @@ def _find_report_period(lines: List[str]) -> Optional[str]:
     return None
 
 
-def _find_districts(lines: List[str]) -> List[int]:
-    seen = []
-    for line in lines:
-        m = re.search(r"DISTRICT (\d+)", line)
-        if m:
-            seen.append(int(m.group(1)))
-    return sorted(set(seen))
-
-
-def _parse_incidents(lines: List[str], districts: List[int]) -> List[dict]:
+def _parse_incidents(lines: List[str]) -> List[dict]:
     """Walk the lines once, tracking which district section we're in.
 
     The PDF lists incidents under `DISTRICT NN` headers. We assign each
     incident-bearing line to the most recent district header seen. This
     avoids the previous bug where a per-district flag was never reset
     and re-occurrences of a district header were silently skipped.
+
+    Every district in the report is kept. There used to be a districts-of-
+    interest filter here, but it was built from the districts found in the
+    very same PDF and so matched all of them — a no-op that still read like
+    a working feature.
     """
-    wanted = {str(d) for d in districts}
     incidents: List[dict] = []
     current_district: Optional[str] = None
 
@@ -112,7 +107,7 @@ def _parse_incidents(lines: List[str], districts: List[int]) -> List[dict]:
         if header_match:
             current_district = header_match.group(1)
             continue
-        if current_district is None or current_district not in wanted:
+        if current_district is None:
             continue
 
         tokens = line.strip().split()
@@ -154,9 +149,8 @@ class PDFIncidentExtractorTool(BaseTool):
     def _run(self, pdf_path: str, output_json_path: str = "extracted_incidents.json") -> str:
         text = _extract_text(pdf_path)
         lines = text.split("\n")
-        districts = _find_districts(lines)
         report_period = _find_report_period(lines)
-        incidents = _parse_incidents(lines, districts)
+        incidents = _parse_incidents(lines)
 
         # Stamp the period on every row so downstream consumers can group by week
         # and so re-ingesting the same report is detectable.
