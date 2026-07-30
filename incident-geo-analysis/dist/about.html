@@ -11,7 +11,9 @@
         --border: rgba(15, 23, 42, 0.08);
         --text: #0f172a;
         --text-muted: #475569;
+        --text-subtle: #64748b;
         --accent: #dc2626;
+        --accent-soft: rgba(220, 38, 38, 0.1);
         --shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.15),
           0 2px 6px rgba(15, 23, 42, 0.04);
         --radius: 14px;
@@ -29,13 +31,13 @@
         font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
           Roboto, Helvetica, Arial, sans-serif;
         font-size: 15px;
-        line-height: 1.6;
+        line-height: 1.65;
         -webkit-font-smoothing: antialiased;
       }
       .navbar {
-        position: sticky;
-        top: 16px;
-        margin: 16px auto 32px;
+        /* Not sticky: the pill is opaque and centred over a 720px text column,
+           so sticking it would hide the middle of whatever scrolled under it. */
+        margin: 16px auto 40px;
         width: fit-content;
         display: flex;
         gap: 4px;
@@ -65,7 +67,7 @@
       .container {
         max-width: 720px;
         margin: 0 auto;
-        padding: 0 20px 60px;
+        padding: 0 20px 80px;
       }
       .eyebrow {
         font-size: 11px;
@@ -75,18 +77,26 @@
         color: var(--accent);
       }
       h1 {
-        margin: 6px 0 24px;
-        font-size: 36px;
+        margin: 6px 0 14px;
+        font-size: 38px;
         font-weight: 700;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+      }
+      .lede {
+        font-size: 17px;
+        color: var(--text-muted);
+        margin: 0 0 32px;
       }
       h2 {
-        margin-top: 36px;
-        font-size: 20px;
+        margin: 44px 0 12px;
+        font-size: 19px;
         font-weight: 700;
+        letter-spacing: -0.01em;
       }
       p {
         color: var(--text-muted);
+        margin: 0 0 14px;
       }
       a {
         color: var(--accent);
@@ -100,15 +110,148 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
-        padding: 24px;
+        padding: 22px 24px;
         box-shadow: var(--shadow);
       }
-      ul {
-        padding-left: 20px;
+
+      /* ---- Live stats from the current report ---- */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+      .stat .n {
+        display: block;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      .stat .k {
+        font-size: 12px;
+        color: var(--text-subtle);
+      }
+      .stat.is-accent .n {
+        color: var(--accent);
+      }
+      .period {
+        font-size: 13px;
+        color: var(--text-subtle);
+        margin: 0 0 32px;
+      }
+
+      /* ---- Numbered pipeline ---- */
+      ol.steps {
+        list-style: none;
+        counter-reset: step;
+        padding: 0;
+        margin: 0;
+      }
+      ol.steps li {
+        counter-increment: step;
+        position: relative;
+        padding: 0 0 16px 42px;
         color: var(--text-muted);
       }
-      li {
-        margin: 6px 0;
+      ol.steps li:last-child {
+        padding-bottom: 0;
+      }
+      ol.steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 1px;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      ol.steps li::after {
+        content: "";
+        position: absolute;
+        left: 13px;
+        top: 30px;
+        bottom: 4px;
+        width: 1px;
+        background: var(--border);
+      }
+      ol.steps li:last-child::after {
+        display: none;
+      }
+      ol.steps b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      ul.plain {
+        padding-left: 20px;
+        margin: 0;
+        color: var(--text-muted);
+      }
+      ul.plain li {
+        margin: 7px 0;
+      }
+      ul.plain li b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .done {
+        color: var(--text-subtle);
+      }
+      .done b {
+        color: var(--text-muted);
+      }
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        vertical-align: 2px;
+        margin-right: 6px;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88em;
+        background: rgba(15, 23, 42, 0.05);
+        border-radius: 5px;
+        padding: 1px 5px;
+        color: var(--text);
+        /* The longest of these is a 38-char offence code, which at nowrap sat
+           exactly at the edge of a 375px viewport. Let it wrap instead. */
+        overflow-wrap: break-word;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--text-subtle);
+        border-left: 2px solid var(--border);
+        padding-left: 14px;
+        margin: 18px 0 0;
+      }
+      footer {
+        margin-top: 52px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--text-subtle);
       }
     </style>
   </head>
@@ -121,43 +264,189 @@
     <div class="container">
       <div class="eyebrow">About</div>
       <h1>Garland TX Police Incidents</h1>
+      <p class="lede">
+        The City of Garland publishes a weekly PDF of selected police incidents.
+        This site turns that PDF into a map you can actually read — and a list
+        you can skim.
+      </p>
 
+      <div class="stats" id="stats">
+        <div class="stat is-accent">
+          <span class="n" id="stat-total">—</span>
+          <span class="k">incidents</span>
+        </div>
+        <div class="stat">
+          <span class="n" id="stat-mapped">—</span>
+          <span class="k">on the map</span>
+        </div>
+        <div class="stat">
+          <span class="n" id="stat-confidential">—</span>
+          <span class="k">confidential</span>
+        </div>
+        <div class="stat">
+          <span class="n" id="stat-unmappable">—</span>
+          <span class="k">not mappable</span>
+        </div>
+      </div>
+      <p class="period" id="stat-period">Loading the current report…</p>
+
+      <h2>Reading the map</h2>
       <div class="card">
         <p>
-          This site plots the weekly police incident report for Garland, TX onto
-          a map. Each incident is shown as a bounding box around its reported
-          block. Hover for the category, click for the full record.
+          Every incident is drawn as a <b>box covering a block</b>, not a pin on
+          a building. Hover a box for the offence, click it for the full record.
         </p>
-        <p>
-          Source data comes from the
-          <a
-            href="https://www.garlandtx.gov/396/Crime-Statistics-Maps"
-            target="_blank"
-            rel="noopener"
-            >City of Garland's Crime Statistics &amp; Maps</a
-          >
-          page. Some incidents have confidential addresses — those are listed in
-          the side panel on the map instead.
-        </p>
-        <p>
-          The pipeline (PDF download → extraction → geocoding → map) is open
-          source on
-          <a
-            href="https://github.com/caleblawrence/garland-tx-police-activity"
-            target="_blank"
-            rel="noopener"
-            >GitHub</a
-          >.
+        <p style="margin-bottom: 0">
+          The panel in the bottom-right corner lists <b>every incident</b> in the
+          report. Clicking a row jumps the map to it. Incidents that have no box
+          are greyed out but still listed, so the report reads the same whether
+          or not a location could be resolved.
         </p>
       </div>
 
-      <h2>Roadmap</h2>
-      <ul>
-        <li>Persist incidents across weeks for historical comparison</li>
-        <li>Filter by district and category</li>
-        <li>Highlight aggravated and violent incidents</li>
-        <li>Automate the full refresh on a weekly schedule</li>
+      <h2>Where the numbers come from</h2>
+      <p>
+        Everything here is derived from the
+        <a
+          href="https://www.garlandtx.gov/396/Crime-Statistics-Maps"
+          target="_blank"
+          rel="noopener"
+          >City of Garland's Crime Statistics &amp; Maps</a
+        >
+        page — specifically the "Previous Week Selected Incident Report" PDF. No
+        data is added, and nothing is filtered out.
+      </p>
+      <p>
+        Because the city publishes the <i>previous</i> week, the map always
+        trails real time by a week or more. It also covers selected offence
+        categories only — murder, sexual assault, aggravated assault, robbery,
+        burglary, theft, motor vehicle theft and criminal mischief — so it is not
+        a complete picture of police activity.
+      </p>
+
+      <h2>How locations are estimated</h2>
+      <p>
+        The PDF never gives a house number. It reports a block, like
+        <code>37XX W BUCKINGHAM RD</code>. So a box is the honest shape for this
+        data: the incident happened <i>somewhere</i> along that block.
+      </p>
+      <p>
+        Each block is looked up against OpenStreetMap, and only results that
+        match a real street address are used. Where both ends of a block resolve,
+        the box spans them; where only one does, it's a fixed box roughly 150
+        metres across. A typical box is about 120 m on its longest side.
+      </p>
+      <p class="note">
+        Boxes are approximations, and a few of them will be wrong. Treat them as
+        "this block, give or take" rather than an address. If a lookup can't be
+        pinned to a real address at all, the incident is left off the map instead
+        of being drawn somewhere plausible-looking but false.
+      </p>
+
+      <h2>What isn't on the map</h2>
+      <ul class="plain">
+        <li>
+          <b>Confidential addresses.</b> The city withholds the location for some
+          incidents — typically sexual assaults and offences involving children.
+          These are listed with their date and district only.
+        </li>
+        <li>
+          <b>Locations that can't be resolved.</b> Freeway blocks
+          (<code>LBJ FRWY</code>), major roads with no address data, streets too
+          new to be in OpenStreetMap, and rows where the city left the address
+          column blank.
+        </li>
       </ul>
+
+      <h2>How it's built</h2>
+      <ol class="steps">
+        <li>
+          <b>Download</b> the weekly PDF from the city's document centre.
+        </li>
+        <li>
+          <b>Extract</b> every incident from the PDF text — date, offence,
+          location and district — and record which week the report covers.
+        </li>
+        <li>
+          <b>Relabel</b> the offence codes with a language model, turning
+          <code>THEFT-MOTOR VEHICLE-$2,500 L/T $30,000</code> into
+          <span style="color: var(--text)">Motor Vehicle Theft</span>.
+        </li>
+        <li>
+          <b>Store</b> the week in a local database, skipping incidents already
+          recorded so a re-run can't double-count.
+        </li>
+        <li>
+          <b>Geocode</b> each block against OpenStreetMap and build the boxes.
+        </li>
+        <li><b>Render</b> the map and the incident list.</li>
+      </ol>
+
+      <h2>Roadmap</h2>
+      <ul class="plain">
+        <li class="done">
+          <span class="tag">Done</span><b>Keep every week in one database.</b>
+          Past reports are retained and tagged by week, ready for comparison.
+        </li>
+        <li>
+          <b>Show history in the UI.</b> The weeks are stored but the map still
+          only renders the latest one — no trends or week-over-week view yet.
+        </li>
+        <li><b>Filter</b> by district and offence category.</li>
+        <li><b>Highlight</b> violent and aggravated offences.</li>
+        <li>
+          <b>Refresh automatically.</b> Publishing a new week is still run by
+          hand.
+        </li>
+      </ul>
+
+      <footer>
+        Not affiliated with the City of Garland or the Garland Police Department.
+        Source and full pipeline on
+        <a
+          href="https://github.com/caleblawrence/garland-tx-police-activity"
+          target="_blank"
+          rel="noopener"
+          >GitHub</a
+        >. Map data © OpenStreetMap contributors.
+      </footer>
     </div>
+
+    <script>
+      // Pulled from the same file the map reads, so these never drift from
+      // what's actually published.
+      fetch("incidents.json")
+        .then((r) => r.json())
+        .then((items) => {
+          const count = (s) => items.filter((i) => i.status === s).length;
+          const set = (id, v) => (document.getElementById(id).textContent = v);
+          set("stat-total", items.length);
+          set("stat-mapped", count("mapped"));
+          set("stat-confidential", count("confidential"));
+          set("stat-unmappable", count("unmappable"));
+
+          const period = items.find((i) => i.report_period)?.report_period;
+          const fmt = (s) => {
+            const d = new Date(s.trim());
+            return isNaN(d)
+              ? s.trim()
+              : d.toLocaleDateString(undefined, {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                });
+          };
+          document.getElementById("stat-period").textContent = period
+            ? `Currently showing the week of ${period
+                .split("-")
+                .map(fmt)
+                .join(" – ")}.`
+            : "Showing the most recent report published by the city.";
+        })
+        .catch(() => {
+          document.getElementById("stat-period").textContent =
+            "Showing the most recent report published by the city.";
+        });
+    </script>
   </body>
 </html>

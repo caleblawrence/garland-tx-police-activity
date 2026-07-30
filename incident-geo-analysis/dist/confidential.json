@@ -5,6 +5,7 @@
     "incident": "SEXUAL ASSLT-RAPE",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "23",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Sexual Assault"
   },
   {
@@ -13,6 +14,7 @@
     "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "23",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Child Injury"
   },
   {
@@ -21,6 +23,7 @@
     "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "26",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Child Injury"
   },
   {
@@ -29,6 +32,7 @@
     "incident": "SEXUAL ASSLT-RAPE",
     "location": "ADDRESS CONFIDENTIAL",
     "district": "43",
+    "report_period": "07/12/2026 - 07/18/2026",
     "short_description": "Sexual Assault"
   }
 ]

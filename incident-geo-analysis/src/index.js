@@ -51,16 +51,23 @@ const normalizeIncidents = (data) => {
         "incident" in item &&
         "date" in item
     )
-    .map(({ date, incident, location, short_description, district }, i) => ({
-      // Stable within a build, and the key the incident list uses to pan the
-      // map to the matching box.
-      id: i,
-      date,
-      incident,
-      location,
-      district,
-      short_description: short_description || incident,
-    }));
+    .map(
+      (
+        { date, incident, location, short_description, district, report_period },
+        i
+      ) => ({
+        // Stable within a build, and the key the incident list uses to pan the
+        // map to the matching box.
+        id: i,
+        date,
+        incident,
+        location,
+        district,
+        // Which week the city's report covers — the About page reads this.
+        report_period,
+        short_description: short_description || incident,
+      })
+    );
 };
 
 const processIncidents = async (data) => {
