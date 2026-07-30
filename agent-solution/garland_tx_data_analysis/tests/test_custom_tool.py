@@ -54,6 +54,9 @@ def test_tinydb_writer_stores_every_row_with_mapping(tmp_path):
         json_path=str(out_json),
         db_path=str(db_path),
         short_description_map=mapping,
+        # Without this the default relative path writes into the project
+        # directory and overwrites the real enriched_incidents.json.
+        enriched_json_path=str(tmp_path / "enriched.json"),
     )
     assert f"Inserted {summary['total_incidents']}" in msg
 
@@ -199,3 +202,32 @@ def test_writer_keeps_same_key_incidents_within_one_report(tmp_path):
     stored = TinyDB(str(db_path)).all()
     assert len(stored) == 3
     assert len({r["incident_id"] for r in stored}) == 3, "ids must stay unique"
+
+
+def test_writer_default_paths_stay_inside_cwd(tmp_path):
+    """The writer's default enriched_json_path is a bare relative filename.
+
+    A test that forgot to override it overwrote the project's real
+    enriched_incidents.json with this suite's December 2025 fixture data. The
+    autouse tmp-cwd fixture keeps that contained; this pins the behaviour.
+    """
+    rows = [
+        {
+            "district": "22",
+            "date": "05/03/2026",
+            "incident": "BURGLARY-VEH",
+            "location": "22XX KNIGHTHOOD LN",
+            "report_period": "05/03/2026 - 05/09/2026",
+        }
+    ]
+    src = tmp_path / "in.json"
+    src.write_text(json.dumps(rows))
+
+    TinyDBWriterTool()._run(json_path=str(src), db_path=str(tmp_path / "i.db"))
+
+    written = os.path.join(os.getcwd(), "enriched_incidents.json")
+    assert os.path.exists(written), "default write should land in the cwd"
+    # The cwd is the per-test tmp dir, never the checked-out project.
+    assert os.path.realpath(os.getcwd()) != os.path.realpath(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
