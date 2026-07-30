@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Garland TX police incidents">
+  <!-- The mark is one of the map's incident boxes on a street: the same red
+       stroke and translucent fill the polygons use, so the tab icon reads as a
+       miniature of the map. Kept to two shapes — at 16px anything more is mud. -->
+  <rect width="64" height="64" rx="14" fill="#0f172a" />
+  <path d="M0 47h64" stroke="#f8fafc" stroke-opacity="0.14" stroke-width="6" />
+  <rect
+    x="15"
+    y="18"
+    width="34"
+    height="22"
+    rx="2.5"
+    fill="#dc2626"
+    fill-opacity="0.42"
+    stroke="#dc2626"
+    stroke-width="5.5"
+  />
+</svg>

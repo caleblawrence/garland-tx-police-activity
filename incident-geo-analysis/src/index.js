@@ -1,5 +1,11 @@
 import { getFullAddress, hasBlockNumber, resolveBlockBox } from "./geo.js";
-import { writeFileSync, readFileSync, mkdirSync, existsSync } from "fs";
+import {
+  writeFileSync,
+  readFileSync,
+  mkdirSync,
+  existsSync,
+  copyFileSync,
+} from "fs";
 import ProgressBar from "progress";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -9,6 +15,8 @@ const __dirname = path.dirname(__filename);
 
 const projectRoot = path.resolve(__dirname, "..");
 const repoRoot = path.resolve(projectRoot, "..");
+
+const STATIC_ASSETS = ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"];
 
 const AGENT_DATA_DIR = path.join(
   repoRoot,
@@ -186,6 +194,16 @@ const main = async () => {
     "utf-8"
   );
   writeFileSync(path.join(projectRoot, "dist/about.html"), aboutHtml);
+
+  // Icons are authored in src/favicon.svg; the PNGs are rasterised from it and
+  // committed so a build never needs a browser or an SVG renderer.
+  for (const asset of STATIC_ASSETS) {
+    copyFileSync(
+      path.join(projectRoot, "src", asset),
+      path.join(projectRoot, "dist", asset)
+    );
+  }
+  console.log(`copied ${STATIC_ASSETS.length} static assets`);
 };
 
 if (import.meta.url === `file://${process.argv[1]}`) {
