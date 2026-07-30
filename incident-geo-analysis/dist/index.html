@@ -150,7 +150,8 @@
         display: flex;
         flex-direction: column;
       }
-      #confidential-header {
+      #confidential-header,
+      #unmapped-header {
         margin: 0;
         padding: 14px 18px;
         cursor: pointer;
@@ -163,15 +164,18 @@
         color: var(--text);
         gap: 8px;
       }
-      #confidential-header:hover {
+      #confidential-header:hover,
+      #unmapped-header:hover {
         background: rgba(15, 23, 42, 0.03);
       }
-      #confidential-header .label {
+      #confidential-header .label,
+      #unmapped-header .label {
         display: flex;
         align-items: center;
         gap: 8px;
       }
-      #confidential-header .chev {
+      #confidential-header .chev,
+      #unmapped-header .chev {
         width: 8px;
         height: 8px;
         border-right: 2px solid var(--text-muted);
@@ -179,15 +183,21 @@
         transform: rotate(-45deg);
         transition: transform 0.2s;
       }
-      #confidential-header.expanded .chev {
+      #confidential-header.expanded .chev,
+      #unmapped-header.expanded .chev {
         transform: rotate(45deg);
       }
-      #confidential-list {
+      #unmapped-header {
+        border-top: 1px solid var(--border);
+      }
+      #confidential-list,
+      #unmapped-list {
         padding: 0 18px 14px;
         overflow-y: auto;
         max-height: 40vh;
       }
-      #confidential-list.collapsed {
+      #confidential-list.collapsed,
+      #unmapped-list.collapsed {
         display: none;
       }
       .confidential-item {
@@ -306,6 +316,15 @@
         <span class="chev"></span>
       </h3>
       <div id="confidential-list" class="collapsed"></div>
+
+      <h3 id="unmapped-header">
+        <span class="label">
+          <span>Not mappable</span>
+          <span class="badge" id="unmapped-count">0</span>
+        </span>
+        <span class="chev"></span>
+      </h3>
+      <div id="unmapped-list" class="collapsed"></div>
     </aside>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -406,27 +425,48 @@
           }
         });
 
-      fetch("confidential.json")
-        .then((r) => r.json())
-        .then((items) => {
-          const list = document.getElementById("confidential-list");
-          document.getElementById("conf-count").textContent = items.length;
-          items.forEach((item) => {
-            const el = document.createElement("div");
-            el.className = "confidential-item";
-            el.innerHTML =
-              `<div class="ci-type">${item.short_description || item.incident}</div>` +
-              `<div>${item.date}${item.district ? " · District " + item.district : ""}</div>`;
-            list.appendChild(el);
-          });
-        });
+      const renderSidePanel = ({ url, listId, countId, headerId, showLocation }) => {
+        fetch(url)
+          .then((r) => r.json())
+          .then((items) => {
+            const list = document.getElementById(listId);
+            document.getElementById(countId).textContent = items.length;
+            items.forEach((item) => {
+              const el = document.createElement("div");
+              el.className = "confidential-item";
+              const where = showLocation && item.location ? ` · ${item.location}` : "";
+              el.innerHTML =
+                `<div class="ci-type">${item.short_description || item.incident}</div>` +
+                `<div>${item.date}${
+                  item.district ? " · District " + item.district : ""
+                }${where}</div>`;
+              list.appendChild(el);
+            });
+          })
+          .catch(() => {});
 
-      const header = document.getElementById("confidential-header");
-      header.addEventListener("click", () => {
-        document
-          .getElementById("confidential-list")
-          .classList.toggle("collapsed");
-        header.classList.toggle("expanded");
+        const header = document.getElementById(headerId);
+        header.addEventListener("click", () => {
+          document.getElementById(listId).classList.toggle("collapsed");
+          header.classList.toggle("expanded");
+        });
+      };
+
+      renderSidePanel({
+        url: "confidential.json",
+        listId: "confidential-list",
+        countId: "conf-count",
+        headerId: "confidential-header",
+      });
+
+      // Freeway blocks and streets missing from OpenStreetMap can't be drawn,
+      // but they still belong in the report.
+      renderSidePanel({
+        url: "unmappable.json",
+        listId: "unmapped-list",
+        countId: "unmapped-count",
+        headerId: "unmapped-header",
+        showLocation: true,
       });
     </script>
   </body>

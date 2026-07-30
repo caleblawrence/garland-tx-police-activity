@@ -1,10 +1,4 @@
-import {
-  getFullAddress,
-  getAddressBeginning,
-  getAddressEnding,
-  getLatLng,
-  createBoundingBox,
-} from "./geo.js";
+import { getFullAddress, hasBlockNumber, resolveBlockBox } from "./geo.js";
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from "fs";
 import ProgressBar from "progress";
 import path from "path";
@@ -78,45 +72,67 @@ const processIncidents = async (data) => {
 
   const geojsonFeatures = [];
   const confidentialAddresses = [];
+  const unmappable = [];
   for (const item of flatList) {
     bar.tick();
     if (item.location === "ADDRESS CONFIDENTIAL") {
       confidentialAddresses.push(item);
       continue;
     }
-    const fullAddress = getFullAddress(item.location);
-    const beginningLatLng = await getLatLng(getAddressBeginning(fullAddress));
-    const endingLatLng = await getLatLng(getAddressEnding(fullAddress));
-    const bboxFeature = createBoundingBox(beginningLatLng, endingLatLng);
-    if (bboxFeature) {
-      geojsonFeatures.push({
-        type: "Feature",
-        geometry: bboxFeature.geometry,
-        properties: {
-          address: fullAddress,
-          incident: item.incident,
-          short_description: item.short_description,
-          district: item.district,
-          date: item.date,
-        },
-      });
+    // Some rows come out of the PDF with a blank address column. Geocoding
+    // those resolved to the Garland city centroid and drew a box downtown for
+    // an incident that happened somewhere else entirely.
+    if (!hasBlockNumber(item.location)) {
+      unmappable.push(item);
+      continue;
     }
+    const bboxFeature = await resolveBlockBox(item.location);
+    if (!bboxFeature) {
+      unmappable.push(item);
+      continue;
+    }
+    geojsonFeatures.push({
+      type: "Feature",
+      geometry: bboxFeature.geometry,
+      properties: {
+        address: getFullAddress(item.location),
+        incident: item.incident,
+        short_description: item.short_description,
+        district: item.district,
+        date: item.date,
+      },
+    });
   }
-  return { geojsonFeatures, confidentialAddresses };
+  return { geojsonFeatures, confidentialAddresses, unmappable };
 };
 
 const main = async () => {
   mkdirSync(path.join(projectRoot, "dist"), { recursive: true });
 
   console.log(`Reading incidents from ${incidentsPath}`);
-  const { geojsonFeatures, confidentialAddresses } = await processIncidents(
-    rawData
+  const { geojsonFeatures, confidentialAddresses, unmappable } =
+    await processIncidents(rawData);
+
+  console.log(
+    `\nmapped ${geojsonFeatures.length}, confidential ${confidentialAddresses.length}, ` +
+      `unmappable ${unmappable.length}`
   );
+  for (const item of unmappable) {
+    console.log(`  unmappable: ${item.date} ${item.incident} @ "${item.location}"`);
+  }
 
   // Save confidential addresses
   writeFileSync(
     path.join(projectRoot, "dist/confidential.json"),
     JSON.stringify(confidentialAddresses, null, 2)
+  );
+
+  // Incidents we couldn't place (freeways and streets OSM has no address data
+  // for). They get their own panel so a murder never silently disappears just
+  // because its street isn't in OpenStreetMap.
+  writeFileSync(
+    path.join(projectRoot, "dist/unmappable.json"),
+    JSON.stringify(unmappable, null, 2)
   );
 
   // Save valid GeoJSON FeatureCollection

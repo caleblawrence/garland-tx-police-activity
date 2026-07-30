@@ -1,0 +1,100 @@
+[
+  {
+    "date": "07/13/2026",
+    "incident": "INFO-IDENTITY THEFT",
+    "location": "66XX LAKE SHORE DR",
+    "district": "21",
+    "short_description": "Identity Theft Report"
+  },
+  {
+    "date": "07/16/2026",
+    "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+    "location": "",
+    "district": "27",
+    "short_description": "Theft"
+  },
+  {
+    "date": "07/12/2026",
+    "incident": "BURGLARY-HAB",
+    "location": "50XX N GEORGE BUSH SVC",
+    "district": "31",
+    "short_description": "Residential Burglary"
+  },
+  {
+    "date": "07/17/2026",
+    "incident": "MURDER",
+    "location": "3XX RIVER FERN AVE",
+    "district": "32",
+    "short_description": "Homicide"
+  },
+  {
+    "date": "07/13/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "14XX STATE HIGHWAY 66 HWY",
+    "district": "35",
+    "short_description": "Building Burglary"
+  },
+  {
+    "date": "07/14/2026",
+    "incident": "BURGLARY-BLDG",
+    "location": "18XX S FIRST ST",
+    "district": "36",
+    "short_description": "Building Burglary"
+  },
+  {
+    "date": "07/14/2026",
+    "incident": "THEFT-FROM PERSON-OTHER",
+    "location": "29XX S JUPITER RD",
+    "district": "41",
+    "short_description": "Theft from Person"
+  },
+  {
+    "date": "07/16/2026",
+    "incident": "OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE",
+    "location": "",
+    "district": "41",
+    "short_description": "Unauthorized Vehicle Use"
+  },
+  {
+    "date": "07/15/2026",
+    "incident": "INFO-THEFT",
+    "location": "30XX S FIRST ST",
+    "district": "42",
+    "short_description": "Theft Report"
+  },
+  {
+    "date": "07/13/2026",
+    "incident": "ASSAULT-AGG-D/W",
+    "location": "114XX LBJ FRWY",
+    "district": "43",
+    "short_description": "Aggravated Assault with Weapon"
+  },
+  {
+    "date": "07/14/2026",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
+    "location": "122XX LBJ FRWY",
+    "district": "43",
+    "short_description": "Vehicle Theft"
+  },
+  {
+    "date": "07/14/2026",
+    "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
+    "location": "122XX LBJ FRWY",
+    "district": "43",
+    "short_description": "Vehicle Theft"
+  },
+  {
+    "date": "07/12/2026",
+    "incident": "BURGLARY-VEH",
+    "location": "60XX I30 FRWY",
+    "district": "54",
+    "short_description": "Vehicle Burglary"
+  },
+  {
+    "date": "07/14/2026",
+    "incident": "INJURY TO AN ELDERLY PERSON-BI",
+    "location": "134XX I30 FRWY",
+    "district": "56",
+    "short_description": "Elderly Person Injury"
+  }
+]
