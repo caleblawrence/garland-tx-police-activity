@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>About · Garland TX Police Incidents</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --border: rgba(15, 23, 42, 0.08);
+        --text: #0f172a;
+        --text-muted: #475569;
+        --accent: #dc2626;
+        --shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.15),
+          0 2px 6px rgba(15, 23, 42, 0.04);
+        --radius: 14px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .navbar {
+        position: sticky;
+        top: 16px;
+        margin: 16px auto 32px;
+        width: fit-content;
+        display: flex;
+        gap: 4px;
+        padding: 4px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+      }
+      .navbar a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 8px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 999px;
+        transition: background 0.15s, color 0.15s;
+      }
+      .navbar a:hover {
+        color: var(--text);
+        background: rgba(15, 23, 42, 0.05);
+      }
+      .navbar a.active {
+        color: white;
+        background: var(--text);
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 20px 60px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+      }
+      h1 {
+        margin: 6px 0 24px;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        margin-top: 36px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      p {
+        color: var(--text-muted);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+      ul {
+        padding-left: 20px;
+        color: var(--text-muted);
+      }
+      li {
+        margin: 6px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="index.html">Map</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
+
+    <div class="container">
+      <div class="eyebrow">About</div>
+      <h1>Garland TX Police Incidents</h1>
+
+      <div class="card">
+        <p>
+          This site plots the weekly police incident report for Garland, TX onto
+          a map. Each incident is shown as a bounding box around its reported
+          block. Hover for the category, click for the full record.
+        </p>
+        <p>
+          Source data comes from the
+          <a
+            href="https://www.garlandtx.gov/396/Crime-Statistics-Maps"
+            target="_blank"
+            rel="noopener"
+            >City of Garland's Crime Statistics &amp; Maps</a
+          >
+          page. Some incidents have confidential addresses — those are listed in
+          the side panel on the map instead.
+        </p>
+        <p>
+          The pipeline (PDF download → extraction → geocoding → map) is open
+          source on
+          <a
+            href="https://github.com/caleblawrence/garland-tx-police-activity"
+            target="_blank"
+            rel="noopener"
+            >GitHub</a
+          >.
+        </p>
+      </div>
+
+      <h2>Roadmap</h2>
+      <ul>
+        <li>Persist incidents across weeks for historical comparison</li>
+        <li>Filter by district and category</li>
+        <li>Highlight aggravated and violent incidents</li>
+        <li>Automate the full refresh on a weekly schedule</li>
+      </ul>
+    </div>
+  </body>
+</html>
