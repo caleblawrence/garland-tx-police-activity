@@ -198,3 +198,9 @@ cython_debug/
 .cursorindexingignore
 .vercel
 agent-solution/garland_tx_data_analysis/incidents.json
+
+# Claude Code session state (includes throwaway worktrees)
+.claude/
+
+# Written by the agent on each run
+agent-solution/garland_tx_data_analysis/run-report.md

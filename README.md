@@ -90,9 +90,10 @@ build output, so they can't drift from what's published.</em>
 flowchart TD
     PDF["garlandtx.gov<br/>Previous Week Selected Incident Report"]
 
-    subgraph crew["Stage 1 · crewAI agents (Python)"]
+    subgraph crew["Stage 1 · LangGraph deep agent (Python)"]
         DL["Download<br/>browser UA · PDF verified"]
         EX["Extract<br/>date · offence · block · district · week"]
+        AU["Audit the extraction<br/>vs the PDF's own district totals"]
         LB["Relabel offence codes<br/>Claude Haiku"]
     end
 
@@ -102,25 +103,45 @@ flowchart TD
         RN["Render<br/>Leaflet map + incident list"]
     end
 
-    DB[("TinyDB<br/>append-only · deduped by week")]
+    DB[("Neon Postgres<br/>append-only · deduped by week")]
     OUT["dist/ static site"]
 
-    PDF --> DL --> EX --> LB
+    PDF --> DL --> EX --> AU --> LB
+    AU -.->|"doesn't reconcile"| STOP["Stop · don't publish"]
     LB --> DB
     LB -->|"enriched_incidents.json"| GC --> BX --> RN --> OUT
 ```
 
-Two properties worth knowing, because both were bugs once:
+Stage 1 is a [deep agent](https://github.com/langchain-ai/deepagents): the tools
+do the deterministic work — fetch, parse, store — and the agent decides how to
+sequence them and whether the result is fit to publish. It delegates to two
+subagents: one audits the extraction, one writes the plain-English offence
+labels.
+
+The audit is the point. Every district block in the PDF ends with its own
+`District Total: N`, so the parse can be checked against the source instead of
+trusted. When a numbered district doesn't reconcile, the auditor reads the raw
+page to find out what the parser missed, and the run stops rather than
+publishing a short week.
+
+Three properties worth knowing, because the first two were bugs once:
 
 - **A failed download stops the run.** It used to return an error string, so the
-  crew would carry on and silently re-publish whatever stale PDF was on disk.
+  pipeline would carry on and silently re-publish whatever stale PDF was on disk.
 - **Re-running is idempotent.** The database compares per-key counts, so a
   second run adds nothing — while still keeping the genuine "same block, same
-  day, same offence" repeats that a single week really does contain.
+  day, same offence" repeats that a single week really does contain. That is
+  also why the `incidents` table has no unique constraint over the natural key:
+  one would silently swallow those repeats.
+- **The week is knowingly incomplete.** The report's first block arrives under a
+  bare `DISTRICT` header with no number, and rows that can't be attributed to a
+  district are dropped. In the 07/12/2026 report that is 4 of 102. Every
+  numbered district reconciles exactly; the shortfall is now counted and
+  reported on each run rather than being invisible.
 
 ## Quick start
 
-**Prerequisites** — Python 3.10–3.12, Node 18+, [uv](https://docs.astral.sh/uv/),
+**Prerequisites** — Python 3.11–3.14, Node 18+, [uv](https://docs.astral.sh/uv/),
 and an Anthropic API key.
 
 ```bash
@@ -128,21 +149,27 @@ git clone https://github.com/caleblawrence/garland-tx-police-activity
 cd garland-tx-police-activity
 ```
 
-Point the crew at a model:
+Give the agent a key and a database. The history lives in
+[Neon](https://neon.tech) Postgres; the free tier is plenty for a few hundred
+rows a week.
 
 ```bash
 cat > agent-solution/garland_tx_data_analysis/.env <<'EOF'
-MODEL=claude-haiku-4-5-20251001
 ANTHROPIC_API_KEY=sk-ant-...
+DATABASE_URL=postgresql://...        # Neon: main branch
+TEST_DATABASE_URL=postgresql://...   # Neon: a `test` branch — the suite truncates this
 EOF
 ```
 
-**Stage 1** — fetch, parse and label the latest weekly report:
+The agent creates the `incidents` table on first write. Coming from the old
+TinyDB file, `uv run migrate_history` imports it once, preserving ids.
+
+**Stage 1** — fetch, parse, audit and label the latest weekly report:
 
 ```bash
 cd agent-solution/garland_tx_data_analysis
-crewai install
-crewai run
+uv sync
+uv run run_agent
 ```
 
 **Stage 2** — geocode the blocks and build the site:
@@ -168,26 +195,29 @@ cd incident-geo-analysis && npm test          # 26 tests
 ```
 
 ```bash
-cd agent-solution/garland_tx_data_analysis && PYTHONPATH=src .venv/bin/python -m pytest tests/
+cd agent-solution/garland_tx_data_analysis && uv run pytest tests/   # 14 tests
 ```
+
+The six Postgres-backed tests run against the Neon `test` branch and skip if
+`TEST_DATABASE_URL` is unset, so a fresh clone with no database still passes.
 
 ## Layout
 
 ```
-agent-solution/garland_tx_data_analysis/   Stage 1 — crewAI crew
-  src/.../crew.py                          agents and task definitions
-  src/.../tools/custom_tool.py             download · extract · store
-  incidents.db                             append-only history, tagged by week
+agent-solution/garland_tx_data_analysis/   Stage 1 — the deep agent
+  src/.../agent.py                         agent, subagents and system prompts
+  src/.../tools.py                         download · parse · read · store
+  src/.../main.py                          entrypoint, streams the run
+  src/.../backfill.py                      one-time TinyDB -> Postgres import
+  incidents.db                             frozen backup of the pre-Postgres history
   enriched_incidents.json                  handoff to stage 2
+  run-report.md                            what the last run did (written by the agent)
 
 incident-geo-analysis/                     Stage 2 — the site
   src/geo.js                               geocoding and box geometry
   src/index.js                             build script
   src/map.html, src/about.html             the two pages
   dist/                                    build output (deployed)
-
-scrape-incidents/                          legacy: the original Python scraper
-persistance/                               legacy: an early storage experiment
 ```
 
 ## Reading the data honestly
@@ -205,11 +235,13 @@ persistance/                               legacy: an early storage experiment
 ## Roadmap
 
 - [x] Keep every week in one database, tagged and deduped
+- [x] Check each extraction against the report's own district totals
 - [ ] Surface that history in the UI — trends and week-over-week views
 - [ ] Filter by district and offence category
 - [ ] Highlight violent and aggravated offences
 - [ ] Publish a new week automatically instead of by hand
 - [ ] Recover the incidents dropped by the PDF's unnumbered `DISTRICT` header
+      (now counted and reported each run, but still dropped)
 
 ---
 
