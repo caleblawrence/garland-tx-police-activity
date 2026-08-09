@@ -220,6 +220,16 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
     ]
     unnumbered = sum(s["parsed_total"] for s in sections if s["district"] is None)
 
+    # The verdict is arithmetic, so compute it here rather than paying a model
+    # round-trip to reach the same conclusion. `audit_required` is the whole
+    # decision: every numbered district either matches the total the PDF
+    # declares for it, or it does not.
+    #
+    # Rows under an unnumbered DISTRICT header are deliberately not a
+    # discrepancy. They are a known, quantified, by-design loss — auditing them
+    # every week would re-derive the same answer at the same cost.
+    audit_required = bool(discrepancies)
+
     summary = {
         "json_path": os.path.abspath(output_json_path),
         "report_period": report_period,
@@ -227,6 +237,13 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
         "per_district_counts": per_district,
         "unique_incident_types": unique_types,
         "reconciliation": {
+            "audit_required": audit_required,
+            "summary": (
+                f"{len(discrepancies)} district(s) do not match the total the "
+                "report declares for them — audit before storing."
+                if audit_required
+                else "Every numbered district matches its declared total."
+            ),
             "declared_total_all_districts": sum(s["declared_total"] for s in sections),
             "stored_incidents": len(incidents),
             "unnumbered_district_rows": unnumbered,

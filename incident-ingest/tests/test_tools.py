@@ -79,6 +79,53 @@ def test_parser_reconciles_against_the_reports_own_district_totals():
         assert d["declared_total"] != d["parsed_total"]
 
 
+def test_a_clean_parse_does_not_ask_for_an_audit():
+    """`audit_required` is the whole stop/go decision, and it is arithmetic.
+
+    The fixture reconciles against every district total it declares, so no
+    reasoning call is warranted — a clean week should cost zero LLM audits.
+    """
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+    )
+    rec = summary["reconciliation"]
+
+    assert rec["discrepancies"] == []
+    assert rec["audit_required"] is False
+    assert "matches its declared total" in rec["summary"]
+    # Rows under an unnumbered header are a known, by-design loss. They must
+    # not drag a clean week into an audit.
+    assert rec["unnumbered_district_rows"] > 0
+
+
+def test_a_district_that_does_not_reconcile_asks_for_an_audit(monkeypatch):
+    """A district short of its declared total is exactly what the auditor is for.
+
+    This is the shape of the real 07/26/2026 failure: district 51 declared 6
+    and parsed 5, because a long offence name wrapped onto another line.
+    """
+    page = "\n".join(
+        [
+            "Reported Between 05/03/2026 & 05/09/2026",
+            " DISTRICT 51",
+            " 1 11442026R036639 BURGLARY-VEH05/03/2026 8XX HUDSON DR",
+            "District Total: 2",
+        ]
+    )
+    monkeypatch.setattr(tools, "_extract_text", lambda _: page)
+
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": "ignored.pdf", "output_json_path": os.devnull})
+    )
+    rec = summary["reconciliation"]
+
+    assert rec["audit_required"] is True
+    assert rec["discrepancies"] == [
+        {"district": "51", "declared_total": 2, "parsed_total": 1, "missing": 1}
+    ]
+    assert "audit before storing" in rec["summary"]
+
+
 def test_rows_under_an_unnumbered_district_header_are_counted_not_silently_dropped():
     """The report's first block is headed by a bare `DISTRICT` with no number.
 

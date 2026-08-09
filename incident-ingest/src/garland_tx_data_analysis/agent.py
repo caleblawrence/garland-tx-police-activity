@@ -44,10 +44,12 @@ LABEL_MODEL = os.getenv("GARLAND_LABEL_MODEL", "anthropic:claude-haiku-4-5")
 EXTRACTION_AUDITOR = SubAgent(
     name="extraction-auditor",
     description=(
-        "Audits a parse of the weekly PDF against the report's own district "
-        "totals. Delegate the parse summary to this agent before storing "
-        "anything. Returns a verdict on whether the extraction is trustworthy "
-        "and an account of any rows that went missing."
+        "Diagnoses a parse that failed to reconcile against the report's own "
+        "district totals. Use this ONLY when `reconciliation.audit_required` "
+        "is true — when it is false the arithmetic already checked out and "
+        "this agent has nothing to find. Reads the source PDF to work out "
+        "which rows went missing and why, and returns a verdict on whether "
+        "the extraction is trustworthy."
     ),
     system_prompt="""You audit extractions of the Garland weekly incident PDF.
 
@@ -157,11 +159,18 @@ The run, and the standing constraints on it:
    if it matches a week already in the database, the download probably served
    a stale file, and you should say so rather than quietly re-ingesting it.
 
-3. Delegate the parse summary to `extraction-auditor` before storing anything.
-   Do not audit it yourself — the point of the separate agent is that it reads
-   the source rather than taking the summary's word for it.
+3. Look at `reconciliation.audit_required` in that summary.
 
-   If the verdict is `untrustworthy`, STOP. Do not store the week. Report what
+   If it is FALSE, the parse already reconciles against every district total
+   the report declares. There is nothing to investigate — go straight to step
+   4. Do not delegate to the auditor, and do not re-check the arithmetic
+   yourself; it has been done.
+
+   If it is TRUE, delegate the summary to `extraction-auditor` and wait for its
+   verdict. Do not audit it yourself — the point of the separate agent is that
+   it reads the source PDF rather than taking the summary's word for it.
+
+   If that verdict is `untrustworthy`, STOP. Do not store the week. Report what
    the auditor found. A wrong week on a public map is worse than a late one.
 
 4. Delegate the summary's `unique_incident_types` to `offence-labeller` and
