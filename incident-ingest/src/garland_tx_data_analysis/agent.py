@@ -13,8 +13,10 @@ always been silently losing rows rather than crashing.
 """
 
 import os
+from pathlib import Path
 
 from deepagents import SubAgent, create_deep_agent
+from deepagents.backends import FilesystemBackend
 
 from garland_tx_data_analysis.tools import (
     download_weekly_report,
@@ -27,9 +29,10 @@ PDF_URL = (
     "https://www.garlandtx.gov/DocumentCenter/View/802/"
     "Previous-Week-Selected-Incident-Report-PDF?bidId="
 )
-PDF_PATH = "work/police_incidents.pdf"
-INCIDENTS_JSON_PATH = "work/extracted_incidents.json"
-ENRICHED_JSON_PATH = "work/enriched_incidents.json"
+WORK_DIR = "work"
+PDF_PATH = f"{WORK_DIR}/police_incidents.pdf"
+INCIDENTS_JSON_PATH = f"{WORK_DIR}/extracted_incidents.json"
+ENRICHED_JSON_PATH = f"{WORK_DIR}/enriched_incidents.json"
 
 # The main agent plans, audits and decides, so it runs on the strongest model.
 # Relabelling offence codes is mechanical string work, and this project has
@@ -125,6 +128,15 @@ Each run fetches the city's latest weekly PDF, extracts the incidents, checks
 the extraction, labels the offence codes, and stores the week for the map that
 renders it.
 
+Two kinds of path, and mixing them up wastes a turn:
+
+  - The pipeline tools below take paths relative to the project, so the
+    parse output is `{INCIDENTS_JSON_PATH}`.
+  - Your file tools (`ls`, `read_file`, `write_file`, `glob`, `grep`) are
+    rooted at the run directory `{WORK_DIR}/`. The same file is
+    `/extracted_incidents.json` to them. Nothing outside that directory is
+    reachable, by design.
+
 The tools available to you:
   - `download_weekly_report` — fetch the PDF. It verifies the response really
     is a PDF and raises if not.
@@ -162,7 +174,7 @@ The run, and the standing constraints on it:
    incident type had no label, and that warning means the map will show a raw
    offence code to the public.
 
-6. Write a short run report to `work/run-report.md` covering: the report period,
+6. Write a short run report to `/run-report.md` covering: the report period,
    how many incidents were stored and how many were new to the database, the
    auditor's verdict, and anything a person should act on. Then summarise it
    in your reply.
@@ -170,6 +182,25 @@ The run, and the standing constraints on it:
 Report what actually happened. If a step failed or you skipped one, say so
 plainly — this pipeline's characteristic failure is looking successful while
 publishing nothing, or publishing last week's data over again."""
+
+
+def build_backend() -> FilesystemBackend:
+    """Give the agent's file tools the real run directory — and only that.
+
+    Without a backend, deepagents defaults to an in-memory state store: `ls`
+    finds nothing, and a written file never reaches disk. The auditor could
+    not read the parse output and the run report was silently lost.
+
+    Rooted at `work/` rather than the project, with `virtual_mode=True` so
+    traversal (`..`, `~`) and outside-absolute paths are blocked. The agent has
+    web_fetch, and `.env` holds the Anthropic key and the Postgres URL — it
+    has no business being reachable. Note the tools see this directory as their
+    root, so `work/extracted_incidents.json` on disk is `/extracted_incidents.json`
+    to them.
+    """
+    work = Path(WORK_DIR).resolve()
+    work.mkdir(parents=True, exist_ok=True)
+    return FilesystemBackend(root_dir=work, virtual_mode=True)
 
 
 def build_agent():
@@ -184,4 +215,5 @@ def build_agent():
         ],
         system_prompt=SYSTEM_PROMPT,
         subagents=[EXTRACTION_AUDITOR, OFFENCE_LABELLER],
+        backend=build_backend(),
     )
