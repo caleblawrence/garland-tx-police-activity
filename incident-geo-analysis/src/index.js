@@ -18,11 +18,7 @@ const repoRoot = path.resolve(projectRoot, "..");
 
 const STATIC_ASSETS = ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"];
 
-const AGENT_DATA_DIR = path.join(
-  repoRoot,
-  "agent-solution",
-  "garland_tx_data_analysis"
-);
+const AGENT_DATA_DIR = path.join(repoRoot, "incident-ingest");
 
 // Prefer the enriched list (has short_description) and fall back to the raw
 // extractor output if the formatter hasn't run yet.
@@ -38,7 +34,7 @@ const incidentsPath = candidatePaths.find((p) => existsSync(p));
 if (!incidentsPath) {
   console.error(
     `Incidents JSON not found. Tried:\n${candidatePaths.map((p) => "  " + p).join("\n")}\n` +
-      `Run the agent crew first (cd agent-solution/garland_tx_data_analysis && crewai run) ` +
+      `Run the agent first (cd incident-ingest && uv run run_agent) ` +
       `or set INCIDENTS_JSON_PATH to point at a JSON file.`
   );
   process.exit(1);
@@ -47,7 +43,7 @@ if (!incidentsPath) {
 const rawData = JSON.parse(readFileSync(incidentsPath, "utf-8"));
 
 const normalizeIncidents = (data) => {
-  // Accept either the flat list emitted by the agent crew or the legacy
+  // Accept either the flat list emitted by the agent or the legacy
   // {districtNumber: [incident, ...]} shape from the old scrape pipeline.
   const rows = Array.isArray(data) ? data : Object.values(data).flat();
   return rows

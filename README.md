@@ -154,7 +154,7 @@ Give the agent a key and a database. The history lives in
 rows a week.
 
 ```bash
-cat > agent-solution/garland_tx_data_analysis/.env <<'EOF'
+cat > incident-ingest/.env <<'EOF'
 ANTHROPIC_API_KEY=sk-ant-...
 DATABASE_URL=postgresql://...        # Neon: main branch
 TEST_DATABASE_URL=postgresql://...   # Neon: a `test` branch — the suite truncates this
@@ -167,7 +167,7 @@ TinyDB file, `uv run migrate_history` imports it once, preserving ids.
 **Stage 1** — fetch, parse, audit and label the latest weekly report:
 
 ```bash
-cd agent-solution/garland_tx_data_analysis
+cd incident-ingest
 uv sync
 uv run run_agent
 ```
@@ -175,7 +175,7 @@ uv run run_agent
 **Stage 2** — geocode the blocks and build the site:
 
 ```bash
-cd ../../incident-geo-analysis
+cd ../incident-geo-analysis
 npm install
 npm run build
 npm run serve
@@ -195,7 +195,7 @@ cd incident-geo-analysis && npm test          # 26 tests
 ```
 
 ```bash
-cd agent-solution/garland_tx_data_analysis && uv run pytest tests/   # 14 tests
+cd incident-ingest && uv run pytest tests/   # 15 tests
 ```
 
 The six Postgres-backed tests run against the Neon `test` branch and skip if
@@ -204,20 +204,20 @@ The six Postgres-backed tests run against the Neon `test` branch and skip if
 ## Layout
 
 ```
-agent-solution/garland_tx_data_analysis/   Stage 1 — the deep agent
-  src/.../agent.py                         agent, subagents and system prompts
-  src/.../tools.py                         download · parse · read · store
-  src/.../main.py                          entrypoint, streams the run
-  src/.../backfill.py                      one-time TinyDB -> Postgres import
-  incidents.db                             frozen backup of the pre-Postgres history
-  enriched_incidents.json                  handoff to stage 2
-  run-report.md                            what the last run did (written by the agent)
+incident-ingest/               Stage 1 — the deep agent
+  src/.../agent.py             agent, subagents and system prompts
+  src/.../tools.py             download · parse · read · store
+  src/.../main.py              entrypoint, streams the run
+  src/.../backfill.py          one-time TinyDB -> Postgres import
+  incidents.db                 frozen backup of the pre-Postgres history
+  enriched_incidents.json      handoff to stage 2
+  run-report.md                what the last run did (written by the agent)
 
-incident-geo-analysis/                     Stage 2 — the site
-  src/geo.js                               geocoding and box geometry
-  src/index.js                             build script
-  src/map.html, src/about.html             the two pages
-  dist/                                    build output (deployed)
+incident-geo-analysis/         Stage 2 — the site
+  src/geo.js                   geocoding and box geometry
+  src/index.js                 build script
+  src/map.html, src/about.html the two pages
+  dist/                        build output (deployed)
 ```
 
 ## Reading the data honestly

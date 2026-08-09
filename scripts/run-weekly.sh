@@ -17,7 +17,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-AGENT_DIR="$REPO_ROOT/agent-solution/garland_tx_data_analysis"
+AGENT_DIR="$REPO_ROOT/incident-ingest"
 GEO_DIR="$REPO_ROOT/incident-geo-analysis"
 INCIDENTS_JSON="$AGENT_DIR/extracted_incidents.json"
 
