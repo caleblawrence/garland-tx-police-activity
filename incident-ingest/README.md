@@ -105,18 +105,20 @@ The connection string is read from `DATABASE_URL` by the tool itself and is
 never a tool argument: arguments are echoed into the model's context and the run
 transcript, and the URL carries a password.
 
-### Importing the old TinyDB history
+### The pre-Postgres history
 
-The pre-Postgres pipeline kept its history in `incidents.db`. Import it once:
+The pipeline used to keep its history in `incidents.db`, a TinyDB JSON file.
+Those 442 rows — spanning 2025-12-28 to 2026-07-18, `incident_id` preserved —
+were imported into Postgres once and now live there. 344 of them predate the
+`report_period` field and carry NULL for it.
+
+`incidents.db` stays in the repo as the frozen record of the pre-migration
+state. Nothing reads it any more. The import script that loaded it is in git
+history if it is ever needed again:
 
 ```bash
-uv run migrate_history
+git show 06211cd:incident-ingest/src/garland_tx_data_analysis/backfill.py
 ```
-
-442 rows, spanning 2025-12-28 to 2026-07-18, with `incident_id` preserved. Safe
-to re-run — it conflicts on the primary key and does nothing. The JSON file is
-only read; keep it as the backup of the pre-migration state. 344 of those rows
-predate the `report_period` field and carry NULL there.
 
 ## Models
 

@@ -161,8 +161,8 @@ TEST_DATABASE_URL=postgresql://...   # Neon: a `test` branch — the suite trunc
 EOF
 ```
 
-The agent creates the `incidents` table on first write. Coming from the old
-TinyDB file, `uv run migrate_history` imports it once, preserving ids.
+The agent creates the `incidents` table on first write, so there is no separate
+migration step.
 
 **Stage 1** — fetch, parse, audit and label the latest weekly report:
 
@@ -208,8 +208,7 @@ incident-ingest/               Stage 1 — the deep agent
   src/.../agent.py             agent, subagents and system prompts
   src/.../tools.py             download · parse · read · store
   src/.../main.py              entrypoint, streams the run
-  src/.../backfill.py          one-time TinyDB -> Postgres import
-  incidents.db                 frozen backup of the pre-Postgres history
+  incidents.db                 frozen record of the pre-Postgres history
   enriched_incidents.json      handoff to stage 2
   run-report.md                what the last run did (written by the agent)
 

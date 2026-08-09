@@ -26,7 +26,6 @@ dev = ["pytest>=8"]
 [project.scripts]
 garland_tx_data_analysis = "garland_tx_data_analysis.main:run"
 run_agent = "garland_tx_data_analysis.main:run"
-migrate_history = "garland_tx_data_analysis.backfill:run"
 
 [build-system]
 requires = ["hatchling"]
