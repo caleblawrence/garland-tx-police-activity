@@ -27,9 +27,9 @@ PDF_URL = (
     "https://www.garlandtx.gov/DocumentCenter/View/802/"
     "Previous-Week-Selected-Incident-Report-PDF?bidId="
 )
-PDF_PATH = "police_incidents.pdf"
-INCIDENTS_JSON_PATH = "extracted_incidents.json"
-ENRICHED_JSON_PATH = "enriched_incidents.json"
+PDF_PATH = "work/police_incidents.pdf"
+INCIDENTS_JSON_PATH = "work/extracted_incidents.json"
+ENRICHED_JSON_PATH = "work/enriched_incidents.json"
 
 # The main agent plans, audits and decides, so it runs on the strongest model.
 # Relabelling offence codes is mechanical string work, and this project has
@@ -162,7 +162,7 @@ The run, and the standing constraints on it:
    incident type had no label, and that warning means the map will show a raw
    offence code to the public.
 
-6. Write a short run report to `run-report.md` covering: the report period,
+6. Write a short run report to `work/run-report.md` covering: the report period,
    how many incidents were stored and how many were new to the database, the
    auditor's verdict, and anything a person should act on. Then summarise it
    in your reply.

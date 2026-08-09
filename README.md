@@ -208,9 +208,8 @@ incident-ingest/               Stage 1 — the deep agent
   src/.../agent.py             agent, subagents and system prompts
   src/.../tools.py             download · parse · read · store
   src/.../main.py              entrypoint, streams the run
-  incidents.db                 frozen record of the pre-Postgres history
-  enriched_incidents.json      handoff to stage 2
-  run-report.md                what the last run did (written by the agent)
+  tests/fixtures/              a real weekly PDF, for the tests
+  work/                        run output, gitignored — PDF, JSON, run report
 
 incident-geo-analysis/         Stage 2 — the site
   src/geo.js                   geocoding and box geometry

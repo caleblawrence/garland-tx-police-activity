@@ -197,10 +197,11 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 .vercel
-incident-ingest/incidents.json
 
 # Claude Code session state (includes throwaway worktrees)
 .claude/
 
-# Written by the agent on each run
-incident-ingest/run-report.md
+# Everything the agent downloads or generates on a run: the weekly PDF, the
+# extracted and enriched JSON, and its run report. Stage 2 reads the enriched
+# JSON from here; the site itself deploys from the committed dist/.
+incident-ingest/work/

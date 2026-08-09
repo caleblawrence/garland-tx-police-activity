@@ -16,8 +16,8 @@ from garland_tx_data_analysis.tools import (
 
 PDF_PATH = os.path.join(
     os.path.dirname(__file__),
-    "..",
-    "police_incidents_report.pdf",
+    "fixtures",
+    "weekly_report.pdf",
 )
 
 
@@ -273,7 +273,7 @@ def test_store_default_paths_stay_inside_cwd(db, tmp_path):
 
     store_incidents.invoke({"json_path": str(src)})
 
-    written = os.path.join(os.getcwd(), "enriched_incidents.json")
+    written = os.path.join(os.getcwd(), "work", "enriched_incidents.json")
     assert os.path.exists(written), "default write should land in the cwd"
     # The cwd is the per-test tmp dir, never the checked-out project.
     assert os.path.realpath(os.getcwd()) != os.path.realpath(

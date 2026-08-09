@@ -18,7 +18,7 @@ const repoRoot = path.resolve(projectRoot, "..");
 
 const STATIC_ASSETS = ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"];
 
-const AGENT_DATA_DIR = path.join(repoRoot, "incident-ingest");
+const AGENT_DATA_DIR = path.join(repoRoot, "incident-ingest", "work");
 
 // Prefer the enriched list (has short_description) and fall back to the raw
 // extractor output if the formatter hasn't run yet.

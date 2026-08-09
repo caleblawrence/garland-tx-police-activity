@@ -105,18 +105,27 @@ The connection string is read from `DATABASE_URL` by the tool itself and is
 never a tool argument: arguments are echoed into the model's context and the run
 transcript, and the URL carries a password.
 
-### The pre-Postgres history
+### Where a run puts things
 
-The pipeline used to keep its history in `incidents.db`, a TinyDB JSON file.
-Those 442 rows — spanning 2025-12-28 to 2026-07-18, `incident_id` preserved —
-were imported into Postgres once and now live there. 344 of them predate the
-`report_period` field and carry NULL for it.
+Everything the agent downloads or writes goes to `work/`, which is gitignored:
 
-`incidents.db` stays in the repo as the frozen record of the pre-migration
-state. Nothing reads it any more. The import script that loaded it is in git
-history if it is ever needed again:
+```
+work/police_incidents.pdf        the week's report, as downloaded
+work/extracted_incidents.json    parser output
+work/enriched_incidents.json     labelled — stage 2 reads this
+work/run-report.md               what the run did, written by the agent
+```
+
+The site deploys from `incident-geo-analysis/dist/`, which *is* committed, so
+none of `work/` needs to be in git.
+
+The history before Postgres lived in a TinyDB file, `incidents.db`. Its 442
+rows — spanning 2025-12-28 to 2026-07-18 — were imported once and now live in
+Neon; 344 of them predate the `report_period` field and carry NULL for it. Both
+that file and the script that imported it are in git history:
 
 ```bash
+git show 06211cd:incident-ingest/incidents.db
 git show 06211cd:incident-ingest/src/garland_tx_data_analysis/backfill.py
 ```
 

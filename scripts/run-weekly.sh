@@ -18,7 +18,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 AGENT_DIR="$REPO_ROOT/incident-ingest"
 GEO_DIR="$REPO_ROOT/incident-geo-analysis"
-INCIDENTS_JSON="$AGENT_DIR/extracted_incidents.json"
+INCIDENTS_JSON="$AGENT_DIR/work/extracted_incidents.json"
 
 if [[ "${SKIP_AGENT:-0}" != "1" ]]; then
   echo "==> Running deep agent in $AGENT_DIR"
