@@ -90,7 +90,7 @@ build output, so they can't drift from what's published.</em>
 flowchart TD
     PDF["garlandtx.gov<br/>Previous Week Selected Incident Report"]
 
-    subgraph crew["Stage 1 · LangGraph deep agent (Python)"]
+    subgraph ingest["Stage 1 · LangGraph deep agent (Python)"]
         DL["Download<br/>browser UA · PDF verified"]
         EX["Extract<br/>date · offence · block · district · week"]
         AU["Audit the extraction<br/>vs the PDF's own district totals"]

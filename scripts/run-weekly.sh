@@ -11,7 +11,6 @@
 #
 # Env vars:
 #   SKIP_AGENT=1  Skip step 1 (reuse the existing extracted_incidents.json).
-#                 SKIP_CREW=1 still works, for anything already scripted.
 #   SKIP_GEO=1    Skip step 2.
 
 set -euo pipefail
@@ -21,7 +20,7 @@ AGENT_DIR="$REPO_ROOT/incident-ingest"
 GEO_DIR="$REPO_ROOT/incident-geo-analysis"
 INCIDENTS_JSON="$AGENT_DIR/extracted_incidents.json"
 
-if [[ "${SKIP_AGENT:-${SKIP_CREW:-0}}" != "1" ]]; then
+if [[ "${SKIP_AGENT:-0}" != "1" ]]; then
   echo "==> Running deep agent in $AGENT_DIR"
   cd "$AGENT_DIR"
   if [[ -x ".venv/bin/run_agent" ]]; then
@@ -37,7 +36,7 @@ if [[ "${SKIP_AGENT:-${SKIP_CREW:-0}}" != "1" ]]; then
 fi
 
 if [[ ! -f "$INCIDENTS_JSON" ]]; then
-  echo "Error: $INCIDENTS_JSON not found. Run without SKIP_CREW=1." >&2
+  echo "Error: $INCIDENTS_JSON not found. Run without SKIP_AGENT=1." >&2
   exit 1
 fi
 
