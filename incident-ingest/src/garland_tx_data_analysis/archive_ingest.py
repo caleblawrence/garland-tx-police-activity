@@ -33,6 +33,7 @@ import psycopg
 import requests
 from dotenv import load_dotenv
 
+from garland_tx_data_analysis.categories import CATEGORIES, categorise
 from garland_tx_data_analysis.tools import (
     BROWSER_USER_AGENT,
     DOWNLOAD_TIMEOUT_SECONDS,
@@ -285,8 +286,15 @@ def export(path: str = EXPORT_PATH) -> dict:
                 for r in cur.fetchall()
             ]
 
+    # The category travels with the row so the page never has to know how an
+    # offence code maps to one. There is exactly one place that decides, and it
+    # is categories.py.
+    for row in rows:
+        row["category"] = categorise(row["incident"])
+
     payload = {
         "months": months,
+        "categories": CATEGORIES,
         "incidents": rows,
         "unlabelled_codes": sorted(
             {r["incident"] for r in rows if not r["labelled"]}
@@ -295,11 +303,15 @@ def export(path: str = EXPORT_PATH) -> dict:
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     with open(path, "w") as f:
         json.dump(payload, f, indent=1)
+    by_category: dict[str, int] = {}
+    for row in rows:
+        by_category[row["category"]] = by_category.get(row["category"], 0) + 1
     return {
         "path": os.path.abspath(path),
         "months": len(months),
         "incidents": len(rows),
         "unlabelled_codes": len(payload["unlabelled_codes"]),
+        "by_category": by_category,
     }
 
 
