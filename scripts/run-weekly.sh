@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Refresh the weekly incidents data and rebuild the map.
 #
-# 1. Runs the deep agent (downloads PDF, extracts incidents, audits the
-#    extraction, writes extracted_incidents.json and the Postgres history).
+# 1. Runs the deep agent (downloads PDF, parses and reconciles the incidents,
+#    labels any new offence code, writes enriched_incidents.json and the
+#    Postgres history).
 # 2. Runs the geo-analysis (geocodes each address, writes
 #    incident-geo-analysis/dist/features.geojson + supporting HTML).
 #
@@ -10,7 +11,7 @@
 #   ./scripts/run-weekly.sh
 #
 # Env vars:
-#   SKIP_AGENT=1  Skip step 1 (reuse the existing extracted_incidents.json).
+#   SKIP_AGENT=1  Skip step 1 (reuse the existing enriched_incidents.json).
 #   SKIP_GEO=1    Skip step 2.
 
 set -euo pipefail
@@ -18,7 +19,13 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 AGENT_DIR="$REPO_ROOT/incident-ingest"
 GEO_DIR="$REPO_ROOT/incident-geo-analysis"
-INCIDENTS_JSON="$AGENT_DIR/work/extracted_incidents.json"
+# The map is built from the ENRICHED list. extracted_incidents.json carries no
+# short_description, so building from it publishes raw offence codes —
+# "THEFT-ALL OTHER-$2,500 L/T $30,000" where a reader should see "Theft". This
+# script used to point stage 2 at exactly that file.
+INCIDENTS_JSON="$AGENT_DIR/work/enriched_incidents.json"
+EXTRACTED_JSON="$AGENT_DIR/work/extracted_incidents.json"
+PARSE_SUMMARY="$AGENT_DIR/work/extracted_incidents.summary.json"
 
 if [[ "${SKIP_AGENT:-0}" != "1" ]]; then
   echo "==> Running deep agent in $AGENT_DIR"
@@ -36,8 +43,43 @@ if [[ "${SKIP_AGENT:-0}" != "1" ]]; then
 fi
 
 if [[ ! -f "$INCIDENTS_JSON" ]]; then
-  echo "Error: $INCIDENTS_JSON not found. Run without SKIP_AGENT=1." >&2
+  echo "Error: $INCIDENTS_JSON not found." >&2
+  if [[ -f "$EXTRACTED_JSON" ]]; then
+    echo "  $(basename "$EXTRACTED_JSON") exists, but it carries no labels." >&2
+    echo "  Building from it would put raw offence codes on the public map." >&2
+    echo "  The agent writes the enriched file when it stores a week; if it" >&2
+    echo "  refused the week, fix that rather than publishing without labels." >&2
+  else
+    echo "  Run without SKIP_AGENT=1." >&2
+  fi
   exit 1
+fi
+
+# The agent leaves enriched_incidents.json behind from the previous week when a
+# run refuses to store. Building anyway would silently republish the old week as
+# though it were this one, which is the failure this pipeline is most prone to.
+if [[ -f "$PARSE_SUMMARY" ]]; then
+  if ! python3 - "$PARSE_SUMMARY" <<'PYCHECK'
+import json, sys
+summary = json.load(open(sys.argv[1]))
+bad = summary.get("reconciliation", {}).get("discrepancies") or []
+if bad:
+    districts = ", ".join(str(d["district"]) for d in bad)
+    print(f"  District(s) {districts} do not match their declared totals.",
+          file=sys.stderr)
+    sys.exit(1)
+PYCHECK
+  then
+    echo "Error: the last parse did not reconcile, so nothing was stored." >&2
+    echo "  Not rebuilding the map — it would republish the previous week." >&2
+    exit 1
+  fi
+
+  if [[ "$EXTRACTED_JSON" -nt "$INCIDENTS_JSON" ]]; then
+    echo "Error: $(basename "$EXTRACTED_JSON") is newer than the enriched list." >&2
+    echo "  The last run parsed a week it never stored. Not rebuilding." >&2
+    exit 1
+  fi
 fi
 
 if [[ "${SKIP_GEO:-0}" != "1" ]]; then
