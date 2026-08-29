@@ -66,15 +66,15 @@ def test_parser_writes_full_incident_list(tmp_path):
         assert {"district", "date", "incident", "location"} <= inc.keys()
 
 
-def test_parser_reconciles_against_the_reports_own_district_totals():
+def test_parser_reconciles_against_the_reports_own_district_totals(tmp_path):
     """The PDF declares `District Total: N` per block; the parse is checked against it.
 
-    This is the signal the extraction auditor works from, so the numbers have to
+    This is the signal the whole stop/go decision rests on, so the numbers have to
     add up: every row the parser saw is either stored under a numbered district
     or counted as belonging to an unnumbered one.
     """
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
     rec = summary["reconciliation"]
 
@@ -88,14 +88,14 @@ def test_parser_reconciles_against_the_reports_own_district_totals():
         assert d["declared_total"] != d["parsed_total"]
 
 
-def test_a_clean_parse_does_not_ask_for_an_audit():
+def test_a_clean_parse_does_not_ask_for_an_audit(tmp_path):
     """`audit_required` is the whole stop/go decision, and it is arithmetic.
 
     The fixture reconciles against every district total it declares, so no
     reasoning call is warranted — a clean week should cost zero LLM audits.
     """
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
     rec = summary["reconciliation"]
 
@@ -107,8 +107,8 @@ def test_a_clean_parse_does_not_ask_for_an_audit():
     assert rec["unnumbered_district_rows"] > 0
 
 
-def test_a_district_that_does_not_reconcile_asks_for_an_audit(monkeypatch):
-    """A district short of its declared total is exactly what the auditor is for.
+def test_a_district_that_does_not_reconcile_asks_for_an_audit(monkeypatch, tmp_path):
+    """A district short of its declared total means rows were dropped.
 
     This is the shape of the real 07/26/2026 failure: district 51 declared 6
     and parsed 5. That particular cause — a wrapped offence name — is handled
@@ -125,15 +125,24 @@ def test_a_district_that_does_not_reconcile_asks_for_an_audit(monkeypatch):
     monkeypatch.setattr(tools, "_extract_text", lambda _: page)
 
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": "ignored.pdf", "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": "ignored.pdf", "output_json_path": str(tmp_path / "out.json")})
     )
     rec = summary["reconciliation"]
 
     assert rec["audit_required"] is True
-    assert rec["discrepancies"] == [
-        {"district": "51", "declared_total": 2, "parsed_total": 1, "missing": 1}
-    ]
+    [gap] = rec["discrepancies"]
+    assert (gap["district"], gap["declared_total"], gap["parsed_total"], gap["missing"]) == (
+        "51", 2, 1, 1
+    )
     assert "audit before storing" in rec["summary"]
+
+    # The block itself travels with the discrepancy: this is what replaced the
+    # extraction-auditor subagent, which read the source and wrote prose about it.
+    assert gap["source_lines"] == [
+        " DISTRICT 51",
+        " 1 11442026R036639 BURGLARY-VEH05/03/2026 8XX HUDSON DR",
+        "District Total: 2",
+    ]
 
 
 def test_rows_under_an_unnumbered_district_header_are_counted_not_silently_dropped():
@@ -240,7 +249,7 @@ def test_an_unfinished_row_does_not_swallow_the_one_after_it():
     assert sections == [{"district": "22", "declared_total": 2, "parsed_total": 1}]
 
 
-def test_wrapped_rows_reconcile_end_to_end():
+def test_wrapped_rows_reconcile_end_to_end(tmp_path):
     """The 07/26/2026 report, which is what found this bug.
 
     The synthetic cases above pin the logic; this pins that pypdf really does
@@ -248,7 +257,7 @@ def test_wrapped_rows_reconcile_end_to_end():
     """
     summary = json.loads(
         parse_incidents.invoke(
-            {"pdf_path": WRAPPED_ROW_PDF_PATH, "output_json_path": os.devnull}
+            {"pdf_path": WRAPPED_ROW_PDF_PATH, "output_json_path": str(tmp_path / "out.json")}
         )
     )
 
@@ -258,14 +267,14 @@ def test_wrapped_rows_reconcile_end_to_end():
     assert summary["total_incidents"] == 100
 
 
-def test_period_check_reports_unknown_without_a_database():
+def test_period_check_reports_unknown_without_a_database(tmp_path):
     """No database is not the same answer as nothing stored.
 
     A run that cannot reach Postgres must not read as "this week is new" —
     that is how a stale week gets published. It says so instead.
     """
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
 
     check = summary["period_check"]
@@ -274,9 +283,9 @@ def test_period_check_reports_unknown_without_a_database():
     assert check["stale_download_suspected"] is False
 
 
-def test_period_check_reports_a_week_the_database_has_never_seen(db):
+def test_period_check_reports_a_week_the_database_has_never_seen(db, tmp_path):
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
 
     assert summary["period_check"]["status"] == "new"
@@ -297,7 +306,7 @@ def test_period_check_flags_a_week_that_is_already_stored(db, tmp_path):
     })
 
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
 
     check = summary["period_check"]
@@ -325,7 +334,7 @@ def test_period_check_distinguishes_a_half_finished_run_from_a_stale_download(db
     })
 
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
 
     check = summary["period_check"]
@@ -334,17 +343,17 @@ def test_period_check_distinguishes_a_half_finished_run_from_a_stale_download(db
     assert check["already_stored_rows"] == 10
 
 
-def test_parser_reports_report_period():
+def test_parser_reports_report_period(tmp_path):
     """The period makes a stale download visible in the run output."""
     summary = json.loads(
-        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(tmp_path / "out.json")})
     )
     assert summary["report_period"], "report period should be parsed off page 1"
     assert " - " in summary["report_period"]
 
 
-def test_read_report_text_exposes_the_source_to_the_auditor():
-    """The auditor reads the source rather than trusting the parse summary."""
+def test_read_report_text_exposes_the_source():
+    """So a person, or the agent, can read the PDF rather than the parse of it."""
     page = read_report_text.invoke({"pdf_path": PDF_PATH, "page": 1})
     assert "DISTRICT" in page
 
@@ -465,6 +474,67 @@ def test_unlabelled_types_reports_only_what_the_model_still_has_to_name(db, tmp_
     after = json.loads(unlabelled_incident_types.invoke({"json_path": str(incidents)}))
     assert after["needing_labels"] == [], "nothing left for the labeller to do"
     assert after["already_labelled"] == 2
+
+
+def test_store_refuses_a_week_whose_parse_did_not_reconcile(db, tmp_path, monkeypatch):
+    """The halt is arithmetic, so it is enforced rather than requested.
+
+    This used to be a subagent verdict the main agent was asked to honour: the
+    auditor returned `untrustworthy` and the prompt said to stop. The condition
+    that woke the auditor already determined that verdict, so the decision is
+    made here, where nothing can talk it out of it.
+    """
+    page = "\n".join([
+        "Reported Between 05/03/2026 & 05/09/2026",
+        " DISTRICT 51",
+        " 1 11442026R036639 BURGLARY-VEH05/03/2026 8XX HUDSON DR",
+        "District Total: 2",
+    ])
+    monkeypatch.setattr(tools, "_extract_text", lambda _: page)
+    out_json = tmp_path / "incidents.json"
+    parse_incidents.invoke({"pdf_path": "ignored.pdf", "output_json_path": str(out_json)})
+
+    msg = store_incidents.invoke({
+        "json_path": str(out_json),
+        "enriched_json_path": str(tmp_path / "enriched.json"),
+    })
+
+    assert msg.startswith("REFUSED")
+    assert fetch_incidents() == [], "nothing may reach the database"
+    assert not (tmp_path / "enriched.json").exists(), "and nothing may reach the map"
+
+    # The refusal carries the source, which is what the auditor used to describe.
+    assert " 1 11442026R036639 BURGLARY-VEH05/03/2026 8XX HUDSON DR" in msg
+    assert "District Total: 2" in msg
+
+
+def test_store_says_so_when_nothing_verified_the_json(db, tmp_path):
+    """A hand-made JSON has no parse behind it. Silence would imply one."""
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+
+    msg = store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+        "enriched_json_path": str(tmp_path / "enriched.json"),
+    })
+
+    assert "no parse summary" in msg
+    assert len(fetch_incidents()) == 1, "an unverified JSON still stores; it is not a refusal"
+
+
+def test_a_reconciling_parse_stores_without_comment(db, tmp_path):
+    out_json = tmp_path / "incidents.json"
+    parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(out_json)})
+
+    msg = store_incidents.invoke({
+        "json_path": str(out_json),
+        "enriched_json_path": str(tmp_path / "enriched.json"),
+    })
+
+    assert not msg.startswith("REFUSED")
+    assert "no parse summary" not in msg
+    assert len(fetch_incidents()) == 115
 
 
 def test_store_is_idempotent_across_reruns(db, tmp_path):

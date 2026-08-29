@@ -1,15 +1,21 @@
 """The weekly-report deep agent.
 
 A LangGraph deep agent (via the `deepagents` harness) that fetches Garland's
-weekly incident PDF, extracts it, audits its own extraction against the
-report's own district totals, labels the offence codes, and stores the week.
+weekly incident PDF, extracts it, labels any offence code it has not seen
+before, stores the week, and reports what it did.
 
-The shape is deliberately not a fixed three-step chain. The tools do the
-deterministic work; the agent decides how to sequence it, when the parse is
-trustworthy, and what to do when it is not. The auditor subagent exists
-because the PDF hands us a way to check the parse — every district block ends
-with `District Total: N` — and the interesting failure of this pipeline has
-always been silently losing rows rather than crashing.
+The tools do the deterministic work, and where a decision has a right answer
+they make it rather than reporting it upward: the parse either reconciles
+against the report's own `District Total: N` lines or the store refuses the
+week, and a code that already has a label keeps it. What is left for the model
+is the part with no right answer — naming a new offence code, and writing an
+account of the run that a person can read.
+
+There used to be an `extraction-auditor` subagent here, asked to read a failed
+parse and return a verdict the main agent would honour. The verdict was
+already determined by the arithmetic that woke it, and the diagnosis it wrote
+was prose about eight lines of source that are now simply printed. See
+`_district_block_lines` and `_reconciliation_gate` in tools.py.
 """
 
 import os
@@ -40,55 +46,6 @@ ENRICHED_JSON_PATH = f"{WORK_DIR}/enriched_incidents.json"
 # always used Haiku for it — keep that.
 MODEL = os.getenv("GARLAND_MODEL", "anthropic:claude-opus-5")
 LABEL_MODEL = os.getenv("GARLAND_LABEL_MODEL", "anthropic:claude-haiku-4-5")
-
-
-EXTRACTION_AUDITOR = SubAgent(
-    name="extraction-auditor",
-    description=(
-        "Diagnoses a parse that failed to reconcile against the report's own "
-        "district totals. Use this ONLY when `reconciliation.audit_required` "
-        "is true — when it is false the arithmetic already checked out and "
-        "this agent has nothing to find. Reads the source PDF to work out "
-        "which rows went missing and why, and returns a verdict on whether "
-        "the extraction is trustworthy."
-    ),
-    system_prompt="""You audit extractions of the Garland weekly incident PDF.
-
-The report declares its own ground truth: every district block ends with a
-`District Total: N` line. The `parse_incidents` tool reconciles what it parsed
-against those declarations and reports the result under `reconciliation`.
-
-Your job is to decide whether the extraction can be trusted, and to explain
-precisely what was lost if it cannot.
-
-How to work:
-
-1. Read the `reconciliation` block. `discrepancies` lists any district whose
-   parsed row count disagrees with the total the PDF declares for it.
-2. For every discrepancy, use `read_report_text` to read the actual district
-   block in the source and work out what the parser missed — a row spanning
-   two lines, a date format it did not recognise, a header it did not match.
-   Do not speculate about the cause without reading the source.
-3. `unnumbered_district_rows` counts rows the report filed under a `DISTRICT`
-   header carrying no number. Those rows cannot be attributed to a district
-   and are dropped by design. This is a known defect in the source PDF, not a
-   parser bug — report the count, and do not treat it as a discrepancy.
-
-Return a verdict of exactly one of `trustworthy`, `trustworthy-with-losses`,
-or `untrustworthy`, followed by:
-  - declared vs stored totals,
-  - each district that failed to reconcile and what the source actually shows
-    there,
-  - the unnumbered-district row count.
-
-Use `untrustworthy` when a numbered district fails to reconcile: that means
-the parser is dropping rows it should have caught. Use
-`trustworthy-with-losses` when the only shortfall is the unnumbered-district
-rows. Be concrete and quantitative; the caller decides whether to publish
-based on what you report, so do not soften a real loss.""",
-    tools=[read_report_text],
-    model=MODEL,
-)
 
 
 OFFENCE_LABELLER = SubAgent(
@@ -160,7 +117,8 @@ The tools available to you:
     have never been given a label. Usually none.
   - `store_incidents` — label, append to the Postgres database, and write the
     enriched JSON the map reads. It takes no connection details; it reads them
-    from the environment itself.
+    from the environment itself. It refuses a week whose parse did not
+    reconcile against the report's district totals.
 
 The run, and the standing constraints on it:
 
@@ -182,17 +140,20 @@ The run, and the standing constraints on it:
 
 3. Look at `reconciliation.audit_required` in that summary.
 
-   If it is FALSE, the parse already reconciles against every district total
-   the report declares. There is nothing to investigate — go straight to step
-   4. Do not delegate to the auditor, and do not re-check the arithmetic
-   yourself; it has been done.
+   If it is FALSE, every numbered district matches the total the report
+   declares for it. Do not re-check the arithmetic; it has been done. Go to
+   step 4.
 
-   If it is TRUE, delegate the summary to `extraction-auditor` and wait for its
-   verdict. Do not audit it yourself — the point of the separate agent is that
-   it reads the source PDF rather than taking the summary's word for it.
+   If it is TRUE, rows were dropped. STOP — do not go on to store the week.
+   Each entry in `reconciliation.discrepancies` carries the raw `source_lines`
+   of the district that came up short; read them and report what the block
+   actually shows, quoting the lines. That is usually enough to see the cause:
+   an offence name wrapped across lines, a date the parser did not match, a
+   header it did not recognise.
 
-   If that verdict is `untrustworthy`, STOP. Do not store the week. Report what
-   the auditor found. A wrong week on a public map is worse than a late one.
+   You do not have to enforce this. `store_incidents` refuses a week whose
+   parse did not reconcile, and will refuse it if you try. Your job is to
+   explain what went wrong, not to decide whether it matters.
 
 4. Call `unlabelled_incident_types` on the parse output. Most weeks it returns
    an empty `needing_labels`: every code in the report has been named before,
@@ -211,9 +172,9 @@ The run, and the standing constraints on it:
    that warning means the map will show a raw offence code to the public.
 
 6. Write a short run report to `/run-report.md` covering: the report period,
-   how many incidents were stored and how many were new to the database, the
-   auditor's verdict, and anything a person should act on. Then summarise it
-   in your reply.
+   how many incidents were stored and how many were new to the database,
+   whether the parse reconciled, any offence code named for the first time,
+   and anything a person should act on. Then summarise it in your reply.
 
 Report what actually happened. If a step failed or you skipped one, say so
 plainly — this pipeline's characteristic failure is looking successful while
@@ -224,8 +185,8 @@ def build_backend() -> FilesystemBackend:
     """Give the agent's file tools the real run directory — and only that.
 
     Without a backend, deepagents defaults to an in-memory state store: `ls`
-    finds nothing, and a written file never reaches disk. The auditor could
-    not read the parse output and the run report was silently lost.
+    finds nothing, and a written file never reaches disk. The run report was
+    silently lost, and nothing could read the parse output back.
 
     Rooted at `work/` rather than the project, with `virtual_mode=True` so
     traversal (`..`, `~`) and outside-absolute paths are blocked. The agent has
@@ -251,6 +212,6 @@ def build_agent():
             unlabelled_incident_types,
         ],
         system_prompt=SYSTEM_PROMPT,
-        subagents=[EXTRACTION_AUDITOR, OFFENCE_LABELLER],
+        subagents=[OFFENCE_LABELLER],
         backend=build_backend(),
     )

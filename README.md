@@ -93,7 +93,7 @@ flowchart TD
     subgraph ingest["Stage 1 · LangGraph deep agent (Python)"]
         DL["Download<br/>browser UA · PDF verified"]
         EX["Extract<br/>date · offence · block · district · week"]
-        AU["Audit the extraction<br/>vs the PDF's own district totals"]
+        AU["Reconcile the extraction<br/>vs the PDF's own district totals"]
         LB["Relabel offence codes<br/>Claude Haiku"]
     end
 
@@ -113,16 +113,17 @@ flowchart TD
 ```
 
 Stage 1 is a [deep agent](https://github.com/langchain-ai/deepagents): the tools
-do the deterministic work — fetch, parse, store — and the agent decides how to
-sequence them and whether the result is fit to publish. It delegates to two
-subagents: one audits the extraction, one writes the plain-English offence
-labels.
+do the deterministic work — fetch, parse, store — and where a decision has a
+right answer they make it rather than reporting it upward. What is left to the
+model is the part with no right answer: naming an offence code nobody has seen
+before, and writing an account of the run a person can read. One subagent, the
+offence labeller, does the first.
 
-The audit is the point. Every district block in the PDF ends with its own
-`District Total: N`, so the parse can be checked against the source instead of
-trusted. When a numbered district doesn't reconcile, the auditor reads the raw
-page to find out what the parser missed, and the run stops rather than
-publishing a short week.
+The reconciliation is the point. Every district block in the PDF ends with its
+own `District Total: N`, so the parse can be checked against the source instead
+of trusted. When a numbered district doesn't reconcile, that district's raw
+source lines come back with the shortfall, and the store refuses the week
+rather than publishing a short one.
 
 Three properties worth knowing, because the first two were bugs once:
 

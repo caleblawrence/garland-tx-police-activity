@@ -6,8 +6,9 @@ every decision the agent could get wrong is left to the agent.
 The important one is `parse_incidents`. The PDF closes every district block
 with its own `District Total: N` line, so the parser can be checked against
 the source rather than trusted. The tool reports that reconciliation instead
-of asserting success, which is what gives the extraction auditor something
-real to audit.
+of asserting success, and `store_incidents` refuses a week that does not add
+up. The check the report hands us is only worth having if something acts on
+it.
 """
 
 import json
@@ -236,6 +237,44 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
     return incidents, sections
 
 
+def _district_block_lines(lines: list[str], district: str) -> list[str]:
+    """The raw source lines of one district block, header to total inclusive.
+
+    This is what the extraction auditor used to be for. A district that does
+    not reconcile has lost rows, and the answer is always visible in its own
+    block — a wrapped offence name, a date format the parser does not match, a
+    header it did not recognise. A model reading the block and describing it
+    produced prose about the source; printing the block produces the source.
+    Page furniture is left in deliberately: a row lost across a page break is
+    only diagnosable if the break is visible.
+    """
+    out: list[str] = []
+    inside = False
+    for line in lines:
+        header = NUMBERED_HEADER_RE.search(line)
+        if header:
+            if inside:
+                break  # a second block opened without a total; stop here
+            inside = header.group(1) == district
+        if inside:
+            out.append(line)
+            if DISTRICT_TOTAL_RE.search(line):
+                break
+    return out
+
+
+# Written next to the parsed incidents so `store_incidents` can refuse a week
+# the parse could not vouch for. The incidents JSON itself stays a flat array —
+# the geo-analysis step reads it directly and would break on anything else.
+SUMMARY_SUFFIX = ".summary.json"
+
+
+def _summary_path_for(json_path: str) -> str:
+    """Where the parse summary sits, given the incidents JSON path."""
+    base = json_path[: -len(".json")] if json_path.endswith(".json") else json_path
+    return base + SUMMARY_SUFFIX
+
+
 @tool
 def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incidents.json") -> str:
     """Parse every incident out of a Garland weekly incident PDF.
@@ -287,6 +326,9 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
             "declared_total": s["declared_total"],
             "parsed_total": s["parsed_total"],
             "missing": s["declared_total"] - s["parsed_total"],
+            # The block itself, so whoever reads this can see what was lost
+            # rather than being told about it.
+            "source_lines": _district_block_lines(lines, s["district"]),
         }
         for s in sections
         if s["declared_total"] != s["parsed_total"]
@@ -366,6 +408,14 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
             "discrepancies": discrepancies,
         },
     }
+
+    # Alongside the incidents, so store_incidents can refuse a week whose parse
+    # did not reconcile. The decision is arithmetic and belongs where it cannot
+    # be talked out of: it used to be a subagent's verdict string that the main
+    # agent was asked to honour.
+    with open(_summary_path_for(output_json_path), "w") as f:
+        json.dump(summary, f, indent=2)
+
     return json.dumps(summary, indent=2)
 
 
@@ -617,6 +667,53 @@ def unlabelled_incident_types(json_path: str) -> str:
     )
 
 
+def _reconciliation_gate(json_path: str) -> tuple[Optional[str], str]:
+    """Refuse to store a week whose parse did not reconcile.
+
+    Returns (refusal, note). A refusal is the message to return instead of
+    storing; the note is appended to a successful store's report.
+
+    A numbered district short of the total the report declares for it means
+    rows were dropped, and a week quietly missing incidents is worse on a
+    public map than a week that is late. That used to be a subagent's verdict
+    which the main agent was asked to respect. It is arithmetic, so it is
+    enforced here instead: there is no argument to be had with it, and no tool
+    argument that turns it off.
+
+    A missing summary is neither a pass nor a failure. It means nothing checked
+    this JSON, and the store says so rather than implying a check that did not
+    happen.
+    """
+    summary_path = _summary_path_for(json_path)
+    try:
+        with open(summary_path, "r") as f:
+            summary = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return None, (
+            f" NOTE: no parse summary at {os.path.basename(summary_path)}, so "
+            "nothing verified this JSON against the report's district totals."
+        )
+
+    discrepancies = (summary.get("reconciliation") or {}).get("discrepancies") or []
+    if not discrepancies:
+        return None, ""
+
+    detail = []
+    for d in discrepancies:
+        block = "\n".join(d.get("source_lines") or []) or "(source not recorded)"
+        detail.append(
+            f"District {d['district']}: the report declares {d['declared_total']}, "
+            f"the parse found {d['parsed_total']}. The block reads:\n{block}"
+        )
+    return (
+        "REFUSED: not storing this week. "
+        f"{len(discrepancies)} numbered district(s) do not match the total the "
+        "report declares for them, so rows were dropped. Publishing a week that "
+        "is quietly missing incidents is worse than publishing it late — fix the "
+        "parser and re-run.\n\n" + "\n\n".join(detail)
+    ), ""
+
+
 @tool
 def store_incidents(
     json_path: str,
@@ -649,6 +746,10 @@ def store_incidents(
             incidents = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         return f"Error reading incidents JSON at {json_path}: {e}"
+
+    refusal, parse_note = _reconciliation_gate(json_path)
+    if refusal:
+        return refusal
 
     supplied = short_description_map or {}
     types = sorted({inc.get("incident", "") for inc in incidents} - {""})
@@ -747,4 +848,5 @@ def store_incidents(
             if unlabelled
             else "Every incident type was labelled."
         )
+        + parse_note
     )
