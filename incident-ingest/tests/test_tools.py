@@ -20,6 +20,14 @@ PDF_PATH = os.path.join(
     "weekly_report.pdf",
 )
 
+# The 07/26/2026 report: the first one carrying an offence name long enough to
+# wrap, which is the case weekly_report.pdf does not contain.
+WRAPPED_ROW_PDF_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "fixtures",
+    "weekly_report_wrapped_row.pdf",
+)
+
 
 def _rows(period: str = "05/03/2026 - 05/09/2026", day: str = "05/03/2026") -> list[dict]:
     """One incident, in the shape parse_incidents writes."""
@@ -102,7 +110,8 @@ def test_a_district_that_does_not_reconcile_asks_for_an_audit(monkeypatch):
     """A district short of its declared total is exactly what the auditor is for.
 
     This is the shape of the real 07/26/2026 failure: district 51 declared 6
-    and parsed 5, because a long offence name wrapped onto another line.
+    and parsed 5. That particular cause — a wrapped offence name — is handled
+    now, so what reaches this state is a row the parser still cannot read.
     """
     page = "\n".join(
         [
@@ -151,6 +160,101 @@ def test_rows_under_an_unnumbered_district_header_are_counted_not_silently_dropp
         {"district": None, "declared_total": 1, "parsed_total": 1},
         {"district": "21", "declared_total": 1, "parsed_total": 1},
     ]
+
+
+def test_parser_recovers_a_row_whose_offence_name_wrapped():
+    """A long offence name is emitted across several lines, date on none of them.
+
+    District 51 of the 07/26/2026 report declared 6 and parsed 5 for exactly
+    this reason: a $20,000 metal theft whose description wrapped was dropped
+    without a trace, and only the district total showed it had gone.
+    """
+    lines = [
+        " DISTRICT 51",
+        " 148 11442026R036639 BURGLARY-VEH-(CRIM ATT)07/26/2026 8XX HUDSON DR",
+        " 148 02062026R036876 THEFT-MATERIAL ALUMINUM/ BRONZE/ COPPER/ BRASS L/T ",
+        "$20,000",
+        "07/30/2026 10XX W CENTERVILLE RD",
+        "District Total: 2",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert sections == [{"district": "51", "declared_total": 2, "parsed_total": 2}]
+    assert incidents[1] == {
+        "district": "51",
+        "date": "07/30/2026",
+        "incident": "THEFT-MATERIAL ALUMINUM/ BRONZE/ COPPER/ BRASS L/T $20,000",
+        "location": "10XX W CENTERVILLE RD",
+    }
+
+
+def test_a_wrapped_row_is_abandoned_at_a_page_break_not_completed_by_the_print_date():
+    """Page furniture must never finish a pending row.
+
+    The report reprints a footer, the print date and the column header on every
+    page. The print date is a date, so pasting it onto a half-built row would
+    manufacture an incident that never happened — dated to the day the report
+    was printed. Losing the row instead is caught by the district total; a
+    fabricated one would be published as fact.
+    """
+    lines = [
+        " DISTRICT 51",
+        " 148 02062026R036876 THEFT-MATERIAL ALUMINUM/ BRONZE/ COPPER/ BRASS L/T ",
+        "$20,000",
+        "Page 4 of 6Prepared by:  Crime Analysis",
+        "08/03/2026",
+        "ADDRESSOFFENSECASE#BEAT",
+        "07/30/2026 10XX W CENTERVILLE RD",
+        "District Total: 1",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert incidents == [], "a page break must abandon the row, not complete it"
+    assert sections == [{"district": "51", "declared_total": 1, "parsed_total": 0}], (
+        "and the loss must show up against the declared total"
+    )
+
+
+def test_an_unfinished_row_does_not_swallow_the_one_after_it():
+    """A row that never finds its date is dropped when the next row opens."""
+    lines = [
+        " DISTRICT 22",
+        " 1 11442026R036639 THEFT-MATERIAL ALUMINUM/ BRONZE/ COPPER/ BRASS L/T ",
+        " 2 22002026R036021 BURGLARY-VEH07/16/2026 23XX APOLLO RD",
+        "District Total: 2",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert incidents == [
+        {
+            "district": "22",
+            "date": "07/16/2026",
+            "incident": "BURGLARY-VEH",
+            "location": "23XX APOLLO RD",
+        }
+    ], "the abandoned row's text must not leak into the row that follows it"
+    assert sections == [{"district": "22", "declared_total": 2, "parsed_total": 1}]
+
+
+def test_wrapped_rows_reconcile_end_to_end():
+    """The 07/26/2026 report, which is what found this bug.
+
+    The synthetic cases above pin the logic; this pins that pypdf really does
+    hand us the lines they describe.
+    """
+    summary = json.loads(
+        parse_incidents.invoke(
+            {"pdf_path": WRAPPED_ROW_PDF_PATH, "output_json_path": os.devnull}
+        )
+    )
+
+    assert summary["report_period"] == "07/26/2026 - 08/01/2026"
+    assert summary["reconciliation"]["audit_required"] is False
+    assert summary["reconciliation"]["discrepancies"] == []
+    assert summary["total_incidents"] == 100
 
 
 def test_parser_reports_report_period():

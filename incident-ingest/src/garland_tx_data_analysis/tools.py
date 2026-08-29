@@ -94,6 +94,24 @@ BARE_HEADER_RE = re.compile(r"^DISTRICT$")
 DISTRICT_TOTAL_RE = re.compile(r"District Total:\s*(\d+)")
 DATE_RE = re.compile(r"\d{1,2}/\d{1,2}/\d{4}")
 
+# A row opens with the beat and case numbers the report runs together, e.g.
+# ` 148 02062026R036876 THEFT-...`. Matching that shape is what lets us tell a
+# row whose offence name wrapped from an ordinary line of page furniture.
+ROW_START_RE = re.compile(r"^\s*\d+\s+\d+R\d+\b")
+
+# Page furniture: the report repeats a footer, a print date and the column
+# header on every page. A wrapped row never continues across these, so they
+# abandon a part-built row rather than being pasted into it — the print date in
+# particular would otherwise supply a date and manufacture a phantom incident.
+PAGE_FURNITURE_RE = re.compile(
+    r"^\s*(Page \d+ of \d+|Prepared by:|ADDRESSOFFENSECASE#BEAT|Murder \(incl)"
+    r"|^\s*\d{1,2}/\d{1,2}/\d{4}\s*$"
+)
+
+# A wrapped row spans a handful of physical lines at most. The cap stops a
+# malformed page from swallowing the rest of a district into one pending row.
+MAX_WRAPPED_LINES = 4
+
 
 def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
     """Walk the lines once, returning (incidents, sections).
@@ -108,16 +126,53 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
     header have no district to belong to and are dropped, exactly as before;
     the difference is that now the drop is counted and reported rather than
     silent.
+
+    Most rows arrive whole, with the offence name and date run together:
+
+        ` 148 13002026R036918 ORGANIZED RETAIL THEFT...07/30/2026 11XX W ...`
+
+    An offence name long enough to wrap is emitted across several physical
+    lines instead, and the date lands on none of them:
+
+        ` 148 02062026R036876 THEFT-MATERIAL ALUMINUM/ BRONZE/ COPPER/ L/T `
+        `$20,000`
+        `07/30/2026 10XX W CENTERVILLE RD`
+
+    So a line that opens a row but carries no date starts a pending row, and
+    following lines are appended until one supplies the date. Page furniture
+    and the next row abandon a pending row rather than being pasted into it:
+    losing a row is caught by the district-total reconciliation, while a
+    fabricated one would be published as fact.
     """
     incidents: list[dict] = []
     sections: list[dict] = []
 
     current_district: Optional[str] = None
     section_count = 0
+    # The parts of a row whose offence name wrapped, still waiting for a date.
+    pending: list[str] = []
+
+    def record(body: str) -> None:
+        """Count a row against its district block, and keep it if attributable."""
+        nonlocal section_count
+        section_count += 1
+        if current_district is None:
+            return
+        date_match = DATE_RE.search(body)
+        incident_type, _, location = body.partition(date_match.group())
+        incidents.append(
+            {
+                "district": current_district,
+                "date": date_match.group(),
+                "incident": incident_type.strip(),
+                "location": location.strip(),
+            }
+        )
 
     for line in lines:
         header_match = NUMBERED_HEADER_RE.search(line)
         if header_match:
+            pending = []
             current_district = header_match.group(1)
             section_count = 0
             continue
@@ -126,12 +181,14 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
             # A bare `DISTRICT` with no number starts a section we cannot
             # attribute. Reset rather than letting its rows leak into the
             # district above it.
+            pending = []
             current_district = None
             section_count = 0
             continue
 
         total_match = DISTRICT_TOTAL_RE.search(line)
         if total_match:
+            pending = []
             sections.append(
                 {
                     "district": current_district,
@@ -142,28 +199,39 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
             section_count = 0
             continue
 
+        if PAGE_FURNITURE_RE.match(line):
+            # The footer, the print date and the repeated column header. These
+            # would otherwise be appended to a pending row — and the print date
+            # is a date, so it would complete one and invent an incident.
+            pending = []
+            continue
+
         tokens = line.strip().split()
+        opens_a_row = bool(ROW_START_RE.match(line))
+
+        if pending and not opens_a_row:
+            # Continuation lines carry no beat or case number, so take the
+            # whole line rather than dropping the first two tokens.
+            pending.append(line.strip())
+            body = " ".join(pending)
+            if DATE_RE.search(body):
+                record(body)
+                pending = []
+            elif len(pending) >= MAX_WRAPPED_LINES:
+                pending = []
+            continue
+
+        # A new row starts here, so whatever was pending never found its date.
+        pending = []
+
         if len(tokens) < 3:
             continue
         # Lines look like: " <row#> <report-id> INCIDENT-TYPE<DATE> <LOCATION>"
         body = " ".join(tokens[2:]).strip()
-        date_match = DATE_RE.search(body)
-        if not date_match:
-            continue
-
-        section_count += 1
-        if current_district is None:
-            continue
-
-        incident_type, _, location = body.partition(date_match.group())
-        incidents.append(
-            {
-                "district": current_district,
-                "date": date_match.group(),
-                "incident": incident_type.strip(),
-                "location": location.strip(),
-            }
-        )
+        if DATE_RE.search(body):
+            record(body)
+        elif opens_a_row:
+            pending = [body]
 
     return incidents, sections
 

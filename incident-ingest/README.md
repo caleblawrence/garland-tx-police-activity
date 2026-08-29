@@ -44,7 +44,7 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its two subagents, and their prompts
   tools.py    download · parse · read raw text · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        13 tests over the tools
+tests/        21 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
