@@ -152,7 +152,8 @@ The tools available to you:
     is a PDF and raises if not.
   - `parse_incidents` — parse the PDF to JSON. Returns a summary including a
     `reconciliation` block checking the parse against the report's own
-    district totals.
+    district totals, and a `period_check` block saying whether this week is
+    already in the database.
   - `read_report_text` — read the PDF's raw text when you need to see the
     source yourself.
   - `unlabelled_incident_types` — which offence codes in this week's report
@@ -165,9 +166,19 @@ The run, and the standing constraints on it:
 
 1. Download the report from {PDF_URL} to `{PDF_PATH}`.
 
-2. Parse it to `{INCIDENTS_JSON_PATH}`. Note the report period in the summary:
-   if it matches a week already in the database, the download probably served
-   a stale file, and you should say so rather than quietly re-ingesting it.
+2. Parse it to `{INCIDENTS_JSON_PATH}`, then read `period_check.status` in the
+   summary. It has already compared this week against the database; you cannot
+   check that yourself, so take what it says.
+
+     - `new` — go on to step 3.
+     - `partially-stored` — an earlier run stored part of this week and stopped.
+       Go on; storing tops up the remainder.
+     - `already-stored` — this whole week is in the database already. STOP. The
+       download almost certainly served a stale file, and re-publishing last
+       week as this week is the failure this pipeline is most prone to. Report
+       it and do not store.
+     - `unknown` — the database could not be reached. That is not the same as
+       nothing being stored. Say so in your report, and expect step 5 to fail.
 
 3. Look at `reconciliation.audit_required` in that summary.
 

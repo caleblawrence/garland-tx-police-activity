@@ -258,6 +258,82 @@ def test_wrapped_rows_reconcile_end_to_end():
     assert summary["total_incidents"] == 100
 
 
+def test_period_check_reports_unknown_without_a_database():
+    """No database is not the same answer as nothing stored.
+
+    A run that cannot reach Postgres must not read as "this week is new" —
+    that is how a stale week gets published. It says so instead.
+    """
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+    )
+
+    check = summary["period_check"]
+    assert check["status"] == "unknown"
+    assert check["already_stored_rows"] is None
+    assert check["stale_download_suspected"] is False
+
+
+def test_period_check_reports_a_week_the_database_has_never_seen(db):
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+    )
+
+    assert summary["period_check"]["status"] == "new"
+    assert summary["period_check"]["already_stored_rows"] == 0
+
+
+def test_period_check_flags_a_week_that_is_already_stored(db, tmp_path):
+    """The stale-download signal: this week is in the database, all of it.
+
+    Step 2 of the agent's prompt used to ask it to notice this. It never could
+    — nothing in its toolset reads the database — so the check lives here.
+    """
+    out_json = tmp_path / "incidents.json"
+    parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(out_json)})
+    store_incidents.invoke({
+        "json_path": str(out_json),
+        "enriched_json_path": str(tmp_path / "enriched.json"),
+    })
+
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+    )
+
+    check = summary["period_check"]
+    assert check["status"] == "already-stored"
+    assert check["stale_download_suspected"] is True
+    assert check["already_stored_rows"] == check["parsed_rows"]
+
+
+def test_period_check_distinguishes_a_half_finished_run_from_a_stale_download(db, tmp_path):
+    """Both leave rows for this period behind; only one must stop the run.
+
+    A run that stored some of the week and died has to be allowed to finish,
+    or the week can never be completed.
+    """
+    out_json = tmp_path / "incidents.json"
+    parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": str(out_json)})
+    with open(out_json) as f:
+        rows = json.load(f)
+
+    partial = tmp_path / "partial.json"
+    partial.write_text(json.dumps(rows[:10]))
+    store_incidents.invoke({
+        "json_path": str(partial),
+        "enriched_json_path": str(tmp_path / "enriched.json"),
+    })
+
+    summary = json.loads(
+        parse_incidents.invoke({"pdf_path": PDF_PATH, "output_json_path": os.devnull})
+    )
+
+    check = summary["period_check"]
+    assert check["status"] == "partially-stored"
+    assert check["stale_download_suspected"] is False
+    assert check["already_stored_rows"] == 10
+
+
 def test_parser_reports_report_period():
     """The period makes a stale download visible in the run output."""
     summary = json.loads(
