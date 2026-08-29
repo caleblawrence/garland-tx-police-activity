@@ -33,6 +33,26 @@ from dotenv import load_dotenv
 
 from garland_tx_data_analysis.tools import connect, ensure_schema
 
+# The murder family, decided by hand rather than by the labeller.
+#
+# Capital murder collapses into Murder: the capital distinction is a sentencing
+# tier, not a different act, and the map's legend is not the place to draw it.
+# That also settles the base code, which the labeller had called "Homicide" —
+# one label for one thing.
+#
+# Two do NOT collapse. Solicitation is not a killing and attempt is not a
+# killing, and labelling either "Murder" would tell a reader someone died when
+# nobody did. Same rule the offence labeller already follows for (CRIM ATT).
+# Manslaughter, negligent homicide and the traffic fatalities stay distinct
+# because they are distinct offences.
+MURDER_FAMILY = {
+    "MURDER": "Murder",
+    "MURDER-CAPITAL-TERROR THREAT/OTHER FELONY": "Murder",
+    "MURDER-CAPITAL-MULTIPLE PERSONS": "Murder",
+    "MURDER-CAPITAL-PEACE OFFICER/FIREMAN-(CRIM ATT)": "Attempted Murder",
+    "MURDER-(CRIM SOLICIT)": "Solicitation of Murder",
+}
+
 CANONICAL_LABELS = {
     'ASSAULT-AGG-D/W': 'Aggravated Assault with Deadly Weapon',
     'ASSAULT-AGG-SBI': 'Aggravated Assault',
@@ -103,6 +123,8 @@ CANONICAL_LABELS = {
     'UNAUTHORIZED USE MOTOR VEHICLE': 'Unauthorized Vehicle Use',
     'UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)': 'Attempted Unauthorized Vehicle Use',
 }
+
+CANONICAL_LABELS.update(MURDER_FAMILY)
 
 COUNT_DRIFTED_SQL = """
     SELECT count(*) FROM (
