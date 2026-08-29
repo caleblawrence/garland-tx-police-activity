@@ -24,6 +24,25 @@ from langchain_core.tools import tool
 from psycopg.rows import tuple_row
 from pypdf import PdfReader
 
+# Where a run keeps its files, and what they are called. These are fixed: the
+# city serves one URL, and the pipeline writes the same four files every week.
+#
+# They are defaults on the tools rather than values the agent types, because an
+# agent that types them can mistype them, and gets nothing right by doing so.
+# The system prompt used to carry all four paths plus six lines explaining that
+# tool paths are project-relative while the agent's own file tools are rooted at
+# work/. On its first unattended run the agent wrote its report to
+# `/work/run-report.md`, which those file tools resolved to `work/work/`.
+WORK_DIR = "work"
+PDF_URL = (
+    "https://www.garlandtx.gov/DocumentCenter/View/802/"
+    "Previous-Week-Selected-Incident-Report-PDF?bidId="
+)
+PDF_PATH = f"{WORK_DIR}/police_incidents.pdf"
+INCIDENTS_JSON_PATH = f"{WORK_DIR}/extracted_incidents.json"
+ENRICHED_JSON_PATH = f"{WORK_DIR}/enriched_incidents.json"
+
+
 # garlandtx.gov sits behind a filter that answers `404` with an empty body to
 # clients sending the default `python-requests/x.y` User-Agent. The download
 # then "failed" while the rest of the pipeline happily re-parsed whatever stale
@@ -37,15 +56,15 @@ DOWNLOAD_TIMEOUT_SECONDS = 60
 
 
 @tool
-def download_weekly_report(url: str, save_path: str) -> str:
-    """Download the weekly police-incidents PDF and save it locally.
+def download_weekly_report(url: str = PDF_URL, save_path: str = PDF_PATH) -> str:
+    """Download this week's police-incidents PDF. Call it with no arguments.
 
     Verifies the response really is a PDF and raises if it is not, so the run
     stops instead of silently reusing an older file.
 
     Args:
-        url: The URL of the PDF to download.
-        save_path: Local path to write the PDF to.
+        url: The city's weekly report URL. Defaults to the right one.
+        save_path: Where to write it. Defaults to the run directory.
     """
     response = requests.get(
         url,
@@ -302,8 +321,10 @@ def _summary_path_for(json_path: str) -> str:
 
 
 @tool
-def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incidents.json") -> str:
-    """Parse every incident out of a Garland weekly incident PDF.
+def parse_incidents(
+    pdf_path: str = PDF_PATH, output_json_path: str = INCIDENTS_JSON_PATH
+) -> str:
+    """Parse the downloaded report. Call it with no arguments.
 
     Writes the incidents to JSON and returns a summary that reconciles what was
     parsed against the `District Total: N` figure the PDF declares for each
@@ -317,8 +338,10 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
     could not be reached — not the same as nothing being stored).
 
     Args:
-        pdf_path: Path to the downloaded PDF.
-        output_json_path: Where to write the extracted incidents as JSON.
+        pdf_path: The downloaded PDF. Defaults to what download_weekly_report
+            just wrote.
+        output_json_path: Where to write the incidents. Defaults to the run
+            directory.
     """
     text = _extract_text(pdf_path)
     lines = text.split("\n")
@@ -446,14 +469,14 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
 
 
 @tool
-def read_report_text(pdf_path: str, page: Optional[int] = None) -> str:
+def read_report_text(pdf_path: str = PDF_PATH, page: Optional[int] = None) -> str:
     """Return the raw extracted text of the PDF, for inspecting it directly.
 
     Use this when the parse does not reconcile with the report's own district
     totals and you need to see what the source actually says.
 
     Args:
-        pdf_path: Path to the PDF.
+        pdf_path: The PDF. Defaults to this week's download.
         page: 1-based page number. Omit to get every page.
     """
     reader = PdfReader(pdf_path)
@@ -661,7 +684,7 @@ def _learn_labels(
 
 
 @tool
-def unlabelled_incident_types(json_path: str) -> str:
+def unlabelled_incident_types(json_path: str = INCIDENTS_JSON_PATH) -> str:
     """List the offence codes in a parsed report that have no label yet.
 
     Returns JSON: the codes needing a label, and how many already have one.
@@ -669,7 +692,7 @@ def unlabelled_incident_types(json_path: str) -> str:
     before and the labeller has nothing to do — the stored labels are reused.
 
     Args:
-        json_path: Path to the JSON written by parse_incidents.
+        json_path: The parse output. Defaults to what parse_incidents wrote.
     """
     try:
         with open(json_path, "r") as f:
@@ -742,9 +765,9 @@ def _reconciliation_gate(json_path: str) -> tuple[Optional[str], str]:
 
 @tool
 def store_incidents(
-    json_path: str,
+    json_path: str = INCIDENTS_JSON_PATH,
     short_description_map: Optional[dict[str, str]] = None,
-    enriched_json_path: str = "work/enriched_incidents.json",
+    enriched_json_path: str = ENRICHED_JSON_PATH,
 ) -> str:
     """Label the incidents, append new ones to Postgres, and write the map feed.
 
@@ -758,14 +781,14 @@ def store_incidents(
     from week to week.
 
     Args:
-        json_path: Path to the JSON written by parse_incidents.
+        json_path: The parse output. Defaults to what parse_incidents wrote.
         short_description_map: Labels for codes that do not have one yet, as
             returned by `unlabelled_incident_types`, e.g.
             {"THEFT-MOTOR VEHICLE-$2,500 L/T $30,000": "Motor Vehicle Theft"}.
             Codes with no stored and no supplied label fall back to the verbose
             name from the PDF.
         enriched_json_path: Where to write the flat enriched list the
-            geo-analysis step reads.
+            geo-analysis step reads. Defaults to the run directory.
     """
     try:
         with open(json_path, "r") as f:

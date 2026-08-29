@@ -772,6 +772,42 @@ class _FakeResponse:
             raise requests.exceptions.HTTPError(f"{self.status_code} Client Error")
 
 
+def test_the_pipeline_tools_default_every_fixed_path(tmp_path, monkeypatch):
+    """Nothing the agent cannot influence should be the agent's to type.
+
+    The URL and all three paths are fixed — one city, one report, the same
+    files every week — so they are defaults rather than arguments. Typing them
+    could only ever go wrong. On its first unattended run the agent wrote its
+    report to `/work/run-report.md`, which its work-rooted file tools resolved
+    to `work/work/`, because the prompt had to explain two path namespaces.
+    """
+    from garland_tx_data_analysis import agent, tools
+
+    monkeypatch.chdir(tmp_path)
+    assert tools.PDF_PATH == "work/police_incidents.pdf"
+    assert tools.INCIDENTS_JSON_PATH == "work/extracted_incidents.json"
+    assert tools.ENRICHED_JSON_PATH == "work/enriched_incidents.json"
+    assert tools.PDF_URL.startswith("https://www.garlandtx.gov/")
+
+    for tool, param, expected in [
+        (download_weekly_report, "url", tools.PDF_URL),
+        (download_weekly_report, "save_path", tools.PDF_PATH),
+        (parse_incidents, "pdf_path", tools.PDF_PATH),
+        (parse_incidents, "output_json_path", tools.INCIDENTS_JSON_PATH),
+        (read_report_text, "pdf_path", tools.PDF_PATH),
+        (unlabelled_incident_types, "json_path", tools.INCIDENTS_JSON_PATH),
+        (store_incidents, "json_path", tools.INCIDENTS_JSON_PATH),
+        (store_incidents, "enriched_json_path", tools.ENRICHED_JSON_PATH),
+    ]:
+        got = tool.args_schema.model_fields[param].default
+        assert got == expected, f"{tool.name}.{param} defaults to {got!r}"
+
+    # And none of it appears in the prompt, so there is only one namespace left
+    # for the agent to think in: the one its own file tools use.
+    assert "work/" not in agent.SYSTEM_PROMPT
+    assert "garlandtx.gov" not in agent.SYSTEM_PROMPT
+
+
 def test_download_sends_browser_user_agent(monkeypatch, tmp_path):
     """garlandtx.gov 404s the default python-requests UA, which used to make the
     run silently fall back to whatever stale PDF was already on disk."""
