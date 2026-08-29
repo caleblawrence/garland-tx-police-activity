@@ -366,6 +366,18 @@ CREATE INDEX IF NOT EXISTS incidents_natural_key_idx
     ON incidents (report_period, district, occurred_on, incident, location);
 CREATE INDEX IF NOT EXISTS incidents_report_period_idx ON incidents (report_period);
 CREATE INDEX IF NOT EXISTS incidents_occurred_on_idx ON incidents (occurred_on);
+
+-- One label per offence code, decided once and reused forever after.
+-- Re-deriving labels every week produced 94 different labels for 68 codes:
+-- the same code read as "Vandalism" one week and "Criminal Mischief
+-- ($100-$750)" the next, so the map's legend was never stable. A model is the
+-- right tool for naming a code nobody has seen before and the wrong one for
+-- re-deciding a name that already exists.
+CREATE TABLE IF NOT EXISTS incident_labels (
+    incident          text PRIMARY KEY,
+    short_description text NOT NULL,
+    created_at        timestamptz NOT NULL DEFAULT now()
+);
 """
 
 
@@ -451,6 +463,91 @@ def _existing_counts(conn: psycopg.Connection, periods: list[str]) -> Counter:
         return Counter({tuple(row[:5]): row[5] for row in cur.fetchall()})
 
 
+def _stored_labels(conn: psycopg.Connection, types: list[str]) -> dict[str, str]:
+    """The labels already decided for these offence codes."""
+    if not types:
+        return {}
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT incident, short_description FROM incident_labels WHERE incident = ANY(%s)",
+            (types,),
+        )
+        return dict(cur.fetchall())
+
+
+def _learn_labels(
+    conn: psycopg.Connection, mapping: dict[str, str]
+) -> tuple[list[str], list[str]]:
+    """Record labels for codes that do not have one yet.
+
+    Returns (learned, ignored): the codes this call gave a label to for the
+    first time, and the codes that already had one and kept it.
+
+    `ON CONFLICT DO NOTHING` is the whole point. A code that already has a label
+    keeps it, so whatever the model returns for a code it has seen before is
+    discarded and a label cannot drift by being regenerated. Stability is a
+    constraint here rather than an instruction in a prompt — the drift this
+    replaced happened despite the prompt telling the model not to.
+    """
+    rows = [(incident, label) for incident, label in mapping.items() if incident and label]
+    if not rows:
+        return [], []
+
+    # Read before writing: afterwards every code is present and there is no way
+    # to tell which ones this call actually taught us.
+    existing = _stored_labels(conn, [incident for incident, _ in rows])
+    with conn.cursor() as cur:
+        cur.executemany(
+            """
+            INSERT INTO incident_labels (incident, short_description)
+            VALUES (%s, %s)
+            ON CONFLICT (incident) DO NOTHING
+            """,
+            rows,
+        )
+
+    learned = sorted(incident for incident, _ in rows if incident not in existing)
+    ignored = sorted(
+        incident
+        for incident, label in rows
+        if incident in existing and existing[incident] != label
+    )
+    return learned, ignored
+
+
+@tool
+def unlabelled_incident_types(json_path: str) -> str:
+    """List the offence codes in a parsed report that have no label yet.
+
+    Returns JSON: the codes needing a label, and how many already have one.
+    An empty list means every code in this week's report has been labelled
+    before and the labeller has nothing to do — the stored labels are reused.
+
+    Args:
+        json_path: Path to the JSON written by parse_incidents.
+    """
+    try:
+        with open(json_path, "r") as f:
+            incidents = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        return json.dumps({"error": f"Error reading incidents JSON at {json_path}: {e}"})
+
+    types = sorted({inc.get("incident", "") for inc in incidents} - {""})
+    with connect() as conn:
+        ensure_schema(conn)
+        known = _stored_labels(conn, types)
+
+    needing = [t for t in types if t not in known]
+    return json.dumps(
+        {
+            "types_in_report": len(types),
+            "already_labelled": len(known),
+            "needing_labels": needing,
+        },
+        indent=2,
+    )
+
+
 @tool
 def store_incidents(
     json_path: str,
@@ -463,12 +560,18 @@ def store_incidents(
     database already holds are skipped when appending to it. The database
     connection comes from the environment — you do not pass it.
 
+    Labels come from the `incident_labels` table, not from this call. Anything
+    passed in for a code that already has a label is ignored and reported: a
+    code is named once and keeps that name, so the map's legend stays the same
+    from week to week.
+
     Args:
         json_path: Path to the JSON written by parse_incidents.
-        short_description_map: Maps the exact verbose incident type from the PDF
-            to a concise label, e.g.
+        short_description_map: Labels for codes that do not have one yet, as
+            returned by `unlabelled_incident_types`, e.g.
             {"THEFT-MOTOR VEHICLE-$2,500 L/T $30,000": "Motor Vehicle Theft"}.
-            Types missing from the map fall back to the verbose name.
+            Codes with no stored and no supplied label fall back to the verbose
+            name from the PDF.
         enriched_json_path: Where to write the flat enriched list the
             geo-analysis step reads.
     """
@@ -478,18 +581,8 @@ def store_incidents(
     except (OSError, json.JSONDecodeError) as e:
         return f"Error reading incidents JSON at {json_path}: {e}"
 
-    mapping = short_description_map or {}
-
-    # The database is the append-only history; the enriched JSON is what the map
-    # renders for the current week. These are deliberately different sets:
-    # deduping the JSON too would blank the map on any re-run.
-    enriched = []
-    for inc in incidents:
-        record = dict(inc)
-        record["short_description"] = mapping.get(
-            inc.get("incident", ""), inc.get("incident", "")
-        )
-        enriched.append(record)
+    supplied = short_description_map or {}
+    types = sorted({inc.get("incident", "") for inc in incidents} - {""})
 
     # The writer used to append unconditionally, so re-running the pipeline in
     # the same week (or after a failed download served up last week's PDF)
@@ -501,6 +594,24 @@ def store_incidents(
     # must keep. Only the surplus beyond what the database already holds is new.
     with connect() as conn:
         ensure_schema(conn)
+
+        # Learn the codes we have never seen, then read every label back. What
+        # gets written is what the table says, so a re-run cannot relabel a week
+        # that is already published.
+        learned, ignored = _learn_labels(conn, supplied)
+        mapping = _stored_labels(conn, types)
+
+        # The database is the append-only history; the enriched JSON is what the
+        # map renders for the current week. These are deliberately different
+        # sets: deduping the JSON too would blank the map on any re-run.
+        enriched = []
+        for inc in incidents:
+            record = dict(inc)
+            record["short_description"] = mapping.get(
+                inc.get("incident", ""), inc.get("incident", "")
+            )
+            enriched.append(record)
+
         periods = sorted({(r.get("report_period") or "").strip() for r in enriched})
         already = _existing_counts(conn, periods)
         incoming = Counter(_incident_key(row) for row in enriched)
@@ -533,7 +644,7 @@ def store_incidents(
             total = cur.fetchone()[0]
 
     skipped = len(enriched) - len(new_rows)
-    unlabelled = sorted({inc.get("incident", "") for inc in incidents} - set(mapping))
+    unlabelled = [t for t in types if t not in mapping]
 
     try:
         os.makedirs(os.path.dirname(os.path.abspath(enriched_json_path)) or ".", exist_ok=True)
@@ -552,6 +663,15 @@ def store_incidents(
         f"Wrote all {len(enriched)} enriched incidents to "
         f"{os.path.abspath(enriched_json_path)} for the map. "
         f"Database now contains {total} total records. "
+        f"Labelled {len(types)} incident types: {len(learned)} newly learned, "
+        f"{len(types) - len(learned) - len(unlabelled)} reused from "
+        f"incident_labels. "
+        + (
+            f"NOTE: kept the stored label for {len(ignored)} code(s) that were "
+            f"supplied a different one: {ignored}. "
+            if ignored
+            else ""
+        )
         + (
             f"WARNING: {len(unlabelled)} incident types had no label and fell "
             f"back to the verbose name: {unlabelled}"

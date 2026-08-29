@@ -42,19 +42,22 @@ they're dropped. That was always true; it just used to be invisible.
 ```
 src/garland_tx_data_analysis/
   agent.py    the deep agent, its two subagents, and their prompts
-  tools.py    download · parse · read raw text · store
+  tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        21 tests over the tools
+tests/        26 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
 `parse_incidents` (parse + reconcile), `read_report_text` (raw page text, so the
-auditor can look at the source), `store_incidents` (label, append to Postgres,
+auditor can look at the source), `unlabelled_incident_types` (which offence
+codes have never been named), `store_incidents` (label, append to Postgres,
 write the map's JSON).
 
 **Subagents** — `extraction-auditor` returns a verdict of `trustworthy`,
 `trustworthy-with-losses`, or `untrustworthy`. `offence-labeller` maps
-`THEFT-MOTOR VEHICLE-$2,500 L/T $30,000` to `Motor Vehicle Theft`.
+`THEFT-MOTOR VEHICLE-$2,500 L/T $30,000` to `Motor Vehicle Theft` — and is only
+asked about codes that have never been labelled, which most weeks means it is
+not woken at all.
 
 ## Running it
 
@@ -93,6 +96,27 @@ CREATE TABLE incidents (
     inserted_at       timestamptz NOT NULL DEFAULT now()
 );
 ```
+
+Alongside it, one label per offence code:
+
+```sql
+CREATE TABLE incident_labels (
+    incident          text PRIMARY KEY,
+    short_description text NOT NULL,
+    created_at        timestamptz NOT NULL DEFAULT now()
+);
+```
+
+**A code is named once and keeps that name.** Labels used to be re-derived
+every run, and 68 codes had accumulated 94 labels between them: the same code
+read as `Vandalism` one week and `Criminal Mischief ($100-$750)` the next, so
+the map's legend never settled. `store_incidents` now inserts with `ON CONFLICT
+DO NOTHING` and applies whatever the table says, so a label supplied for a code
+that already has one is ignored and reported. Stability is a constraint, not an
+instruction in a prompt — the drift happened while the prompt said not to.
+
+The model is still what names a code nobody has seen before. It just is not
+asked twice.
 
 **There is deliberately no unique constraint over the natural key**
 (`report_period, district, occurred_on, incident, location`). A single week
