@@ -76,7 +76,7 @@ def db(monkeypatch):
     with connect() as conn:
         ensure_schema(conn)
         with conn.cursor() as cur:
-            cur.execute("TRUNCATE incidents, incident_labels RESTART IDENTITY")
+            cur.execute("TRUNCATE incidents, incident_labels, report_weeks RESTART IDENTITY")
     yield
 
 

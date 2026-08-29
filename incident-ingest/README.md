@@ -70,7 +70,7 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its subagent, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        37 tests over the tools
+tests/        41 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
@@ -185,6 +185,34 @@ that file and the script that imported it are in git history:
 git show 06211cd:incident-ingest/incidents.db
 git show 06211cd:incident-ingest/src/garland_tx_data_analysis/backfill.py
 ```
+
+## What the history actually covers
+
+A gap in this data looks exactly like a quiet week. `report_weeks` records
+every week the pipeline has ingested, written in the same transaction as the
+incidents, so coverage can never claim a week the database does not hold:
+
+```bash
+uv run python -m garland_tx_data_analysis.report_coverage
+uv run python -m garland_tx_data_analysis.report_coverage 2026-01-01 2026-08-31
+```
+
+As of the 08/16/2026 run, the honest answer is **5 of 36 weeks**:
+
+```
+have    12/14/2025 - 12/20/2025   115 incidents
+have    12/28/2025 - 01/03/2026    89 incidents
+have    01/04/2026 - 01/10/2026    97 incidents
+have    07/12/2026 - 07/18/2026    98 incidents
+have    08/16/2026 - 08/22/2026    92 incidents
+MISSING 31 further weeks
+plus 211 rows that predate the report-period field and belong to no week
+```
+
+February through April 2026 are not quiet months. They are months nobody ran
+the pipeline. That distinction has to survive into anything that summarises a
+month or claims a trend, which is why the coverage statement travels with the
+numbers rather than being left for a reader to assume.
 
 ## Models
 

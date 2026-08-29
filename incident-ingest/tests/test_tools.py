@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 import requests
@@ -739,6 +739,99 @@ def test_backfill_dry_run_changes_nothing(db, tmp_path):
     backfill_labels.main()
 
     assert [r["short_description"] for r in fetch_incidents()] == ["Burglary of a Vehicle"]
+
+
+def test_storing_a_week_records_that_the_week_is_covered(db, tmp_path):
+    """Coverage is written in the same transaction as the incidents.
+
+    A coverage table that can claim a week the database does not hold is worse
+    than no coverage table.
+    """
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+        "enriched_json_path": str(tmp_path / "e.json"),
+    })
+
+    result = tools.coverage(date(2026, 5, 3), date(2026, 5, 9))
+
+    assert result["weeks_present"] == 1
+    assert result["missing"] == []
+    assert result["complete"] is True
+    assert result["present"][0]["report_period"] == "05/03/2026 - 05/09/2026"
+    assert result["present"][0]["incidents_stored"] == 1
+
+
+def test_coverage_names_the_weeks_that_are_missing(db, tmp_path):
+    """The gap is the point.
+
+    The real history skips February through April 2026 — not quiet months,
+    unrun ones. A summary over that range would report a collection gap as a
+    fall in crime, so the gap has to be nameable before anything summarises.
+    """
+    for offset, day in [(0, "05/03/2026"), (21, "05/24/2026")]:
+        start = date(2026, 5, 3) + timedelta(days=offset)
+        period = (
+            f"{start.strftime('%m/%d/%Y')} - "
+            f"{(start + timedelta(days=6)).strftime('%m/%d/%Y')}"
+        )
+        f = tmp_path / f"w{offset}.json"
+        f.write_text(json.dumps(_rows(period=period, day=day)))
+        store_incidents.invoke({
+            "json_path": str(f),
+            "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+            "enriched_json_path": str(tmp_path / f"e{offset}.json"),
+        })
+
+    result = tools.coverage(date(2026, 5, 3), date(2026, 5, 30))
+
+    assert result["weeks_present"] == 2
+    assert result["missing"] == [
+        "05/10/2026 - 05/16/2026",
+        "05/17/2026 - 05/23/2026",
+    ]
+    assert result["complete"] is False
+    assert "Missing:" in result["coverage_statement"]
+
+
+def test_coverage_reports_rows_that_belong_to_no_week(db, tmp_path):
+    """344 legacy rows predate the report-period field.
+
+    They must not be placed on a calendar, and must not vanish either — a
+    summary that silently omits a third of the history is its own kind of lie.
+    """
+    incidents = tmp_path / "incidents.json"
+    rows = _rows() + [dict(_rows()[0], report_period=None)]
+    incidents.write_text(json.dumps(rows))
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+        "enriched_json_path": str(tmp_path / "e.json"),
+    })
+
+    result = tools.coverage(date(2026, 5, 3), date(2026, 5, 9))
+
+    assert result["unattributed_rows"] == 1
+    assert result["weeks_present"] == 1, "the undated row must not become a week"
+    assert "belong to no week" in result["coverage_statement"]
+
+
+def test_reingesting_a_week_updates_it_rather_than_duplicating_it(db, tmp_path):
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+    for i in range(2):
+        store_incidents.invoke({
+            "json_path": str(incidents),
+            "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+            "enriched_json_path": str(tmp_path / f"e{i}.json"),
+        })
+
+    result = tools.coverage(date(2026, 5, 3), date(2026, 5, 9))
+
+    assert result["weeks_present"] == 1
+    assert result["present"][0]["incidents_stored"] == 1, "dedup kept it at one row"
 
 
 def test_store_default_paths_stay_inside_cwd(db, tmp_path):
