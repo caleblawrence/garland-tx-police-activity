@@ -70,7 +70,7 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its subagent, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        44 tests over the tools
+tests/        48 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
@@ -246,6 +246,41 @@ fewer rows than the report declares — the same case numbers come back in both
 pypdf extraction modes, so the rows are not there to find. Those are stored
 under `--allow-shortfall`, with the gap recorded per month and stated on the
 page rather than quietly presented as whole.
+
+### Categories, and why the picklist is short
+
+The archive holds **189 distinct offence codes**. A filter listing all of them
+is not a filter, and it read badly too: only the 68 codes the weekly pipeline
+had met carried a label, so `Vehicle Burglary` sat beside `THEFT-ALL OTHER-TWO
+OR MORE PREVIOUS CONVICTIONS L/T $2500` and the pair looked like duplicates of
+each other.
+
+Two fixes. `categories.py` groups every code into the categories the report
+*itself* claims to cover, printed on each of its pages:
+
+> Murder (incl Trafc), Sexual Assault, Aggravated Assault, Robbery, Burglary,
+> Theft, Motor Vehicle Theft, Criminal Mischief
+
+That taxonomy is the publisher's, not one invented here, so a reader can check
+it against the source. All 189 codes land in one of those eight plus
+`Information Report`; nothing falls to `Other`, and a new code appearing there
+is the signal to add a rule rather than something quietly absorbed.
+
+The page then offers a category first and the specific offences *within* it
+second — ten entries instead of 189. And `label_backlog.py` ran the existing
+labeller over the 121 codes that had never been named, so nothing shows as a
+raw code any more:
+
+```bash
+uv run python -m garland_tx_data_analysis.label_backlog --apply
+```
+
+It writes through the same `ON CONFLICT DO NOTHING` path as everything else, so
+it cannot rename a code the weekly pipeline or the backfill already decided.
+
+The one distinction worth stating: taking the car is Motor Vehicle Theft,
+taking its catalytic converter is Theft. Folding parts theft into vehicle theft
+would hide that it fell from 6.7% of all incidents in 2022 to 2.4% in 2026.
 
 ## Models
 

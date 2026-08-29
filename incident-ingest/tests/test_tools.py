@@ -968,6 +968,72 @@ def test_a_merged_row_with_no_address_is_still_an_incident():
     assert sections == [{"district": "23", "declared_total": 2, "parsed_total": 2}]
 
 
+def test_every_offence_code_falls_into_the_reports_own_categories():
+    """The eight the report claims to cover, plus information reports.
+
+    Taken from the line printed on every page of every report rather than
+    invented here, so a reader can check the grouping against the source.
+    """
+    from garland_tx_data_analysis.categories import CATEGORIES, categorise
+
+    cases = {
+        "MURDER": "Murder",
+        "MURDER-CAPITAL-MULTIPLE PERSONS": "Murder",
+        "SEXUAL ASSLT CHILD": "Sexual Assault",
+        "CRIMINAL SOLICITATION-MINOR-W/INTENT-(SEXUAL ASSLT)": "Sexual Assault",
+        "ASSAULT-AGG-D/W": "Aggravated Assault",
+        "INJURY TO A CHILD-BI": "Aggravated Assault",
+        "ROBBERY-AGG-INDIV": "Robbery",
+        "BURGLARY-VEH": "Burglary",
+        "JUGGING BURGLARY OF VEHICLE": "Burglary",
+        "THEFT-SHOPLIFTING-L/T $100": "Theft",
+        "ORGANIZED RETAIL THEFT >=$750<$2,500": "Theft",
+        "CRIMINAL MISCHIEF $100 L/T $750": "Criminal Mischief",
+        "CRIM MISCHIEF VEH DAMGE CATALYTIC CNVRTR <$30K": "Criminal Mischief",
+        "INFO-IDENTITY THEFT": "Information Report",
+    }
+    for code, expected in cases.items():
+        assert categorise(code) == expected, code
+    assert set(cases.values()) <= set(CATEGORIES)
+
+
+def test_stealing_the_car_and_stealing_its_parts_are_different_categories():
+    """The distinction the report draws, and the one easiest to get backwards.
+
+    Taking the vehicle is Motor Vehicle Theft. Taking a catalytic converter off
+    it is Theft — which matters, because parts theft fell from 6.7% of all
+    incidents in 2022 to 2.4% in 2026 and folding it into vehicle theft would
+    hide that entirely.
+    """
+    from garland_tx_data_analysis.categories import categorise
+
+    assert categorise("THEFT-MOTOR VEHICLE-L/T $2,500") == "Motor Vehicle Theft"
+    assert categorise("UNAUTHORIZED USE MOTOR VEHICLE") == "Motor Vehicle Theft"
+    assert categorise("THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100") == "Theft"
+    assert categorise("BURGLARY-VEH") == "Burglary", "the report files this as burglary"
+
+
+def test_another_agencys_case_is_still_the_same_offence():
+    from garland_tx_data_analysis.categories import categorise
+
+    assert categorise("OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE") == (
+        "Motor Vehicle Theft"
+    )
+    assert categorise("OTHER AGENCY- THEFT-FIREARM") == "Theft"
+
+
+def test_an_unrecognised_code_is_visible_rather_than_absorbed():
+    """`Other` is a signal to add a rule, not a dumping ground.
+
+    Putting an unknown code into a category it may not belong to would be
+    invisible on the page; landing in Other is not.
+    """
+    from garland_tx_data_analysis.categories import categorise
+
+    assert categorise("SOMETHING GARLAND HAS NEVER FILED BEFORE") == "Other"
+    assert categorise("") == "Other"
+
+
 def test_download_sends_browser_user_agent(monkeypatch, tmp_path):
     """garlandtx.gov 404s the default python-requests UA, which used to make the
     run silently fall back to whatever stale PDF was already on disk."""

@@ -7,7 +7,7 @@
 // is all the archive needs to be and avoids putting 31,000 addresses through
 // Nominatim.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -44,17 +44,24 @@ const intern = (value, list, index) => {
   return index.get(value);
 };
 
+// One category per code, not per row: the category is a property of the
+// offence, so 31,000 rows do not each need to carry the string.
+const codeCategory = [];
+
 const rows = data.incidents.map((incident) => {
   const c = intern(incident.incident, codes, codeIndex);
   labels[c] = incident.short_description;
+  codeCategory[c] = data.categories.indexOf(incident.category);
   const d = intern(incident.district ?? "", districts, districtIndex);
   return [incident.date, d, c, incident.location || ""];
 });
 
 const payload = {
   months: data.months,
+  categories: data.categories,
   codes,
   labels,
+  codeCategory,
   districts,
   rows,
   unlabelledCodes: data.unlabelled_codes,
@@ -66,6 +73,16 @@ writeFileSync(outJson, JSON.stringify(payload));
 
 const html = readFileSync(path.join(projectRoot, "src/archive.html"), "utf-8");
 writeFileSync(path.join(projectRoot, "dist/archive.html"), html);
+
+// The city's own police district polygons, simplified from
+// maps.garlandtx.gov/arcgis/rest/services/CityMap/Public_Safety (layer 4).
+// Real boundaries rather than anything inferred from where incidents happen to
+// have been geocoded — a choropleth drawn on guessed districts would look
+// exactly as authoritative and be wrong.
+copyFileSync(
+  path.join(projectRoot, "src/police-districts.geojson"),
+  path.join(projectRoot, "dist/police-districts.geojson")
+);
 
 const kb = (p) => (readFileSync(p).length / 1024).toFixed(0);
 console.log(
