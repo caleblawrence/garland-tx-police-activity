@@ -26,11 +26,15 @@ than trusted:
 District Total: 3
 ```
 
-`parse_incidents` reports that reconciliation instead of asserting success. The
-`extraction-auditor` subagent reads it, and where a district doesn't add up it
-opens the raw page to find out what the parser missed rather than guessing. If a
-numbered district is short, the run stops — a wrong week on a public map is
-worse than a late one.
+`parse_incidents` reports that reconciliation instead of asserting success, and
+where a district doesn't add up it returns that district's raw source lines
+alongside the shortfall. `store_incidents` then refuses the week outright: a
+numbered district short of its declared total means rows were dropped, and a
+wrong week on a public map is worse than a late one.
+
+The refusal is not advice the agent can weigh. It is arithmetic, so it is
+enforced in the tool — there is no argument to be had with it and no tool
+argument that turns it off.
 
 For the 07/12/2026 report: 102 incidents declared, 98 stored, every numbered
 district reconciling exactly. The missing 4 sit under the report's first block,
@@ -63,24 +67,30 @@ the database, so it could only skip the step or guess.
 
 ```
 src/garland_tx_data_analysis/
-  agent.py    the deep agent, its two subagents, and their prompts
+  agent.py    the deep agent, its subagent, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        30 tests over the tools
+tests/        33 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
 `parse_incidents` (parse, reconcile, and check whether this week is already
 stored), `read_report_text` (raw page text, so the
-auditor can look at the source), `unlabelled_incident_types` (which offence
+you can look at the source), `unlabelled_incident_types` (which offence
 codes have never been named), `store_incidents` (label, append to Postgres,
 write the map's JSON).
 
-**Subagents** — `extraction-auditor` returns a verdict of `trustworthy`,
-`trustworthy-with-losses`, or `untrustworthy`. `offence-labeller` maps
-`THEFT-MOTOR VEHICLE-$2,500 L/T $30,000` to `Motor Vehicle Theft` — and is only
-asked about codes that have never been labelled, which most weeks means it is
-not woken at all.
+**Subagent** — `offence-labeller` maps `THEFT-MOTOR VEHICLE-$2,500 L/T $30,000`
+to `Motor Vehicle Theft`, and is only asked about codes that have never been
+labelled, which most weeks means it is not woken at all.
+
+There used to be a second one. `extraction-auditor` read a failed parse and
+returned a verdict of `trustworthy`, `trustworthy-with-losses` or
+`untrustworthy` for the main agent to honour. But the condition that woke it —
+a numbered district failing to reconcile — already determined that verdict, and
+the diagnosis it wrote was prose about a handful of source lines that are now
+simply printed. The halt moved into `store_incidents`, where it cannot be
+skipped.
 
 ## Running it
 
@@ -180,7 +190,7 @@ git show 06211cd:incident-ingest/src/garland_tx_data_analysis/backfill.py
 
 | Variable | Default | Used by |
 |---|---|---|
-| `GARLAND_MODEL` | `anthropic:claude-opus-5` | the main agent and the auditor |
+| `GARLAND_MODEL` | `anthropic:claude-opus-5` | the main agent |
 | `GARLAND_LABEL_MODEL` | `anthropic:claude-haiku-4-5` | the offence labeller |
 
 Labelling is mechanical string work and has always run on Haiku here. The
