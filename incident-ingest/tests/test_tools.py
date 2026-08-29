@@ -12,6 +12,7 @@ from garland_tx_data_analysis.tools import (
     parse_incidents,
     read_report_text,
     store_incidents,
+    unlabelled_incident_types,
 )
 
 PDF_PATH = os.path.join(
@@ -316,6 +317,80 @@ def test_store_warns_when_an_incident_type_has_no_label(db, tmp_path):
     assert "WARNING" in msg and "BURGLARY-VEH" in msg
 
 
+def test_a_label_survives_a_rerun_that_supplies_a_different_one(db, tmp_path):
+    """The bug this table exists for.
+
+    Re-deriving labels every week gave 68 offence codes 94 different labels —
+    the same code read as "Vandalism" one week and "Criminal Mischief
+    ($100-$750)" the next, so the map's legend never settled. A code is named
+    once; a later run offering a different name is ignored, and told so.
+    """
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+        "enriched_json_path": str(tmp_path / "a.json"),
+    })
+    msg = store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Burglary of a Vehicle"},
+        "enriched_json_path": str(tmp_path / "b.json"),
+    })
+
+    assert "kept the stored label" in msg and "BURGLARY-VEH" in msg
+    assert [r["short_description"] for r in fetch_incidents()] == ["Vehicle Burglary"]
+    with open(tmp_path / "b.json") as f:
+        assert [r["short_description"] for r in json.load(f)] == ["Vehicle Burglary"]
+
+
+def test_a_stored_label_applies_without_being_supplied_again(db, tmp_path):
+    """Once a code is named, later weeks need not ask the model about it."""
+    first = tmp_path / "first.json"
+    first.write_text(json.dumps(_rows(period="05/03/2026 - 05/09/2026", day="05/03/2026")))
+    store_incidents.invoke({
+        "json_path": str(first),
+        "short_description_map": {"BURGLARY-VEH": "Vehicle Burglary"},
+        "enriched_json_path": str(tmp_path / "a.json"),
+    })
+
+    second = tmp_path / "second.json"
+    second.write_text(json.dumps(_rows(period="05/10/2026 - 05/16/2026", day="05/10/2026")))
+    msg = store_incidents.invoke({
+        "json_path": str(second),
+        "enriched_json_path": str(tmp_path / "b.json"),
+    })
+
+    assert "WARNING" not in msg, "the stored label should cover it with nothing supplied"
+    assert "1 reused from incident_labels" in msg
+    assert {r["short_description"] for r in fetch_incidents()} == {"Vehicle Burglary"}
+
+
+def test_unlabelled_types_reports_only_what_the_model_still_has_to_name(db, tmp_path):
+    """The list sent to the labeller shrinks to nothing as codes are learned."""
+    incidents = tmp_path / "incidents.json"
+    rows = _rows() + [dict(_rows()[0], incident="THEFT-MAIL <10 ADDRESSES")]
+    incidents.write_text(json.dumps(rows))
+
+    before = json.loads(unlabelled_incident_types.invoke({"json_path": str(incidents)}))
+    assert before["types_in_report"] == 2
+    assert before["needing_labels"] == ["BURGLARY-VEH", "THEFT-MAIL <10 ADDRESSES"]
+
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {
+            "BURGLARY-VEH": "Vehicle Burglary",
+            "THEFT-MAIL <10 ADDRESSES": "Mail Theft",
+        },
+        "enriched_json_path": str(tmp_path / "a.json"),
+    })
+
+    after = json.loads(unlabelled_incident_types.invoke({"json_path": str(incidents)}))
+    assert after["needing_labels"] == [], "nothing left for the labeller to do"
+    assert after["already_labelled"] == 2
+
+
 def test_store_is_idempotent_across_reruns(db, tmp_path):
     """Re-running on the same report must not restack rows in the database."""
     out_json = tmp_path / "incidents.json"
@@ -410,6 +485,47 @@ def test_store_writes_null_not_the_string_None_when_a_period_is_missing(db, tmp_
         {"json_path": str(src), "enriched_json_path": str(tmp_path / "e2.json")}
     )
     assert len(fetch_incidents()) == 1, "a period-less report must not restack"
+
+
+def test_backfill_settles_a_drifted_code_on_one_label(db, tmp_path):
+    """The cleanup for the 30 codes that had already drifted.
+
+    Also pins that the backfill writes where DATABASE_URL points. It must not
+    reload .env — doing so would send a test aimed at the Neon `test` branch
+    into the live database instead.
+    """
+    from garland_tx_data_analysis import backfill_labels
+
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Burglary of a Vehicle"},
+        "enriched_json_path": str(tmp_path / "a.json"),
+    })
+    assert [r["short_description"] for r in fetch_incidents()] == ["Burglary of a Vehicle"]
+
+    backfill_labels.main(apply=True)
+
+    canonical = backfill_labels.CANONICAL_LABELS["BURGLARY-VEH"]
+    assert canonical == "Vehicle Burglary"
+    assert [r["short_description"] for r in fetch_incidents()] == [canonical]
+
+
+def test_backfill_dry_run_changes_nothing(db, tmp_path):
+    from garland_tx_data_analysis import backfill_labels
+
+    incidents = tmp_path / "incidents.json"
+    incidents.write_text(json.dumps(_rows()))
+    store_incidents.invoke({
+        "json_path": str(incidents),
+        "short_description_map": {"BURGLARY-VEH": "Burglary of a Vehicle"},
+        "enriched_json_path": str(tmp_path / "a.json"),
+    })
+
+    backfill_labels.main()
+
+    assert [r["short_description"] for r in fetch_incidents()] == ["Burglary of a Vehicle"]
 
 
 def test_store_default_paths_stay_inside_cwd(db, tmp_path):

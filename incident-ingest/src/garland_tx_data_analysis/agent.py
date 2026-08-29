@@ -23,6 +23,7 @@ from garland_tx_data_analysis.tools import (
     parse_incidents,
     read_report_text,
     store_incidents,
+    unlabelled_incident_types,
 )
 
 PDF_URL = (
@@ -93,15 +94,22 @@ based on what you report, so do not soften a real loss.""",
 OFFENCE_LABELLER = SubAgent(
     name="offence-labeller",
     description=(
-        "Turns the PDF's verbose offence codes into short human-readable "
-        "labels. Delegate the list of unique incident types to this agent and "
-        "it returns the complete mapping as JSON."
+        "Names offence codes that have never been seen before. Delegate ONLY "
+        "the codes `unlabelled_incident_types` reports as needing a label — "
+        "never the full list of types in a report — and it returns the mapping "
+        "as JSON. Codes that already have a label keep it, so sending one here "
+        "again cannot change it and only spends tokens."
     ),
     system_prompt="""You turn Garland police offence codes into plain English.
 
-You are given the exact list of unique incident types from one week's report.
-Return a JSON object mapping every one of those strings, verbatim as the key,
-to a concise human-readable label.
+You are given offence codes this project has never labelled before — usually a
+handful, sometimes one. Return a JSON object mapping every one of those
+strings, verbatim as the key, to a concise human-readable label.
+
+The label you choose is permanent. It is stored and reused for that code in
+every future week, and it appears in the map's legend, so it must read well
+next to labels already chosen: "Vehicle Burglary", "Motor Vehicle Theft",
+"Shoplifting", "Vandalism", "Attempted Building Burglary".
 
 Examples of the transformation:
   "THEFT-MOTOR VEHICLE-$2,500 L/T $30,000"  -> "Motor Vehicle Theft"
@@ -110,7 +118,7 @@ Examples of the transformation:
   "ASSAULT-AGG-D/W"                         -> "Aggravated Assault"
 
 Rules:
-  - Cover EVERY type you are given. A missing key falls back to the verbose
+  - Cover EVERY code you are given. A missing key falls back to the verbose
     code and shows up that way on a public map.
   - Keys must be byte-identical to the input strings, dollar amounts and all.
   - Labels describe the offence, not its severity tier or dollar threshold.
@@ -147,6 +155,8 @@ The tools available to you:
     district totals.
   - `read_report_text` — read the PDF's raw text when you need to see the
     source yourself.
+  - `unlabelled_incident_types` — which offence codes in this week's report
+    have never been given a label. Usually none.
   - `store_incidents` — label, append to the Postgres database, and write the
     enriched JSON the map reads. It takes no connection details; it reads them
     from the environment itself.
@@ -173,15 +183,21 @@ The run, and the standing constraints on it:
    If that verdict is `untrustworthy`, STOP. Do not store the week. Report what
    the auditor found. A wrong week on a public map is worse than a late one.
 
-4. Delegate the summary's `unique_incident_types` to `offence-labeller` and
-   get the full mapping back. Never write the labels yourself and never
+4. Call `unlabelled_incident_types` on the parse output. Most weeks it returns
+   an empty `needing_labels`: every code in the report has been named before,
+   there is nothing to delegate, and you go straight to step 5.
+
+   When it is not empty, delegate exactly that list to `offence-labeller`.
+   Never send the full `unique_incident_types` list instead — a code that
+   already has a label keeps it, so the rest of the list cannot be changed and
+   sending it only spends tokens. Never write the labels yourself, and never
    re-type incident rows into your own reasoning: a report runs to 100+ rows
    and the files on disk are the source of truth.
 
-5. Store with `store_incidents`, passing the mapping and writing the enriched
-   JSON at `{ENRICHED_JSON_PATH}`. Check its return value: it warns when an
-   incident type had no label, and that warning means the map will show a raw
-   offence code to the public.
+5. Store with `store_incidents`, passing the mapping for the new codes (omit it
+   if there were none) and writing the enriched JSON at `{ENRICHED_JSON_PATH}`.
+   Check its return value: it warns when an incident type had no label, and
+   that warning means the map will show a raw offence code to the public.
 
 6. Write a short run report to `/run-report.md` covering: the report period,
    how many incidents were stored and how many were new to the database, the
@@ -221,6 +237,7 @@ def build_agent():
             parse_incidents,
             read_report_text,
             store_incidents,
+            unlabelled_incident_types,
         ],
         system_prompt=SYSTEM_PROMPT,
         subagents=[EXTRACTION_AUDITOR, OFFENCE_LABELLER],

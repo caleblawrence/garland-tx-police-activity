@@ -29,6 +29,11 @@ def db(monkeypatch):
 
     Requires TEST_DATABASE_URL. Tests that need a database skip without it, so
     a fresh clone with no Postgres still runs the rest of the suite green.
+
+    Both tables are emptied. `incident_labels` outlives a report by design —
+    that is the whole point of it — so leaving it behind between tests makes
+    them order-dependent: a label learned by one test silently satisfies the
+    next one's assertion that a code has no label.
     """
     test_url = os.getenv("TEST_DATABASE_URL")
     if not test_url:
@@ -49,7 +54,7 @@ def db(monkeypatch):
     with connect() as conn:
         ensure_schema(conn)
         with conn.cursor() as cur:
-            cur.execute("TRUNCATE incidents RESTART IDENTITY")
+            cur.execute("TRUNCATE incidents, incident_labels RESTART IDENTITY")
     yield
 
 
