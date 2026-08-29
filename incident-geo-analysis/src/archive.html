@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Archive · Garland TX Police Incidents</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="theme-color" content="#0f172a" />
+    <style>
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --border: rgba(15, 23, 42, 0.08);
+        --text: #0f172a;
+        --text-muted: #475569;
+        --text-subtle: #64748b;
+        --accent: #dc2626;
+        --accent-soft: rgba(220, 38, 38, 0.1);
+        --shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.15),
+          0 2px 6px rgba(15, 23, 42, 0.04);
+        --radius: 14px;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; padding: 0; min-height: 100%;
+        background: var(--bg); color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif;
+        font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+      }
+      .navbar {
+        margin: 16px auto 28px; width: fit-content; display: flex; gap: 4px;
+        padding: 4px; background: var(--surface); border: 1px solid var(--border);
+        border-radius: 999px; box-shadow: var(--shadow);
+      }
+      .navbar a {
+        color: var(--text-muted); text-decoration: none; padding: 8px 18px;
+        font-size: 13px; font-weight: 600; border-radius: 999px;
+      }
+      .navbar a.active { background: var(--accent); color: #fff; }
+      .container { max-width: 1100px; margin: 0 auto 64px; padding: 0 20px; }
+      .eyebrow {
+        text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px;
+        font-weight: 700; color: var(--accent);
+      }
+      h1 { font-size: 30px; margin: 4px 0 8px; letter-spacing: -0.02em; }
+      .lede { color: var(--text-muted); margin: 0 0 24px; max-width: 70ch; }
+      .panel {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px;
+        margin-bottom: 18px;
+      }
+      .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+      .field { display: flex; flex-direction: column; gap: 4px; }
+      .field label {
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.06em; color: var(--text-subtle);
+      }
+      select, input {
+        font: inherit; font-size: 14px; padding: 7px 10px; color: var(--text);
+        background: var(--bg); border: 1px solid var(--border); border-radius: 9px;
+      }
+      input[type="search"] { min-width: 220px; }
+      button {
+        font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+        padding: 8px 14px; border-radius: 9px; border: 1px solid var(--border);
+        background: var(--bg); color: var(--text-muted);
+      }
+      button:hover { background: var(--accent-soft); color: var(--accent); }
+      .summary {
+        display: flex; flex-wrap: wrap; gap: 18px; align-items: baseline;
+        margin-bottom: 12px; color: var(--text-muted); font-size: 14px;
+      }
+      .summary strong { color: var(--text); font-size: 17px; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th {
+        text-align: left; font-size: 11px; text-transform: uppercase;
+        letter-spacing: 0.06em; color: var(--text-subtle); font-weight: 700;
+        padding: 8px 10px; border-bottom: 1px solid var(--border);
+        cursor: pointer; white-space: nowrap; user-select: none;
+      }
+      th:hover { color: var(--accent); }
+      th .dir { opacity: 0.5; font-weight: 400; }
+      td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+      tr:last-child td { border-bottom: none; }
+      .code { color: var(--text-subtle); font-size: 12px; display: block; }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+        font-size: 13px; white-space: nowrap;
+      }
+      .pager { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 16px; }
+      .note {
+        font-size: 13px; color: var(--text-muted); background: var(--accent-soft);
+        border-radius: 10px; padding: 10px 14px; margin-bottom: 18px;
+      }
+      .empty { text-align: center; color: var(--text-subtle); padding: 40px 0; }
+      .table-wrap { overflow-x: auto; }
+      @media (max-width: 640px) { .filters { flex-direction: column; align-items: stretch; } }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="index.html">Map</a>
+      <a href="archive.html" class="active">Archive</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <div class="container">
+      <div class="eyebrow">Monthly Archive</div>
+      <h1>Every month Garland has published</h1>
+      <p class="lede">
+        The city's monthly Crime Watch reports, back to February 2022. This is a
+        separate dataset from the weekly map: different reports, a different
+        grain, and no geocoding — so nothing here is plotted, and nothing here
+        can contradict the map.
+      </p>
+
+      <div id="coverage-note" class="note" hidden></div>
+
+      <div class="panel">
+        <div class="filters">
+          <div class="field">
+            <label for="from">From</label>
+            <select id="from"></select>
+          </div>
+          <div class="field">
+            <label for="to">To</label>
+            <select id="to"></select>
+          </div>
+          <div class="field">
+            <label for="district">District</label>
+            <select id="district"><option value="">All</option></select>
+          </div>
+          <div class="field">
+            <label for="offence">Offence</label>
+            <select id="offence"><option value="">All</option></select>
+          </div>
+          <div class="field">
+            <label for="q">Location contains</label>
+            <input id="q" type="search" placeholder="e.g. BELT LINE" />
+          </div>
+          <button id="reset" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="summary">
+        <span><strong id="count">…</strong> incidents</span>
+        <span id="span"></span>
+        <span id="incomplete"></span>
+      </div>
+
+      <div class="panel" style="padding: 4px 8px">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="date">Date <span class="dir"></span></th>
+                <th data-sort="district">District <span class="dir"></span></th>
+                <th data-sort="offence">Offence <span class="dir"></span></th>
+                <th data-sort="location">Location <span class="dir"></span></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div id="empty" class="empty" hidden>Nothing matches those filters.</div>
+      </div>
+
+      <div class="pager">
+        <button id="prev" type="button">Previous</button>
+        <span id="page-label"></span>
+        <button id="next" type="button">Next</button>
+      </div>
+    </div>
+
+    <script>
+      const PAGE_SIZE = 200;
+      const $ = (id) => document.getElementById(id);
+      const state = { sort: "date", dir: -1, page: 0 };
+      let DATA = null;
+      let filtered = [];
+
+      const monthLabel = (m) => {
+        const [y, mo] = m.split("-");
+        return new Date(Date.UTC(+y, +mo - 1, 1)).toLocaleDateString(undefined, {
+          month: "long", year: "numeric", timeZone: "UTC",
+        });
+      };
+
+      fetch("archive.json")
+        .then((r) => r.json())
+        .then((data) => { DATA = data; init(); })
+        .catch(() => {
+          $("empty").hidden = false;
+          $("empty").textContent = "Could not load the archive data.";
+        });
+
+      function init() {
+        const months = DATA.months.map((m) => m.month);
+        for (const sel of [$("from"), $("to")]) {
+          sel.innerHTML = months
+            .map((m) => `<option value="${m}">${monthLabel(m)}</option>`)
+            .join("");
+        }
+        $("from").value = months[0];
+        $("to").value = months[months.length - 1];
+
+        $("district").innerHTML =
+          '<option value="">All</option>' +
+          [...DATA.districts]
+            .filter(Boolean)
+            .sort()
+            .map((d) => `<option value="${d}">${d}</option>`)
+            .join("");
+
+        // Offences are listed by label, since that is what the rows show. Codes
+        // sharing a label (three CRIMINAL MISCHIEF tiers all read "Vandalism")
+        // are one entry, which is the point of the labels.
+        const byLabel = new Map();
+        DATA.codes.forEach((code, i) => {
+          const label = DATA.labels[i] || code;
+          if (!byLabel.has(label)) byLabel.set(label, []);
+          byLabel.get(label).push(i);
+        });
+        $("offence").innerHTML =
+          '<option value="">All</option>' +
+          [...byLabel.keys()]
+            .sort()
+            .map((l) => `<option value="${encodeURIComponent(l)}">${l}</option>`)
+            .join("");
+        DATA.labelGroups = byLabel;
+
+        const incomplete = DATA.months.filter((m) => m.shortfall_rows > 0);
+        if (incomplete.length) {
+          const total = incomplete.reduce((s, m) => s + m.shortfall_rows, 0);
+          $("coverage-note").hidden = false;
+          $("coverage-note").textContent =
+            `${total} incidents across ${incomplete.length} months are declared by ` +
+            `the reports but absent from their PDF text, so they are not listed ` +
+            `here: ${incomplete.map((m) => monthLabel(m.month)).join(", ")}.`;
+        }
+
+        for (const el of ["from", "to", "district", "offence"]) {
+          $(el).addEventListener("change", () => { state.page = 0; apply(); });
+        }
+        let timer;
+        $("q").addEventListener("input", () => {
+          clearTimeout(timer);
+          timer = setTimeout(() => { state.page = 0; apply(); }, 150);
+        });
+        $("reset").addEventListener("click", () => {
+          $("from").value = months[0];
+          $("to").value = months[months.length - 1];
+          $("district").value = ""; $("offence").value = ""; $("q").value = "";
+          state.page = 0; apply();
+        });
+        document.querySelectorAll("th[data-sort]").forEach((th) => {
+          th.addEventListener("click", () => {
+            const key = th.dataset.sort;
+            state.dir = state.sort === key ? -state.dir : 1;
+            state.sort = key; state.page = 0; apply();
+          });
+        });
+        $("prev").addEventListener("click", () => { if (state.page > 0) { state.page--; render(); } });
+        $("next").addEventListener("click", () => {
+          if ((state.page + 1) * PAGE_SIZE < filtered.length) { state.page++; render(); }
+        });
+
+        apply();
+      }
+
+      function apply() {
+        const from = $("from").value, to = $("to").value;
+        const district = $("district").value;
+        const offenceLabel = $("offence").value
+          ? decodeURIComponent($("offence").value)
+          : "";
+        const codeSet = offenceLabel
+          ? new Set(DATA.labelGroups.get(offenceLabel))
+          : null;
+        const q = $("q").value.trim().toUpperCase();
+
+        filtered = DATA.rows.filter(([date, d, c, loc]) => {
+          const month = date.slice(0, 7);
+          if (month < from || month > to) return false;
+          if (district && DATA.districts[d] !== district) return false;
+          if (codeSet && !codeSet.has(c)) return false;
+          if (q && !loc.toUpperCase().includes(q)) return false;
+          return true;
+        });
+
+        const cmp = {
+          date: (a, b) => a[0].localeCompare(b[0]),
+          district: (a, b) => DATA.districts[a[1]].localeCompare(DATA.districts[b[1]]),
+          offence: (a, b) =>
+            (DATA.labels[a[2]] || "").localeCompare(DATA.labels[b[2]] || ""),
+          location: (a, b) => a[3].localeCompare(b[3]),
+        }[state.sort];
+        filtered.sort((a, b) => cmp(a, b) * state.dir);
+
+        $("count").textContent = filtered.length.toLocaleString();
+        $("span").textContent =
+          from === to ? monthLabel(from) : `${monthLabel(from)} – ${monthLabel(to)}`;
+        document.querySelectorAll("th[data-sort]").forEach((th) => {
+          th.querySelector(".dir").textContent =
+            th.dataset.sort === state.sort ? (state.dir === 1 ? "↑" : "↓") : "";
+        });
+        render();
+      }
+
+      function render() {
+        const start = state.page * PAGE_SIZE;
+        const page = filtered.slice(start, start + PAGE_SIZE);
+        const esc = (s) =>
+          String(s).replace(/[&<>"]/g, (ch) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch])
+          );
+
+        $("rows").innerHTML = page
+          .map(([date, d, c, loc]) => {
+            const code = DATA.codes[c];
+            const label = DATA.labels[c] || code;
+            const showCode = label !== code;
+            return (
+              `<tr><td class="mono">${date}</td>` +
+              `<td class="mono">${esc(DATA.districts[d]) || "—"}</td>` +
+              `<td>${esc(label)}` +
+              (showCode ? `<span class="code">${esc(code)}</span>` : "") +
+              `</td><td>${esc(loc) || '<span class="code">no address given</span>'}</td></tr>`
+            );
+          })
+          .join("");
+
+        $("empty").hidden = filtered.length !== 0;
+        const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        $("page-label").textContent = `Page ${state.page + 1} of ${pages.toLocaleString()}`;
+        $("prev").disabled = state.page === 0;
+        $("next").disabled = state.page + 1 >= pages;
+      }
+    </script>
+  </body>
+</html>

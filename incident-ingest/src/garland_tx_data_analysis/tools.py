@@ -11,6 +11,7 @@ up. The check the report hands us is only worth having if something acts on
 it.
 """
 
+import calendar
 import json
 import os
 import re
@@ -122,6 +123,51 @@ def _find_report_period(lines: list[str]) -> Optional[str]:
     return None
 
 
+MONTH_HEADER_RE = re.compile(
+    r"^\s*(January|February|March|April|May|June|July|August|September|October"
+    r"|November|December)\s+(\d{4})\s*$",
+    re.IGNORECASE,
+)
+MONTHS = {
+    m: i
+    for i, m in enumerate(
+        [
+            "january", "february", "march", "april", "may", "june",
+            "july", "august", "september", "october", "november", "december",
+        ],
+        start=1,
+    )
+}
+
+
+def _find_report_month(lines: list[str]) -> Optional[str]:
+    """Pull `April 2026` off a monthly report's cover, as `2026-04`.
+
+    Monthly reports carry no `Reported Between` header — the month is a line
+    of its own near the top. Taken from the PDF rather than from the archive
+    link's label, because the labels are inconsistent ("April Crime Watch
+    Reports (PDF)" carries no year at all) and the document knows what it is.
+    """
+    for line in lines[:20]:
+        m = MONTH_HEADER_RE.match(line)
+        if m:
+            return f"{int(m.group(2)):04d}-{MONTHS[m.group(1).lower()]:02d}"
+
+    # Most monthly reports use the same `Reported Between X & Y` header as the
+    # weekly ones, over a whole calendar month. Accepted only when the range
+    # really is one entire month — first to last day — so that a weekly report
+    # can never be mistaken for a monthly one.
+    period = _find_report_period(lines)
+    if period:
+        start, end = (_parse_date(p) for p in period.split(" - "))
+        last_day = calendar.monthrange(start.year, start.month)[1]
+        if (start.day, end.day, start.month) == (1, last_day, end.month) and (
+            start.year == end.year
+        ):
+            return f"{start.year:04d}-{start.month:02d}"
+    return None
+
+
 NUMBERED_HEADER_RE = re.compile(r"DISTRICT\s+(\d+)")
 BARE_HEADER_RE = re.compile(r"^DISTRICT$")
 DISTRICT_TOTAL_RE = re.compile(r"District Total:\s*(\d+)")
@@ -131,6 +177,10 @@ DATE_RE = re.compile(r"\d{1,2}/\d{1,2}/\d{4}")
 # ` 148 02062026R036876 THEFT-...`. Matching that shape is what lets us tell a
 # row whose offence name wrapped from an ordinary line of page furniture.
 ROW_START_RE = re.compile(r"^\s*\d+\s+\d+R\d+\b")
+
+# The case number, e.g. `2025R022894`. When it is already in the first token the
+# beat was run together with it, and only one token precedes the offence.
+CASE_IN_TOKEN = re.compile(r"\d{4}R\d{3,}")
 
 # Page furniture: the report repeats a footer, a print date and the column
 # header on every page. A wrapped row never continues across these, so they
@@ -270,10 +320,22 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
         # A new row starts here, so whatever was pending never found its date.
         pending = []
 
-        if len(tokens) < 3:
+        if not tokens:
             continue
-        # Lines look like: " <row#> <report-id> INCIDENT-TYPE<DATE> <LOCATION>"
-        body = " ".join(tokens[2:]).strip()
+        # Lines look like: " <beat> <case#> INCIDENT-TYPE<DATE> <LOCATION>".
+        # Some rows run the beat and case together — `08552025R022894
+        # THEFT-ALL ...` — and dropping two tokens then eats the first word of
+        # the offence, storing "OTHER-$100 L/T $750" where the report says
+        # "THEFT-ALL OTHER-$100 L/T $750". The row still carries a date, so it
+        # reconciles against the district total and nothing catches it.
+        skip = 1 if CASE_IN_TOKEN.search(tokens[0]) else 2
+        # A merged row with no address is only two tokens long
+        # (`17002025R000547 BURGLARY-VEH01/10/2025`), and a flat minimum of
+        # three dropped it. The report does omit addresses; that is not a
+        # reason to lose the incident.
+        if len(tokens) <= skip:
+            continue
+        body = " ".join(tokens[skip:]).strip()
         if DATE_RE.search(body):
             record(body)
         elif opens_a_row:
@@ -512,6 +574,52 @@ CREATE INDEX IF NOT EXISTS incidents_natural_key_idx
     ON incidents (report_period, district, occurred_on, incident, location);
 CREATE INDEX IF NOT EXISTS incidents_report_period_idx ON incidents (report_period);
 CREATE INDEX IF NOT EXISTS incidents_occurred_on_idx ON incidents (occurred_on);
+
+-- The monthly Crime Watch archive, kept deliberately apart from `incidents`.
+--
+-- The city publishes one weekly PDF (always the latest) and a monthly archive
+-- going back to 2022. They overlap: December 2025 appears in both, at two
+-- different grains, and the same incident would be two rows with no way to
+-- tell. Rather than reconcile a week against a month, the archive lives in its
+-- own tables and feeds its own page. Nothing here is geocoded or mapped — the
+-- weekly map remains the only thing plotting points.
+CREATE TABLE IF NOT EXISTS monthly_incidents (
+    monthly_incident_id bigint GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    report_month        text NOT NULL,   -- 'YYYY-MM', off the PDF's own header
+    district            text,
+    occurred_on         date NOT NULL,
+    incident            text NOT NULL,
+    location            text,            -- some rows carry no address at all
+    inserted_at         timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS monthly_incidents_month_idx
+    ON monthly_incidents (report_month);
+CREATE INDEX IF NOT EXISTS monthly_incidents_occurred_on_idx
+    ON monthly_incidents (occurred_on);
+
+-- Which months have been ingested, and what the report declared versus what
+-- was stored. Same reason as report_weeks: a month absent from this table is
+-- a month nobody fetched, not a month without crime.
+CREATE TABLE IF NOT EXISTS monthly_reports (
+    report_month       text PRIMARY KEY,
+    archive_id         integer NOT NULL,
+    declared_total     integer NOT NULL,
+    stored_total       integer NOT NULL,
+    unattributed_rows  integer NOT NULL DEFAULT 0,
+    -- Rows a numbered district declared but the PDF's text layer does not
+    -- contain. Not a parser gap: pypdf finds the same case numbers in both
+    -- extraction modes. Recorded so the page can say a month is incomplete
+    -- rather than quietly presenting it as whole.
+    shortfall_rows     integer NOT NULL DEFAULT 0,
+    ingested_at        timestamptz NOT NULL DEFAULT now()
+);
+
+-- `CREATE TABLE IF NOT EXISTS` is a no-op against a table that already exists,
+-- so a column added later needs saying explicitly. Postgres supports
+-- IF NOT EXISTS here, which keeps this file the whole schema rather than
+-- splitting it across a migrations directory for one column.
+ALTER TABLE monthly_reports
+    ADD COLUMN IF NOT EXISTS shortfall_rows integer NOT NULL DEFAULT 0;
 
 -- One label per offence code, decided once and reused forever after.
 -- Re-deriving labels every week produced 94 different labels for 68 codes:

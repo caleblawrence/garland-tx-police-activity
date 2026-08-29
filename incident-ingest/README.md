@@ -70,7 +70,7 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its subagent, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        41 tests over the tools
+tests/        44 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
@@ -213,6 +213,39 @@ February through April 2026 are not quiet months. They are months nobody ran
 the pipeline. That distinction has to survive into anything that summarises a
 month or claims a trend, which is why the coverage statement travels with the
 numbers rather than being left for a reader to assume.
+
+## The monthly archive
+
+The weekly URL is a fixed document id that always serves the latest week, so it
+cannot reach backwards. The city's [Crime Watch
+Reports](https://www.garlandtx.gov/406/Crime-Watch-Reports) page can: 53 monthly
+PDFs, February 2022 onward.
+
+```bash
+uv run python -m garland_tx_data_analysis.archive_ingest --list
+uv run python -m garland_tx_data_analysis.archive_ingest --all
+uv run python -m garland_tx_data_analysis.archive_ingest --export
+```
+
+**30,973 incidents, February 2022 to June 2026** — against 702 in the weekly
+history. They live in `monthly_incidents`, deliberately apart from `incidents`,
+and feed their own page rather than the map.
+
+Keeping them separate is the whole design. The two feeds overlap — December 2025
+exists as both four weekly reports and one monthly one — and at different grains
+there is no honest way to tell a duplicate from two real incidents that share a
+block, a day and an offence. Separate tables mean neither can corrupt the other,
+the weekly map is untouched, and nothing had to be reconciled that cannot be.
+
+Nothing in the archive is geocoded. It is a filterable list, which is all it
+needs to be and avoids putting 31,000 addresses through Nominatim.
+
+A month whose numbered districts do not add up is refused, exactly as a week is.
+Twelve months are short by 23 rows in total because the PDF's text layer holds
+fewer rows than the report declares — the same case numbers come back in both
+pypdf extraction modes, so the rows are not there to find. Those are stored
+under `--allow-shortfall`, with the gap recorded per month and stated on the
+page rather than quietly presented as whole.
 
 ## Models
 

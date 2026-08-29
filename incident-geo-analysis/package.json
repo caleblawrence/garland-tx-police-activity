@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "serve": "http-server dist -c-1"
+    "serve": "http-server dist -c-1",
+    "archive": "node src/archive.js"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",
