@@ -15,7 +15,7 @@ import json
 import os
 import re
 from collections import Counter
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Optional
 
 import psycopg
@@ -519,6 +519,23 @@ CREATE INDEX IF NOT EXISTS incidents_occurred_on_idx ON incidents (occurred_on);
 -- ($100-$750)" the next, so the map's legend was never stable. A model is the
 -- right tool for naming a code nobody has seen before and the wrong one for
 -- re-deciding a name that already exists.
+-- Every week the pipeline has actually ingested.
+--
+-- Without this, a gap in the data is indistinguishable from a quiet week.
+-- The history holds five report periods spread across nine months: February
+-- through April 2026 have no rows not because Garland had no crime, but
+-- because nobody ran the pipeline. Any statement about a month or a year is a
+-- statement about coverage first, and `incidents` alone cannot tell the two
+-- apart — a month with no rows looks exactly like a month with no incidents.
+CREATE TABLE IF NOT EXISTS report_weeks (
+    report_period     text PRIMARY KEY,
+    period_start      date NOT NULL,
+    period_end        date NOT NULL,
+    incidents_stored  integer NOT NULL,
+    first_ingested_at timestamptz NOT NULL DEFAULT now(),
+    last_ingested_at  timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS incident_labels (
     incident          text PRIMARY KEY,
     short_description text NOT NULL,
@@ -716,6 +733,127 @@ def unlabelled_incident_types(json_path: str = INCIDENTS_JSON_PATH) -> str:
     )
 
 
+def _split_period(period: str) -> tuple[date, date]:
+    """`08/16/2026 - 08/22/2026` -> the two dates it names."""
+    start, _, end = period.partition(" - ")
+    return _parse_date(start), _parse_date(end)
+
+
+def _record_weeks(conn: psycopg.Connection, rows: list[dict]) -> None:
+    """Note which weeks this write covered, and how many rows each holds.
+
+    Written in the same transaction as the incidents, so coverage cannot claim
+    a week the database does not hold. Re-running a week updates the count and
+    the last-seen time rather than adding a second row: it is the same week.
+
+    Rows with no report period are skipped. The 211 legacy rows imported from
+    the pre-Postgres history predate the field and cannot be attributed to a
+    week, and inventing one for them would be the exact error this table is
+    built to prevent.
+    """
+    periods = sorted({(r.get("report_period") or "").strip() for r in rows} - {""})
+    if not periods:
+        return
+    with conn.cursor() as cur:
+        for period in periods:
+            try:
+                start, end = _split_period(period)
+            except ValueError:
+                continue  # not a period we can place on a calendar
+            cur.execute(
+                "SELECT count(*) FROM incidents WHERE report_period = %s", (period,)
+            )
+            cur.execute(
+                """
+                INSERT INTO report_weeks
+                       (report_period, period_start, period_end, incidents_stored)
+                VALUES (%s, %s, %s,
+                        (SELECT count(*) FROM incidents WHERE report_period = %s))
+                ON CONFLICT (report_period) DO UPDATE
+                   SET incidents_stored = EXCLUDED.incidents_stored,
+                       last_ingested_at = now()
+                """,
+                (period, start, end, period),
+            )
+
+
+def coverage(start: date, end: date) -> dict:
+    """Which weeks in a date range the database holds, and which it does not.
+
+    The missing list is the point. A summary or a trend that spans a gap is
+    describing collection, not crime, and the only way to know is to ask what
+    should be there.
+
+    Weeks are taken to run Sunday to Saturday, which is how the report is
+    published, and are enumerated from the first stored week's start date so
+    the grid lines up with real report periods rather than with an arbitrary
+    calendar week.
+    """
+    with connect() as conn:
+        ensure_schema(conn)
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT report_period, period_start, period_end, incidents_stored
+                  FROM report_weeks
+                 WHERE period_end >= %s AND period_start <= %s
+                 ORDER BY period_start
+                """,
+                (start, end),
+            )
+            present = [
+                {
+                    "report_period": r[0],
+                    "period_start": r[1].isoformat(),
+                    "period_end": r[2].isoformat(),
+                    "incidents_stored": r[3],
+                }
+                for r in cur.fetchall()
+            ]
+            cur.execute("SELECT min(period_start) FROM report_weeks")
+            anchor_row = cur.fetchone()[0]
+            cur.execute(
+                "SELECT count(*) FROM incidents WHERE report_period IS NULL"
+            )
+            unattributed = cur.fetchone()[0]
+
+    missing: list[str] = []
+    if anchor_row:
+        have = {p["period_start"] for p in present}
+        cursor = anchor_row
+        while cursor < start:
+            cursor += timedelta(days=7)
+        while cursor <= end:
+            if cursor.isoformat() not in have:
+                missing.append(
+                    f"{cursor.strftime('%m/%d/%Y')} - "
+                    f"{(cursor + timedelta(days=6)).strftime('%m/%d/%Y')}"
+                )
+            cursor += timedelta(days=7)
+
+    weeks_expected = len(present) + len(missing)
+    return {
+        "range": {"start": start.isoformat(), "end": end.isoformat()},
+        "weeks_present": len(present),
+        "weeks_missing": len(missing),
+        "complete": not missing,
+        "incidents_stored": sum(p["incidents_stored"] for p in present),
+        "coverage_statement": (
+            f"{len(present)} of {weeks_expected} weeks in this range are stored."
+            + ("" if not missing else f" Missing: {', '.join(missing)}.")
+            + (
+                ""
+                if not unattributed
+                else f" A further {unattributed} rows predate the report-period "
+                "field and belong to no week."
+            )
+        ),
+        "present": present,
+        "missing": missing,
+        "unattributed_rows": unattributed,
+    }
+
+
 def _reconciliation_gate(json_path: str) -> tuple[Optional[str], str]:
     """Refuse to store a week whose parse did not reconcile.
 
@@ -858,6 +996,10 @@ def store_incidents(
                     """,
                     new_rows,
                 )
+        # Same transaction as the insert: coverage must never claim a week the
+        # database does not actually hold.
+        _record_weeks(conn, enriched)
+
         with conn.cursor() as cur:
             cur.execute("SELECT count(*) FROM incidents")
             total = cur.fetchone()[0]
