@@ -23,6 +23,14 @@ PDF_PATH = os.path.join(
 
 # The 07/26/2026 report: the first one carrying an offence name long enough to
 # wrap, which is the case weekly_report.pdf does not contain.
+# The 08/16/2026 report: repeats `Reported Between ...` at the top of every
+# page, and writes its dates unpadded.
+PAGE_HEADER_PDF_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "fixtures",
+    "weekly_report_page_header.pdf",
+)
+
 WRAPPED_ROW_PDF_PATH = os.path.join(
     os.path.dirname(__file__),
     "fixtures",
@@ -341,6 +349,65 @@ def test_period_check_distinguishes_a_half_finished_run_from_a_stale_download(db
     assert check["status"] == "partially-stored"
     assert check["stale_download_suspected"] is False
     assert check["already_stored_rows"] == 10
+
+
+def test_the_reports_own_date_range_is_not_an_incident(tmp_path):
+    """`Reported Between 8/16/2026 & 8/22/2026` is a page header, not a row.
+
+    It repeats at the top of every page, and it carries a date and enough
+    tokens to look exactly like an incident row. It parsed as one — an offence
+    of "" at "& 8/22/2026" — and inflated whichever district the page break
+    landed inside. The 08/16/2026 run stopped on it: districts 34 and 42 came
+    out one over their declared totals.
+    """
+    summary = json.loads(
+        parse_incidents.invoke(
+            {"pdf_path": PAGE_HEADER_PDF_PATH, "output_json_path": str(tmp_path / "o.json")}
+        )
+    )
+
+    assert summary["reconciliation"]["discrepancies"] == []
+    assert summary["reconciliation"]["audit_required"] is False
+
+    with open(tmp_path / "o.json") as f:
+        incidents = json.load(f)
+    assert all(i["incident"] for i in incidents), "no incident may have an empty offence"
+    assert not any("&" in i["location"] for i in incidents)
+
+
+def test_a_line_with_a_date_but_no_offence_is_not_counted(tmp_path):
+    """Rejecting it must not count it either.
+
+    Counting the line and dropping the row would leave the district one short
+    of its declared total, turning a header into a phantom loss and stopping a
+    run that has nothing wrong with it.
+    """
+    lines = [
+        " DISTRICT 34",
+        "Reported Between 8/16/2026 & 8/22/2026",
+        " 25 07432026R038077 THEFT-ALL OTHER-L/T $10008/18/2026 7XX W WALNUT ST",
+        "District Total: 1",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert [i["incident"] for i in incidents] == ["THEFT-ALL OTHER-L/T $100"]
+    assert sections == [{"district": "34", "declared_total": 1, "parsed_total": 1}]
+
+
+def test_report_period_is_padded_to_one_spelling(tmp_path):
+    """The report writes 8/16/2026 some weeks and 08/16/2026 others.
+
+    The period is a key — it groups a week, dedupes a re-ingest, and answers
+    whether a download was stale — so two spellings would be two weeks.
+    """
+    summary = json.loads(
+        parse_incidents.invoke(
+            {"pdf_path": PAGE_HEADER_PDF_PATH, "output_json_path": str(tmp_path / "o.json")}
+        )
+    )
+
+    assert summary["report_period"] == "08/16/2026 - 08/22/2026"
 
 
 def test_parser_reports_report_period(tmp_path):
