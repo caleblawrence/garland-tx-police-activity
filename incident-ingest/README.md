@@ -37,6 +37,28 @@ district reconciling exactly. The missing 4 sit under the report's first block,
 whose header is a bare `DISTRICT` with no number — they can't be attributed, so
 they're dropped. That was always true; it just used to be invisible.
 
+## The other way a week goes wrong
+
+The download can quietly serve last week's file, and then everything downstream
+succeeds: the parse is clean, the totals reconcile, and the map is republished
+with a week it already showed. The report period is what gives it away, so
+`parse_incidents` looks the period up and returns a `period_check`:
+
+| status | meaning |
+|---|---|
+| `new` | no rows for this period — carry on |
+| `partially-stored` | an earlier run stored part of this week and stopped; storing tops it up |
+| `already-stored` | the whole week is already there — stop, the download is probably stale |
+| `unknown` | the database could not be reached, which is **not** the same as nothing stored |
+
+The distinction between the middle two matters: a stale download and a run that
+died halfway both leave rows for this period behind, and one has to stop the run
+while the other has to be allowed to finish.
+
+This used to be step 2 of the agent's prompt, phrased as "if the period matches
+a week already in the database, say so". The agent had no tool that could read
+the database, so it could only skip the step or guess.
+
 ## Layout
 
 ```
@@ -44,11 +66,12 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its two subagents, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        26 tests over the tools
+tests/        30 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
-`parse_incidents` (parse + reconcile), `read_report_text` (raw page text, so the
+`parse_incidents` (parse, reconcile, and check whether this week is already
+stored), `read_report_text` (raw page text, so the
 auditor can look at the source), `unlabelled_incident_types` (which offence
 codes have never been named), `store_incidents` (label, append to Postgres,
 write the map's JSON).
@@ -174,8 +197,13 @@ uv run pytest tests/
 ```
 
 They cover the tools, not the agent: the download's stale-PDF guard, the
-district-total reconciliation, the unnumbered-header accounting, and the
-store's idempotency across re-runs.
+district-total reconciliation, wrapped rows, the unnumbered-header accounting,
+label stability across runs, the already-stored period check, and the store's
+idempotency across re-runs.
+
+`DATABASE_URL` is removed from the environment for every test that does not ask
+for the `db` fixture, so a test cannot reach the live database by forgetting to
+declare that it wants one.
 
 The six storage tests run against the Neon `test` branch and **truncate it**
 between tests. They skip when `TEST_DATABASE_URL` is unset, so the suite is

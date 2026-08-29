@@ -246,6 +246,11 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
     in `discrepancies` means rows were lost, and `unnumbered_district_rows`
     counts rows the report filed under a `DISTRICT` header with no number.
 
+    Also reports `period_check`, which says whether this week is already in the
+    database. `status` is one of `new`, `partially-stored`, `already-stored`
+    (the download probably served a stale file) or `unknown` (the database
+    could not be reached — not the same as nothing being stored).
+
     Args:
         pdf_path: Path to the downloaded PDF.
         output_json_path: Where to write the extracted incidents as JSON.
@@ -298,10 +303,52 @@ def parse_incidents(pdf_path: str, output_json_path: str = "work/extracted_incid
     # every week would re-derive the same answer at the same cost.
     audit_required = bool(discrepancies)
 
+    # A download that quietly served last week's file is this pipeline's other
+    # characteristic failure, and the report period is the thing that shows it.
+    # Asking the agent to notice was never going to work: nothing in its
+    # toolset could read the database. So the lookup happens here, and what it
+    # reports is a status rather than a raw count.
+    #
+    # "Already stored" and "partially stored" have to be separable. A stale
+    # download and a re-run that crashed halfway both put rows for this period
+    # in the table, but one must stop the run and the other must be allowed to
+    # finish — dedup tops up the missing rows on a second pass.
+    stored_rows = _rows_for_period(report_period)
+    if stored_rows is None:
+        period_status = "unknown"
+        period_summary = (
+            "Could not reach the database to check whether this week is "
+            "already stored."
+        )
+    elif stored_rows == 0:
+        period_status = "new"
+        period_summary = "No rows for this period yet."
+    elif stored_rows >= len(incidents):
+        period_status = "already-stored"
+        period_summary = (
+            f"The database already holds {stored_rows} rows for "
+            f"{report_period!r} and this parse found {len(incidents)}. The "
+            "download probably served a stale file."
+        )
+    else:
+        period_status = "partially-stored"
+        period_summary = (
+            f"The database holds {stored_rows} of this parse's "
+            f"{len(incidents)} rows for {report_period!r} — an earlier run "
+            "stored some of this week. Storing again tops up the remainder."
+        )
+
     summary = {
         "json_path": os.path.abspath(output_json_path),
         "report_period": report_period,
         "total_incidents": len(incidents),
+        "period_check": {
+            "status": period_status,
+            "already_stored_rows": stored_rows,
+            "parsed_rows": len(incidents),
+            "stale_download_suspected": period_status == "already-stored",
+            "summary": period_summary,
+        },
         "per_district_counts": per_district,
         "unique_incident_types": unique_types,
         "reconciliation": {
@@ -437,6 +484,28 @@ def _incident_key(record: dict) -> tuple:
         (record.get("incident") or "").strip(),
         (record.get("location") or "").strip(),
     )
+
+
+def _rows_for_period(period: Optional[str]) -> Optional[int]:
+    """How many rows the database already holds for this report period.
+
+    Returns None when the database cannot be reached — the parse itself does
+    not need it, and a missing DATABASE_URL must not turn a working parse into
+    a failure. The caller reports the difference between "nothing stored" and
+    "could not check"; they are not the same answer.
+    """
+    if not period:
+        return None
+    try:
+        with connect() as conn:
+            ensure_schema(conn)
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT count(*) FROM incidents WHERE report_period = %s", (period,)
+                )
+                return cur.fetchone()[0]
+    except Exception:
+        return None
 
 
 def _existing_counts(conn: psycopg.Connection, periods: list[str]) -> Counter:

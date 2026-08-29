@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 # point the suite at a different database — or verify that it skips without one.
 load_dotenv(override=False)
 
+# Captured before any test can monkeypatch it away, so the guard below still
+# knows which database is the live one.
+LIVE_DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 @pytest.fixture(autouse=True)
 def run_in_tmp_cwd(tmp_path, monkeypatch):
@@ -21,6 +25,22 @@ def run_in_tmp_cwd(tmp_path, monkeypatch):
     paths via tmp_path; anything they forget lands here instead of the repo.
     """
     monkeypatch.chdir(tmp_path)
+
+
+@pytest.fixture(autouse=True)
+def no_database_by_default(monkeypatch):
+    """Unset DATABASE_URL unless a test asks for the `db` fixture.
+
+    `parse_incidents` reads the database now, to say whether a week is already
+    stored. Without this, every test that parses a PDF would open the URL
+    sitting in .env — the live database — and run `CREATE TABLE IF NOT EXISTS`
+    against it. Tests do not get to touch production by omission; `db` puts a
+    URL back, pointed at the Neon `test` branch.
+
+    It also means the no-database path is exercised by every test that does not
+    ask for one, which is what a fresh clone looks like.
+    """
+    monkeypatch.delenv("DATABASE_URL", raising=False)
 
 
 @pytest.fixture
@@ -40,8 +60,10 @@ def db(monkeypatch):
         pytest.skip("TEST_DATABASE_URL is not set; skipping Postgres-backed tests")
 
     # This fixture truncates whatever it is pointed at. Refuse to do that to the
-    # database the pipeline actually publishes to.
-    if test_url == os.getenv("DATABASE_URL"):
+    # database the pipeline actually publishes to. Compared against the value
+    # captured at import, since the autouse fixture above has already removed
+    # it from the environment.
+    if LIVE_DATABASE_URL and test_url == LIVE_DATABASE_URL:
         pytest.fail(
             "TEST_DATABASE_URL matches DATABASE_URL. The test fixture truncates "
             "the incidents table — point it at the Neon `test` branch instead."
