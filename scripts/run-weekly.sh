@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Refresh the weekly incidents data and rebuild the map.
 #
-# 1. Runs the agent crew (downloads PDF, extracts incidents, writes
-#    extracted_incidents.json and TinyDB).
+# 1. Runs the deep agent (downloads PDF, extracts incidents, audits the
+#    extraction, writes extracted_incidents.json and the Postgres history).
 # 2. Runs the geo-analysis (geocodes each address, writes
 #    incident-geo-analysis/dist/features.geojson + supporting HTML).
 #
@@ -10,35 +10,33 @@
 #   ./scripts/run-weekly.sh
 #
 # Env vars:
-#   SKIP_CREW=1   Skip step 1 (reuse the existing extracted_incidents.json).
+#   SKIP_AGENT=1  Skip step 1 (reuse the existing extracted_incidents.json).
 #   SKIP_GEO=1    Skip step 2.
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-AGENT_DIR="$REPO_ROOT/agent-solution/garland_tx_data_analysis"
+AGENT_DIR="$REPO_ROOT/incident-ingest"
 GEO_DIR="$REPO_ROOT/incident-geo-analysis"
-INCIDENTS_JSON="$AGENT_DIR/extracted_incidents.json"
+INCIDENTS_JSON="$AGENT_DIR/work/extracted_incidents.json"
 
-if [[ "${SKIP_CREW:-0}" != "1" ]]; then
-  echo "==> Running agent crew in $AGENT_DIR"
+if [[ "${SKIP_AGENT:-0}" != "1" ]]; then
+  echo "==> Running deep agent in $AGENT_DIR"
   cd "$AGENT_DIR"
-  if ! command -v crewai >/dev/null 2>&1; then
-    if [[ -x ".venv/bin/crewai" ]]; then
-      .venv/bin/crewai run
-    else
-      echo "Error: crewai not on PATH and .venv/bin/crewai not found." >&2
-      echo "Install with: cd $AGENT_DIR && uv sync" >&2
-      exit 1
-    fi
+  if [[ -x ".venv/bin/run_agent" ]]; then
+    .venv/bin/run_agent
+  elif command -v uv >/dev/null 2>&1; then
+    uv run run_agent
   else
-    crewai run
+    echo "Error: .venv/bin/run_agent not found and uv is not on PATH." >&2
+    echo "Install with: cd $AGENT_DIR && uv sync" >&2
+    exit 1
   fi
   cd "$REPO_ROOT"
 fi
 
 if [[ ! -f "$INCIDENTS_JSON" ]]; then
-  echo "Error: $INCIDENTS_JSON not found. Run without SKIP_CREW=1." >&2
+  echo "Error: $INCIDENTS_JSON not found. Run without SKIP_AGENT=1." >&2
   exit 1
 fi
 
