@@ -74,6 +74,19 @@ def _extract_text(pdf_path: str) -> str:
     return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
+def _pad_date(value: str) -> str:
+    """`8/16/2026` -> `08/16/2026`.
+
+    The report writes its own date range both ways depending on the week, and
+    the period string is a key: it groups a week, dedupes a re-ingest, and
+    answers whether a download was stale. Two spellings of the same week are
+    two different weeks to all of that, so it is normalised once, here, rather
+    than compared loosely everywhere downstream.
+    """
+    month, day, year = value.split("/")
+    return f"{int(month):02d}/{int(day):02d}/{year}"
+
+
 def _find_report_period(lines: list[str]) -> Optional[str]:
     """Pull the `Reported Between 05/03/2026 & 05/09/2026` header off page 1.
 
@@ -86,7 +99,7 @@ def _find_report_period(lines: list[str]) -> Optional[str]:
             line,
         )
         if m:
-            return f"{m.group(1)} - {m.group(2)}"
+            return f"{_pad_date(m.group(1))} - {_pad_date(m.group(2))}"
     return None
 
 
@@ -105,7 +118,13 @@ ROW_START_RE = re.compile(r"^\s*\d+\s+\d+R\d+\b")
 # abandon a part-built row rather than being pasted into it — the print date in
 # particular would otherwise supply a date and manufacture a phantom incident.
 PAGE_FURNITURE_RE = re.compile(
-    r"^\s*(Page \d+ of \d+|Prepared by:|ADDRESSOFFENSECASE#BEAT|Murder \(incl)"
+    r"^\s*(Page \d+ of \d+|Prepared by:|ADDRESSOFFENSECASE#BEAT|Murder \(incl"
+    # `Reported Between 8/16/2026 & 8/22/2026` is the report's own date range,
+    # repeated at the top of every page. It carries a date and enough tokens to
+    # look exactly like an incident row, so it parsed as one — an incident with
+    # no offence, at "& 8/22/2026" — and inflated the count of whichever
+    # district the page break happened to fall inside.
+    r"|Reported Between|Monthly Selected|Weekly Selected|Selected Crime)"
     r"|^\s*\d{1,2}/\d{1,2}/\d{4}\s*$"
 )
 
@@ -156,11 +175,18 @@ def _parse_report(lines: list[str]) -> tuple[list[dict], list[dict]]:
     def record(body: str) -> None:
         """Count a row against its district block, and keep it if attributable."""
         nonlocal section_count
+        date_match = DATE_RE.search(body)
+        incident_type, _, location = body.partition(date_match.group())
+        if not incident_type.strip():
+            # No offence text before the date, so this is not an incident
+            # whatever else it looks like. Deliberately not counted either:
+            # counting it would inflate the district's parsed total and hide
+            # the very mismatch that catches lines like this.
+            return
+
         section_count += 1
         if current_district is None:
             return
-        date_match = DATE_RE.search(body)
-        incident_type, _, location = body.partition(date_match.group())
         incidents.append(
             {
                 "district": current_district,
