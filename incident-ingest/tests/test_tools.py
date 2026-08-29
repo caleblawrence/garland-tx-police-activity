@@ -901,6 +901,73 @@ def test_the_pipeline_tools_default_every_fixed_path(tmp_path, monkeypatch):
     assert "garlandtx.gov" not in agent.SYSTEM_PROMPT
 
 
+def test_monthly_reports_are_recognised_by_their_own_header():
+    """Monthly archive reports name a month; weekly ones name a week.
+
+    Some monthly reports print `April 2026` on a line of their own, and others
+    use the same `Reported Between X & Y` header the weekly reports use — over
+    a whole calendar month. Both have to resolve to a month, and a weekly
+    report must resolve to none, or the archive would ingest a single week as
+    though it were a month.
+    """
+    assert tools._find_report_month(["April 2026"]) == "2026-04"
+    assert (
+        tools._find_report_month(["Reported Between 12/01/2025 & 12/31/2025"])
+        == "2025-12"
+    )
+    assert tools._find_report_month(["Reported Between 02/01/2024 & 02/29/2024"]) == (
+        "2024-02"
+    ), "a leap February is still a whole month"
+    assert tools._find_report_month(["Reported Between 08/16/2026 & 08/22/2026"]) is None
+    assert tools._find_report_month(["Reported Between 12/01/2025 & 12/30/2025"]) is None
+
+
+def test_a_row_that_runs_beat_and_case_together_keeps_its_whole_offence():
+    """`08552025R022894 THEFT-ALL OTHER...` has one token before the offence.
+
+    Dropping the usual two ate the first word, storing "OTHER-$100 L/T $750"
+    where the report says "THEFT-ALL OTHER-$100 L/T $750". The row still had a
+    date, so it reconciled against the district total and nothing caught it —
+    the offence was simply wrong.
+    """
+    lines = [
+        " DISTRICT 23",
+        " 8 01002025R000063 BURGLARY-VEH01/02/2025 30XX INNSBROOK DR",
+        "08552025R022894 THEFT-ALL OTHER-$100 L/T $75001/10/2025 22XX MAIN ST",
+        "District Total: 2",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert [i["incident"] for i in incidents] == [
+        "BURGLARY-VEH",
+        "THEFT-ALL OTHER-$100 L/T $750",
+    ]
+    assert sections == [{"district": "23", "declared_total": 2, "parsed_total": 2}]
+
+
+def test_a_merged_row_with_no_address_is_still_an_incident():
+    """Two tokens is a whole row when the beat and case are one of them.
+
+    A flat three-token minimum dropped these, and the report does omit
+    addresses — three consecutive rows in January 2025's district 23 carry
+    none. That is not a reason to lose the incident.
+    """
+    lines = [
+        " DISTRICT 23",
+        "17002025R000547 BURGLARY-VEH01/10/2025",
+        "17002025R000548 BURGLARY-VEH01/10/2025",
+        "District Total: 2",
+    ]
+
+    incidents, sections = tools._parse_report(lines)
+
+    assert len(incidents) == 2
+    assert {i["incident"] for i in incidents} == {"BURGLARY-VEH"}
+    assert [i["location"] for i in incidents] == ["", ""]
+    assert sections == [{"district": "23", "declared_total": 2, "parsed_total": 2}]
+
+
 def test_download_sends_browser_user_agent(monkeypatch, tmp_path):
     """garlandtx.gov 404s the default python-requests UA, which used to make the
     run silently fall back to whatever stale PDF was already on disk."""

@@ -2,7 +2,21 @@
 __pycache__/
 *.py[cod]
 *$py.class
-incident-geo-analysis/dist/
+# The site deploys from dist/, so its build output belongs in git.
+#
+# This used to ignore the whole directory. Nine files were already tracked from
+# before that rule, so the site kept deploying and nothing looked wrong — but
+# any NEW file was ignored, and dist/archive.html would have been built locally
+# and silently never shipped. A directory-level ignore also cannot be undone
+# by a negation below it, so the pattern matches contents instead.
+incident-geo-analysis/dist/*
+!incident-geo-analysis/dist/*.html
+!incident-geo-analysis/dist/*.json
+!incident-geo-analysis/dist/*.geojson
+!incident-geo-analysis/dist/*.png
+!incident-geo-analysis/dist/*.svg
+# The geocoder's cache is a local working file, not part of the site.
+incident-geo-analysis/dist/geocode-cache.json
 
 # C extensions
 *.so
