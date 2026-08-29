@@ -25,21 +25,13 @@ from deepagents import SubAgent, create_deep_agent
 from deepagents.backends import FilesystemBackend
 
 from garland_tx_data_analysis.tools import (
+    WORK_DIR,
     download_weekly_report,
     parse_incidents,
     read_report_text,
     store_incidents,
     unlabelled_incident_types,
 )
-
-PDF_URL = (
-    "https://www.garlandtx.gov/DocumentCenter/View/802/"
-    "Previous-Week-Selected-Incident-Report-PDF?bidId="
-)
-WORK_DIR = "work"
-PDF_PATH = f"{WORK_DIR}/police_incidents.pdf"
-INCIDENTS_JSON_PATH = f"{WORK_DIR}/extracted_incidents.json"
-ENRICHED_JSON_PATH = f"{WORK_DIR}/enriched_incidents.json"
 
 # Both on Haiku. The main agent used to plan, audit and decide, which was worth
 # the strongest model; it no longer does any of those. The parse reconciles
@@ -97,20 +89,17 @@ Return only the JSON object.""",
 )
 
 
-SYSTEM_PROMPT = f"""You publish Garland TX's weekly police incident report.
+SYSTEM_PROMPT = """You publish Garland TX's weekly police incident report.
 
 Each run fetches the city's latest weekly PDF, extracts the incidents, checks
-the extraction, labels the offence codes, and stores the week for the map that
-renders it.
+the extraction, labels any offence code that has never been seen, and stores
+the week for the map that renders it.
 
-Two kinds of path, and mixing them up wastes a turn:
-
-  - The pipeline tools below take paths relative to the project, so the
-    parse output is `{INCIDENTS_JSON_PATH}`.
-  - Your file tools (`ls`, `read_file`, `write_file`, `glob`, `grep`) are
-    rooted at the run directory `{WORK_DIR}/`. The same file is
-    `/extracted_incidents.json` to them. Nothing outside that directory is
-    reachable, by design.
+Call the pipeline tools with no arguments unless you have a specific reason
+not to. Every path and URL they need is fixed and already their default: the
+city serves one report, and each run writes the same files. Your own file
+tools (`ls`, `read_file`, `write_file`, `glob`, `grep`) see the run directory
+as `/`, and nothing outside it is reachable.
 
 The tools available to you:
   - `download_weekly_report` — fetch the PDF. It verifies the response really
@@ -130,9 +119,9 @@ The tools available to you:
 
 The run, and the standing constraints on it:
 
-1. Download the report from {PDF_URL} to `{PDF_PATH}`.
+1. Download the report.
 
-2. Parse it to `{INCIDENTS_JSON_PATH}`, then read `period_check.status` in the
+2. Parse it, then read `period_check.status` in the
    summary. It has already compared this week against the database; you cannot
    check that yourself, so take what it says.
 
@@ -163,7 +152,7 @@ The run, and the standing constraints on it:
    parse did not reconcile, and will refuse it if you try. Your job is to
    explain what went wrong, not to decide whether it matters.
 
-4. Call `unlabelled_incident_types` on the parse output. Most weeks it returns
+4. Call `unlabelled_incident_types`. Most weeks it returns
    an empty `needing_labels`: every code in the report has been named before,
    there is nothing to delegate, and you go straight to step 5.
 
@@ -174,12 +163,13 @@ The run, and the standing constraints on it:
    re-type incident rows into your own reasoning: a report runs to 100+ rows
    and the files on disk are the source of truth.
 
-5. Store with `store_incidents`, passing the mapping for the new codes (omit it
-   if there were none) and writing the enriched JSON at `{ENRICHED_JSON_PATH}`.
-   Check its return value: it warns when an incident type had no label, and
-   that warning means the map will show a raw offence code to the public.
+5. Store with `store_incidents`, passing the mapping for the new codes as
+   `short_description_map` (omit it if there were none). Check its return
+   value: it warns when an incident type had no label, and that warning means
+   the map would show a raw offence code to the public.
 
-6. Write a short run report to `/run-report.md` covering: the report period,
+6. Write a short run report with `write_file` to `/run-report.md` — that path
+   exactly, starting with a single slash. Cover: the report period,
    how many incidents were stored and how many were new to the database,
    whether the parse reconciled, any offence code named for the first time,
    and anything a person should act on. Then summarise it in your reply.
@@ -197,11 +187,16 @@ def build_backend() -> FilesystemBackend:
     silently lost, and nothing could read the parse output back.
 
     Rooted at `work/` rather than the project, with `virtual_mode=True` so
-    traversal (`..`, `~`) and outside-absolute paths are blocked. The agent has
-    web_fetch, and `.env` holds the Anthropic key and the Postgres URL — it
-    has no business being reachable. Note the tools see this directory as their
-    root, so `work/extracted_incidents.json` on disk is `/extracted_incidents.json`
-    to them.
+    traversal (`..`, `~`) and outside-absolute paths are blocked. `.env` holds
+    the Anthropic key and the Postgres URL, and `download_weekly_report` takes
+    an arbitrary URL — so a readable `.env` is a readable `.env` that can be
+    sent somewhere. (deepagents 0.7 grants no web_fetch, which an earlier
+    version of this comment claimed; the egress is the download tool.)
+
+    The tools see this directory as their root, so `work/extracted_incidents.json`
+    on disk is `/extracted_incidents.json` to them. Nothing in the system prompt
+    depends on knowing that any more: the pipeline tools default their own
+    paths, so the agent only ever names a file to its own file tools.
     """
     work = Path(WORK_DIR).resolve()
     work.mkdir(parents=True, exist_ok=True)
