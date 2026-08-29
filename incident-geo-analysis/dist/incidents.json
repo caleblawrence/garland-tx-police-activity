@@ -56,7 +56,7 @@
     "location": "54XX LOVING DR",
     "district": "53",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Aggravated Assault",
+    "short_description": "Aggravated Assault with Deadly Weapon",
     "status": "mapped"
   },
   {
@@ -106,7 +106,7 @@
     "location": "16XX W CAMPBELL RD",
     "district": "22",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Vehicle Parts Theft",
+    "short_description": "Motor Vehicle Parts Theft",
     "status": "mapped"
   },
   {
@@ -256,7 +256,7 @@
     "location": "36XX ARBOR TRL",
     "district": "55",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Fraud Report",
+    "short_description": "Mail Fraud Report",
     "status": "mapped"
   },
   {
@@ -486,7 +486,7 @@
     "location": "7XX DONALD DR",
     "district": "42",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Fraud Report",
+    "short_description": "Mail Fraud Report",
     "status": "mapped"
   },
   {
@@ -496,7 +496,7 @@
     "location": "7XX DONALD DR",
     "district": "42",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Fraud Report",
+    "short_description": "Mail Fraud Report",
     "status": "mapped"
   },
   {
@@ -806,7 +806,7 @@
     "location": "ADDRESS CONFIDENTIAL",
     "district": "52",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Child Injury",
+    "short_description": "Injury to a Child",
     "status": "confidential"
   },
   {
@@ -866,7 +866,7 @@
     "location": "2XX CASALITA DR",
     "district": "37",
     "report_period": "08/16/2026 - 08/22/2026",
-    "short_description": "Aggravated Assault",
+    "short_description": "Aggravated Assault with Deadly Weapon",
     "status": "mapped"
   },
   {

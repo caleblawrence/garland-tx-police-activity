@@ -110,7 +110,7 @@
         "id": 4,
         "address": "16XX W CAMPBELL RD Garland TX",
         "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
-        "short_description": "Vehicle Parts Theft",
+        "short_description": "Motor Vehicle Parts Theft",
         "district": "22",
         "date": "08/17/2026"
       }
@@ -1478,7 +1478,7 @@
         "id": 47,
         "address": "2XX CASALITA DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault",
+        "short_description": "Aggravated Assault with Deadly Weapon",
         "district": "37",
         "date": "08/22/2026"
       }
@@ -1744,7 +1744,7 @@
         "id": 55,
         "address": "7XX DONALD DR Garland TX",
         "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
-        "short_description": "Fraud Report",
+        "short_description": "Mail Fraud Report",
         "district": "42",
         "date": "08/19/2026"
       }
@@ -1782,7 +1782,7 @@
         "id": 56,
         "address": "7XX DONALD DR Garland TX",
         "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
-        "short_description": "Fraud Report",
+        "short_description": "Mail Fraud Report",
         "district": "42",
         "date": "08/19/2026"
       }
@@ -2542,7 +2542,7 @@
         "id": 79,
         "address": "54XX LOVING DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault",
+        "short_description": "Aggravated Assault with Deadly Weapon",
         "district": "53",
         "date": "08/16/2026"
       }
@@ -2732,7 +2732,7 @@
         "id": 87,
         "address": "36XX ARBOR TRL Garland TX",
         "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
-        "short_description": "Fraud Report",
+        "short_description": "Mail Fraud Report",
         "district": "55",
         "date": "08/17/2026"
       }
