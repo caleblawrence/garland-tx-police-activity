@@ -8,35 +8,35 @@
         "coordinates": [
           [
             [
-              -96.682252,
-              32.952151
+              -96.669759,
+              32.9835572
             ],
             [
-              -96.680998,
-              32.952151
+              -96.6685551,
+              32.9835572
             ],
             [
-              -96.680998,
-              32.952450999999996
+              -96.6685551,
+              32.984181
             ],
             [
-              -96.682252,
-              32.952450999999996
+              -96.669759,
+              32.984181
             ],
             [
-              -96.682252,
-              32.952151
+              -96.669759,
+              32.9835572
             ]
           ]
         ]
       },
       "properties": {
-        "id": 1,
-        "address": "34XX AQUARIUS CIR Garland TX",
-        "incident": "OTHER AGENCY- UNAUTHORIZED USE MOTOR VEHICLE",
-        "short_description": "Unauthorized Vehicle Use",
+        "id": 0,
+        "address": "27XX LOOKOUT DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
         "district": "21",
-        "date": "07/17/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -46,73 +46,35 @@
         "coordinates": [
           [
             [
-              -96.6768675,
-              32.9698535
+              -96.65916,
+              32.971481
             ],
             [
-              -96.6765675,
-              32.9698535
+              -96.656853,
+              32.971481
             ],
             [
-              -96.6765675,
-              32.9701535
+              -96.656853,
+              32.97188
             ],
             [
-              -96.6768675,
-              32.9701535
+              -96.65916,
+              32.97188
             ],
             [
-              -96.6768675,
-              32.9698535
+              -96.65916,
+              32.971481
             ]
           ]
         ]
       },
       "properties": {
         "id": 2,
-        "address": "31XX ABBEY CT Garland TX",
-        "incident": "BURGLARY-HAB",
-        "short_description": "Residential Burglary",
-        "district": "21",
-        "date": "07/17/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.6642851,
-              32.95132975
-            ],
-            [
-              -96.663065,
-              32.95132975
-            ],
-            [
-              -96.663065,
-              32.95162975
-            ],
-            [
-              -96.6642851,
-              32.95162975
-            ],
-            [
-              -96.6642851,
-              32.95132975
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 3,
-        "address": "23XX APOLLO RD Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "63XX NAAMAN FOREST BLVD Garland TX",
+        "incident": "INFO-IDENTITY THEFT",
+        "short_description": "Identity Theft Report",
         "district": "22",
-        "date": "07/16/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -122,35 +84,35 @@
         "coordinates": [
           [
             [
-              -96.6642851,
-              32.95132975
+              -96.653091,
+              32.9782018
             ],
             [
-              -96.663065,
-              32.95132975
+              -96.651473,
+              32.9782018
             ],
             [
-              -96.663065,
-              32.95162975
+              -96.651473,
+              32.9823169
             ],
             [
-              -96.6642851,
-              32.95162975
+              -96.653091,
+              32.9823169
             ],
             [
-              -96.6642851,
-              32.95132975
+              -96.653091,
+              32.9782018
             ]
           ]
         ]
       },
       "properties": {
         "id": 4,
-        "address": "23XX APOLLO RD Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "16XX W CAMPBELL RD Garland TX",
+        "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
+        "short_description": "Vehicle Parts Theft",
         "district": "22",
-        "date": "07/16/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -160,73 +122,35 @@
         "coordinates": [
           [
             [
-              -96.648503,
-              32.962296
+              -96.6552548,
+              32.9699886
             ],
             [
-              -96.648203,
-              32.962296
+              -96.6542785,
+              32.9699886
             ],
             [
-              -96.648203,
-              32.962596
+              -96.6542785,
+              32.9709208
             ],
             [
-              -96.648503,
-              32.962596
+              -96.6552548,
+              32.9709208
             ],
             [
-              -96.648503,
-              32.962296
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 5,
-        "address": "54XX NAAMAN FOREST BLVD Garland TX",
-        "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft",
-        "district": "22",
-        "date": "07/16/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.6828475,
-              32.9325491
-            ],
-            [
-              -96.6813475,
-              32.9325491
-            ],
-            [
-              -96.6813475,
-              32.934049099999996
-            ],
-            [
-              -96.6828475,
-              32.934049099999996
-            ],
-            [
-              -96.6828475,
-              32.9325491
+              -96.6552548,
+              32.9699886
             ]
           ]
         ]
       },
       "properties": {
         "id": 6,
-        "address": "21XX N JUPITER RD Garland TX",
-        "incident": "THEFT-SHOPLIFTING-$750 L/T $2,500",
-        "short_description": "Shoplifting",
-        "district": "23",
-        "date": "07/13/2026"
+        "address": "61XX NAAMAN FOREST BLVD Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "short_description": "Unauthorized Vehicle Use",
+        "district": "22",
+        "date": "08/20/2026"
       }
     },
     {
@@ -236,35 +160,111 @@
         "coordinates": [
           [
             [
-              -96.6847647,
-              32.91687945
+              -96.6828475,
+              32.9325491
             ],
             [
-              -96.683228,
-              32.91687945
+              -96.6813475,
+              32.9325491
             ],
             [
-              -96.683228,
-              32.91717945
+              -96.6813475,
+              32.934049099999996
             ],
             [
-              -96.6847647,
-              32.91717945
+              -96.6828475,
+              32.934049099999996
             ],
             [
-              -96.6847647,
-              32.91687945
+              -96.6828475,
+              32.9325491
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 7,
+        "address": "21XX N JUPITER RD Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "short_description": "Shoplifting",
+        "district": "23",
+        "date": "08/19/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6613948,
+              32.9302071
+            ],
+            [
+              -96.6589988,
+              32.9302071
+            ],
+            [
+              -96.6589988,
+              32.9305985
+            ],
+            [
+              -96.6613948,
+              32.9305985
+            ],
+            [
+              -96.6613948,
+              32.9302071
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 8,
+        "address": "21XX W BUCKINGHAM RD Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
+        "short_description": "Theft",
+        "district": "23",
+        "date": "08/21/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.7012977,
+              32.91645185
+            ],
+            [
+              -96.699131,
+              32.91645185
+            ],
+            [
+              -96.699131,
+              32.91675185
+            ],
+            [
+              -96.7012977,
+              32.91675185
+            ],
+            [
+              -96.7012977,
+              32.91645185
             ]
           ]
         ]
       },
       "properties": {
         "id": 9,
-        "address": "35XX W WALNUT ST Garland TX",
+        "address": "44XX W WALNUT ST Garland TX",
         "incident": "BURGLARY-BLDG",
         "short_description": "Building Burglary",
         "district": "24",
-        "date": "07/12/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -274,35 +274,35 @@
         "coordinates": [
           [
             [
-              -96.69340100000001,
-              32.907847
+              -96.692346,
+              32.91185
             ],
             [
-              -96.693101,
-              32.907847
+              -96.692046,
+              32.91185
             ],
             [
-              -96.693101,
-              32.908878
+              -96.692046,
+              32.912334
             ],
             [
-              -96.69340100000001,
-              32.908878
+              -96.692346,
+              32.912334
             ],
             [
-              -96.69340100000001,
-              32.907847
+              -96.692346,
+              32.91185
             ]
           ]
         ]
       },
       "properties": {
         "id": 10,
-        "address": "5XX EASY ST Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "2XX S YALE DR Garland TX",
+        "incident": "THEFT-MAIL <10 ADDRESSES",
+        "short_description": "Mail Theft",
         "district": "24",
-        "date": "07/14/2026"
+        "date": "08/18/2026"
       }
     },
     {
@@ -312,35 +312,35 @@
         "coordinates": [
           [
             [
-              -96.6868548,
-              32.9308902
+              -96.6973009,
+              32.914392400000004
             ],
             [
-              -96.6857004,
-              32.9308902
+              -96.695842,
+              32.914392400000004
             ],
             [
-              -96.6857004,
-              32.9311902
+              -96.695842,
+              32.9146924
             ],
             [
-              -96.6868548,
-              32.9311902
+              -96.6973009,
+              32.9146924
             ],
             [
-              -96.6868548,
-              32.9308902
+              -96.6973009,
+              32.914392400000004
             ]
           ]
         ]
       },
       "properties": {
         "id": 11,
-        "address": "37XX W BUCKINGHAM RD Garland TX",
-        "incident": "BURGLARY-VEH-ATTACHED PARTS OR ACCESSORIES",
-        "short_description": "Vehicle Parts Burglary",
+        "address": "42XX PINERIDGE DR Garland TX",
+        "incident": "BURGLARY-HAB",
+        "short_description": "Habitation Burglary",
         "district": "24",
-        "date": "07/16/2026"
+        "date": "08/18/2026"
       }
     },
     {
@@ -350,35 +350,35 @@
         "coordinates": [
           [
             [
-              -96.6872645,
-              32.9166182
+              -96.6965133,
+              32.91257995
             ],
             [
-              -96.6863289,
-              32.9166182
+              -96.695076,
+              32.91257995
             ],
             [
-              -96.6863289,
-              32.9169182
+              -96.695076,
+              32.91287995
             ],
             [
-              -96.6872645,
-              32.9169182
+              -96.6965133,
+              32.91287995
             ],
             [
-              -96.6872645,
-              32.9166182
+              -96.6965133,
+              32.91257995
             ]
           ]
         ]
       },
       "properties": {
         "id": 12,
-        "address": "37XX W WALNUT ST Garland TX",
-        "incident": "OTHER AGENCY- THEFT-FIREARM",
-        "short_description": "Firearm Theft",
+        "address": "42XX UPLAND WY Garland TX",
+        "incident": "BURGLARY-VEH",
+        "short_description": "Vehicle Burglary",
         "district": "24",
-        "date": "07/17/2026"
+        "date": "08/20/2026"
       }
     },
     {
@@ -388,35 +388,35 @@
         "coordinates": [
           [
             [
-              -96.6910667,
-              32.917488500000005
+              -96.68301435000001,
+              32.9283661
             ],
             [
-              -96.6895667,
-              32.917488500000005
+              -96.68271435,
+              32.9283661
             ],
             [
-              -96.6895667,
-              32.9189885
+              -96.68271435,
+              32.9291194
             ],
             [
-              -96.6910667,
-              32.9189885
+              -96.68301435000001,
+              32.9291194
             ],
             [
-              -96.6910667,
-              32.917488500000005
+              -96.68301435000001,
+              32.9283661
             ]
           ]
         ]
       },
       "properties": {
         "id": 13,
-        "address": "38XX WALNUT PARK CIR Garland TX",
-        "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-L/T $100",
-        "short_description": "Motor Vehicle Parts Theft",
-        "district": "24",
-        "date": "07/17/2026"
+        "address": "17XX N JUPITER RD Garland TX",
+        "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
+        "short_description": "Vandalism",
+        "district": "25",
+        "date": "08/16/2026"
       }
     },
     {
@@ -426,35 +426,35 @@
         "coordinates": [
           [
             [
-              -96.6941503,
-              32.92170975
+              -96.682703,
+              32.916456
             ],
             [
-              -96.692775,
-              32.92170975
+              -96.678831,
+              32.916456
             ],
             [
-              -96.692775,
-              32.92200975
+              -96.678831,
+              32.917334
             ],
             [
-              -96.6941503,
-              32.92200975
+              -96.682703,
+              32.917334
             ],
             [
-              -96.6941503,
-              32.92170975
+              -96.682703,
+              32.916456
             ]
           ]
         ]
       },
       "properties": {
         "id": 14,
-        "address": "40XX BUCKNELL DR Garland TX",
-        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-        "short_description": "Unauthorized Vehicle Use",
-        "district": "24",
-        "date": "07/18/2026"
+        "address": "33XX W WALNUT ST Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "short_description": "Building Burglary",
+        "district": "25",
+        "date": "08/18/2026"
       }
     },
     {
@@ -464,35 +464,35 @@
         "coordinates": [
           [
             [
-              -96.6980431,
-              32.91264445
+              -96.677591,
+              32.91737275
             ],
             [
-              -96.6965797,
-              32.91264445
+              -96.676069,
+              32.91737275
             ],
             [
-              -96.6965797,
-              32.91294445
+              -96.676069,
+              32.91767275
             ],
             [
-              -96.6980431,
-              32.91294445
+              -96.677591,
+              32.91767275
             ],
             [
-              -96.6980431,
-              32.91264445
+              -96.677591,
+              32.91737275
             ]
           ]
         ]
       },
       "properties": {
         "id": 15,
-        "address": "43XX UPLAND WY Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "24",
-        "date": "07/18/2026"
+        "address": "32XX LAKEWOOD DR Garland TX",
+        "incident": "BURGLARY-HAB",
+        "short_description": "Habitation Burglary",
+        "district": "25",
+        "date": "08/21/2026"
       }
     },
     {
@@ -502,35 +502,35 @@
         "coordinates": [
           [
             [
-              -96.6965133,
-              32.91257995
+              -96.66897,
+              32.9223954
             ],
             [
-              -96.695076,
-              32.91257995
+              -96.667502,
+              32.9223954
             ],
             [
-              -96.695076,
-              32.91287995
+              -96.667502,
+              32.9226954
             ],
             [
-              -96.6965133,
-              32.91287995
+              -96.66897,
+              32.9226954
             ],
             [
-              -96.6965133,
-              32.91257995
+              -96.66897,
+              32.9223954
             ]
           ]
         ]
       },
       "properties": {
         "id": 16,
-        "address": "42XX UPLAND WY Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "24",
-        "date": "07/18/2026"
+        "address": "26XX POPLAR TRL Garland TX",
+        "incident": "BURGLARY-HAB",
+        "short_description": "Habitation Burglary",
+        "district": "25",
+        "date": "08/21/2026"
       }
     },
     {
@@ -540,35 +540,35 @@
         "coordinates": [
           [
             [
-              -96.6585673,
-              32.9259388
+              -96.665068,
+              32.9162065
             ],
             [
-              -96.65826729999999,
-              32.9259388
+              -96.663293,
+              32.9162065
             ],
             [
-              -96.65826729999999,
-              32.926659
+              -96.663293,
+              32.9165065
             ],
             [
-              -96.6585673,
-              32.926659
+              -96.665068,
+              32.9165065
             ],
             [
-              -96.6585673,
-              32.9259388
+              -96.665068,
+              32.9162065
             ]
           ]
         ]
       },
       "properties": {
         "id": 17,
-        "address": "14XX MONTERREY DR Garland TX",
-        "incident": "INFO-THEFT",
-        "short_description": "Theft Report",
-        "district": "25",
-        "date": "07/15/2026"
+        "address": "24XX W WALNUT ST Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "short_description": "Building Burglary",
+        "district": "26",
+        "date": "08/18/2026"
       }
     },
     {
@@ -578,35 +578,35 @@
         "coordinates": [
           [
             [
-              -96.679844,
-              32.9124303
+              -96.6828432,
+              32.9111953
             ],
             [
-              -96.678591,
-              32.9124303
+              -96.6825432,
+              32.9111953
             ],
             [
-              -96.678591,
-              32.913853
+              -96.6825432,
+              32.912307
             ],
             [
-              -96.679844,
-              32.913853
+              -96.6828432,
+              32.912307
             ],
             [
-              -96.679844,
-              32.9124303
+              -96.6828432,
+              32.9111953
             ]
           ]
         ]
       },
       "properties": {
         "id": 18,
-        "address": "1XX S BARNES DR Garland TX",
-        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Vandalism",
+        "address": "3XX S JUPITER RD Garland TX",
+        "incident": "INFO-BURGLARY",
+        "short_description": "Burglary Report",
         "district": "26",
-        "date": "07/12/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -616,35 +616,35 @@
         "coordinates": [
           [
             [
-              -96.6753952,
-              32.9137628
+              -96.6655766,
+              32.9145776
             ],
             [
-              -96.6741412,
-              32.9137628
+              -96.6652766,
+              32.9145776
             ],
             [
-              -96.6741412,
-              32.914062799999996
+              -96.6652766,
+              32.9155504
             ],
             [
-              -96.6753952,
-              32.914062799999996
+              -96.6655766,
+              32.9155504
             ],
             [
-              -96.6753952,
-              32.9137628
+              -96.6655766,
+              32.9145776
             ]
           ]
         ]
       },
       "properties": {
         "id": 19,
-        "address": "30XX EDGEWOOD DR Garland TX",
-        "incident": "BURGLARY-BLDG",
-        "short_description": "Building Burglary",
+        "address": "3XX N SHILOH RD Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
         "district": "26",
-        "date": "07/15/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -654,35 +654,73 @@
         "coordinates": [
           [
             [
-              -96.6743921,
-              32.8955418
+              -96.651838,
+              32.916102
             ],
             [
-              -96.6740921,
-              32.8955418
+              -96.648444,
+              32.916102
             ],
             [
-              -96.6740921,
-              32.8971
+              -96.648444,
+              32.916402
             ],
             [
-              -96.6743921,
-              32.8971
+              -96.651838,
+              32.916402
             ],
             [
-              -96.6743921,
-              32.8955418
+              -96.651838,
+              32.916102
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 20,
+        "address": "14XX W WALNUT ST Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
+        "short_description": "Theft",
+        "district": "26",
+        "date": "08/21/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.651838,
+              32.916102
+            ],
+            [
+              -96.648444,
+              32.916102
+            ],
+            [
+              -96.648444,
+              32.916402
+            ],
+            [
+              -96.651838,
+              32.916402
+            ],
+            [
+              -96.651838,
+              32.916102
             ]
           ]
         ]
       },
       "properties": {
         "id": 21,
-        "address": "16XX KINGS RD Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "27",
-        "date": "07/13/2026"
+        "address": "14XX W WALNUT ST Garland TX",
+        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "short_description": "Theft",
+        "district": "26",
+        "date": "08/22/2026"
       }
     },
     {
@@ -692,35 +730,73 @@
         "coordinates": [
           [
             [
-              -96.6915344,
-              32.898808100000004
+              -96.6785905,
+              32.9009713
             ],
             [
-              -96.6900344,
-              32.898808100000004
+              -96.6765244,
+              32.9009713
             ],
             [
-              -96.6900344,
-              32.9003081
+              -96.6765244,
+              32.9018321
             ],
             [
-              -96.6915344,
-              32.9003081
+              -96.6785905,
+              32.9018321
             ],
             [
-              -96.6915344,
-              32.898808100000004
+              -96.6785905,
+              32.9009713
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 22,
+        "address": "31XX MARQUIS DR Garland TX",
+        "incident": "INFO-FOUND PROPERTY-THEFTS",
+        "short_description": "Found Property Report",
+        "district": "27",
+        "date": "08/16/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6844822,
+              32.897112
+            ],
+            [
+              -96.683226,
+              32.897112
+            ],
+            [
+              -96.683226,
+              32.897411999999996
+            ],
+            [
+              -96.6844822,
+              32.897411999999996
+            ],
+            [
+              -96.6844822,
+              32.897112
             ]
           ]
         ]
       },
       "properties": {
         "id": 23,
-        "address": "38XX MILLER PARK DR Garland TX",
-        "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
+        "address": "35XX SECURITY ST Garland TX",
+        "incident": "ROBBERY - AGG - INDIV",
+        "short_description": "Aggravated Robbery",
         "district": "27",
-        "date": "07/16/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -730,35 +806,35 @@
         "coordinates": [
           [
             [
-              -96.64914635,
-              32.894850999999996
+              -96.6515191,
+              32.9070005
             ],
             [
-              -96.64884635,
-              32.894850999999996
+              -96.6502069,
+              32.9070005
             ],
             [
-              -96.64884635,
-              32.895151
+              -96.6502069,
+              32.9073005
             ],
             [
-              -96.64914635,
-              32.895151
+              -96.6515191,
+              32.9073005
             ],
             [
-              -96.64914635,
-              32.894850999999996
+              -96.6515191,
+              32.9070005
             ]
           ]
         ]
       },
       "properties": {
         "id": 24,
-        "address": "18XX S GARLAND AVE Garland TX",
-        "incident": "THEFT-SHOPLIFTING-L/T $100",
-        "short_description": "Shoplifting",
+        "address": "15XX PARK AVE Garland TX",
+        "incident": "INFO-IDENTITY THEFT",
+        "short_description": "Identity Theft Report",
         "district": "27",
-        "date": "07/16/2026"
+        "date": "08/21/2026"
       }
     },
     {
@@ -786,17 +862,55 @@
             [
               -96.6447652,
               32.9637132
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 25,
+        "address": "53XX N GARLAND AVE Garland TX",
+        "incident": "THEFT-SHOPLIFTING-L/T $100",
+        "short_description": "Shoplifting",
+        "district": "31",
+        "date": "08/17/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.7445,
+              32.978014
+            ],
+            [
+              -96.7409947,
+              32.978014
+            ],
+            [
+              -96.7409947,
+              32.9785598
+            ],
+            [
+              -96.7445,
+              32.9785598
+            ],
+            [
+              -96.7445,
+              32.978014
             ]
           ]
         ]
       },
       "properties": {
         "id": 26,
-        "address": "53XX N GARLAND AVE Garland TX",
-        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-        "short_description": "Shoplifting",
+        "address": "6XX W CAMPBELL RD Garland TX",
+        "incident": "THEFT-ALL OTHER-L/T $100",
+        "short_description": "Theft",
         "district": "31",
-        "date": "07/14/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -806,35 +920,35 @@
         "coordinates": [
           [
             [
-              -96.6283014,
-              32.930984800000004
+              -96.6520667,
+              32.9576386
             ],
             [
-              -96.62616,
-              32.930984800000004
+              -96.6517667,
+              32.9576386
             ],
             [
-              -96.62616,
-              32.9312848
+              -96.6517667,
+              32.9579386
             ],
             [
-              -96.6283014,
-              32.9312848
+              -96.6520667,
+              32.9579386
             ],
             [
-              -96.6283014,
-              32.930984800000004
+              -96.6520667,
+              32.9576386
             ]
           ]
         ]
       },
       "properties": {
         "id": 27,
-        "address": "3XX E BUCKINGHAM RD Garland TX",
-        "incident": "CRIMINAL MISCHIEF L/T $100",
-        "short_description": "Vandalism",
+        "address": "45XX N GARLAND AVE Garland TX",
+        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "short_description": "Theft",
         "district": "31",
-        "date": "07/17/2026"
+        "date": "08/18/2026"
       }
     },
     {
@@ -844,73 +958,35 @@
         "coordinates": [
           [
             [
-              -96.6102125,
-              32.951761
+              -96.62291185000001,
+              32.974812
             ],
             [
-              -96.609899,
-              32.951761
+              -96.62261185,
+              32.974812
             ],
             [
-              -96.609899,
-              32.95222
+              -96.62261185,
+              32.9766643
             ],
             [
-              -96.6102125,
-              32.95222
+              -96.62291185000001,
+              32.9766643
             ],
             [
-              -96.6102125,
-              32.951761
+              -96.62291185000001,
+              32.974812
             ]
           ]
         ]
       },
       "properties": {
         "id": 28,
-        "address": "7XX HORSESHOE DR Garland TX",
-        "incident": "ROBBERY-BUSINESS",
-        "short_description": "Business Robbery",
-        "district": "32",
-        "date": "07/12/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.611833,
-              32.9529899
-            ],
-            [
-              -96.6110366,
-              32.9529899
-            ],
-            [
-              -96.6110366,
-              32.9532899
-            ],
-            [
-              -96.611833,
-              32.9532899
-            ],
-            [
-              -96.611833,
-              32.9529899
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 29,
-        "address": "3XX CEDAR SAGE DR Garland TX",
-        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
-        "short_description": "Theft",
-        "district": "32",
-        "date": "07/12/2026"
+        "address": "66XX LYNCH LN Garland TX",
+        "incident": "INFO-THEFT",
+        "short_description": "Theft Report",
+        "district": "31",
+        "date": "08/19/2026"
       }
     },
     {
@@ -948,7 +1024,7 @@
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
         "district": "32",
-        "date": "07/13/2026"
+        "date": "08/17/2026"
       }
     },
     {
@@ -958,73 +1034,35 @@
         "coordinates": [
           [
             [
-              -96.59009859999999,
-              32.9535409
+              -96.5920353,
+              32.9561254
             ],
             [
-              -96.5885986,
-              32.9535409
+              -96.5914963,
+              32.9561254
             ],
             [
-              -96.5885986,
-              32.95504089999999
+              -96.5914963,
+              32.9565816
             ],
             [
-              -96.59009859999999,
-              32.95504089999999
+              -96.5920353,
+              32.9565816
             ],
             [
-              -96.59009859999999,
-              32.9535409
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 31,
-        "address": "42XX BUNKER HILL RD Garland TX",
-        "incident": "CRIMINAL MISCHIEF $750 L/T $2,500",
-        "short_description": "Vandalism",
-        "district": "32",
-        "date": "07/15/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.614846,
-              32.952796
-            ],
-            [
-              -96.613591,
-              32.952796
-            ],
-            [
-              -96.613591,
-              32.953236
-            ],
-            [
-              -96.614846,
-              32.953236
-            ],
-            [
-              -96.614846,
-              32.952796
+              -96.5920353,
+              32.9561254
             ]
           ]
         ]
       },
       "properties": {
         "id": 32,
-        "address": "3XX TOWN CENTER BLVD Garland TX",
-        "incident": "THEFT OF SERVICE-L/T $100",
-        "short_description": "Service Theft",
+        "address": "44XX BUNKER HILL RD Garland TX",
+        "incident": "THEFT CATALYTIC CONVERTER <30K TO REPLACE",
+        "short_description": "Catalytic Converter Theft",
         "district": "32",
-        "date": "07/15/2026"
+        "date": "08/20/2026"
       }
     },
     {
@@ -1034,35 +1072,35 @@
         "coordinates": [
           [
             [
-              -96.612648,
-              32.953415
+              -96.62510115,
+              32.9335594
             ],
             [
-              -96.611907,
-              32.953415
+              -96.62480115,
+              32.9335594
             ],
             [
-              -96.611907,
-              32.953714999999995
+              -96.62480115,
+              32.934328
             ],
             [
-              -96.612648,
-              32.953714999999995
+              -96.62510115,
+              32.934328
             ],
             [
-              -96.612648,
-              32.953415
+              -96.62510115,
+              32.9335594
             ]
           ]
         ]
       },
       "properties": {
         "id": 33,
-        "address": "2XX CEDAR SAGE DR Garland TX",
-        "incident": "THEFT OF SERVICE-$100 L/T $750",
-        "short_description": "Service Theft",
+        "address": "23XX LAVON DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
         "district": "32",
-        "date": "07/15/2026"
+        "date": "08/21/2026"
       }
     },
     {
@@ -1072,35 +1110,35 @@
         "coordinates": [
           [
             [
-              -96.6227573,
-              32.9410676
+              -96.6219059,
+              32.9435222
             ],
             [
-              -96.6224573,
-              32.9410676
+              -96.621598,
+              32.9435222
             ],
             [
-              -96.6224573,
-              32.9415487
+              -96.621598,
+              32.9444942
             ],
             [
-              -96.6227573,
-              32.9415487
+              -96.6219059,
+              32.9444942
             ],
             [
-              -96.6227573,
-              32.9410676
+              -96.6219059,
+              32.9435222
             ]
           ]
         ]
       },
       "properties": {
         "id": 34,
-        "address": "26XX LAVON DR Garland TX",
-        "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft",
+        "address": "29XX LAVON DR Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "short_description": "Building Burglary",
         "district": "32",
-        "date": "07/15/2026"
+        "date": "08/21/2026"
       }
     },
     {
@@ -1110,35 +1148,35 @@
         "coordinates": [
           [
             [
-              -96.614029,
-              32.9540701
+              -96.639788,
+              32.916012
             ],
             [
-              -96.6130758,
-              32.9540701
+              -96.639318,
+              32.916012
             ],
             [
-              -96.6130758,
-              32.954373
+              -96.639318,
+              32.916312
             ],
             [
-              -96.614029,
-              32.954373
+              -96.639788,
+              32.916312
             ],
             [
-              -96.614029,
-              32.9540701
+              -96.639788,
+              32.916012
             ]
           ]
         ]
       },
       "properties": {
         "id": 35,
-        "address": "1XX CEDAR SAGE DR Garland TX",
-        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-        "short_description": "Shoplifting",
-        "district": "32",
-        "date": "07/16/2026"
+        "address": "7XX W WALNUT ST Garland TX",
+        "incident": "THEFT-ALL OTHER-L/T $100",
+        "short_description": "Theft",
+        "district": "34",
+        "date": "08/18/2026"
       }
     },
     {
@@ -1148,35 +1186,35 @@
         "coordinates": [
           [
             [
-              -96.611459,
-              32.953293
+              -96.636408,
+              32.913191
             ],
             [
-              -96.6111575,
-              32.953293
+              -96.635497,
+              32.913191
             ],
             [
-              -96.6111575,
-              32.953695
+              -96.635497,
+              32.913491
             ],
             [
-              -96.611459,
-              32.953695
+              -96.636408,
+              32.913491
             ],
             [
-              -96.611459,
-              32.953293
+              -96.636408,
+              32.913191
             ]
           ]
         ]
       },
       "properties": {
         "id": 36,
-        "address": "6XX BEEBALM LN Garland TX",
-        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-        "short_description": "Shoplifting",
-        "district": "32",
-        "date": "07/17/2026"
+        "address": "4XX W STATE ST Garland TX",
+        "incident": "ROBBERY-INDIV",
+        "short_description": "Robbery",
+        "district": "34",
+        "date": "08/20/2026"
       }
     },
     {
@@ -1186,35 +1224,35 @@
         "coordinates": [
           [
             [
-              -96.608311,
-              32.9521118
+              -96.629349,
+              32.916947
             ],
             [
-              -96.6075363,
-              32.9521118
+              -96.628508,
+              32.916947
             ],
             [
-              -96.6075363,
-              32.954073
+              -96.628508,
+              32.917934
             ],
             [
-              -96.608311,
-              32.954073
+              -96.629349,
+              32.917934
             ],
             [
-              -96.608311,
-              32.9521118
+              -96.629349,
+              32.916947
             ]
           ]
         ]
       },
       "properties": {
         "id": 38,
-        "address": "33XX FIREWHEEL PKWY Garland TX",
-        "incident": "THEFT-FROM PERSON-OTHER",
-        "short_description": "Theft from Person",
-        "district": "32",
-        "date": "07/18/2026"
+        "address": "5XX WALNUT CIRCLE WEST Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "short_description": "Building Burglary",
+        "district": "35",
+        "date": "08/21/2026"
       }
     },
     {
@@ -1224,35 +1262,35 @@
         "coordinates": [
           [
             [
-              -96.597796,
-              32.929478
+              -96.636211,
+              32.896029150000004
             ],
             [
-              -96.596259,
-              32.929478
+              -96.6357977,
+              32.896029150000004
             ],
             [
-              -96.596259,
-              32.929982
+              -96.6357977,
+              32.89632915
             ],
             [
-              -96.597796,
-              32.929982
+              -96.636211,
+              32.89632915
             ],
             [
-              -96.597796,
-              32.929478
+              -96.636211,
+              32.896029150000004
             ]
           ]
         ]
       },
       "properties": {
         "id": 39,
-        "address": "22XX HANNAH LN Garland TX",
+        "address": "4XX ROLANDO DR Garland TX",
         "incident": "CRIMINAL MISCHIEF $100 L/T $750",
         "short_description": "Vandalism",
-        "district": "33",
-        "date": "07/14/2026"
+        "district": "36",
+        "date": "08/17/2026"
       }
     },
     {
@@ -1262,35 +1300,35 @@
         "coordinates": [
           [
             [
-              -96.648535,
-              32.8988949
+              -96.64268985,
+              32.894393900000004
             ],
             [
-              -96.6480583,
-              32.8988949
+              -96.64238985,
+              32.894393900000004
             ],
             [
-              -96.6480583,
-              32.899397
+              -96.64238985,
+              32.8946939
             ],
             [
-              -96.648535,
-              32.899397
+              -96.64268985,
+              32.8946939
             ],
             [
-              -96.648535,
-              32.8988949
+              -96.64268985,
+              32.894393900000004
             ]
           ]
         ]
       },
       "properties": {
         "id": 40,
-        "address": "16XX S GARLAND AVE Garland TX",
-        "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft",
-        "district": "34",
-        "date": "07/15/2026"
+        "address": "8XX W MILLER RD Garland TX",
+        "incident": "BURGLARY-COIN OPERATED MACHINE",
+        "short_description": "Coin Machine Burglary",
+        "district": "36",
+        "date": "08/17/2026"
       }
     },
     {
@@ -1300,73 +1338,35 @@
         "coordinates": [
           [
             [
-              -96.64347785,
-              32.9304939
+              -96.64268985,
+              32.894393900000004
             ],
             [
-              -96.64317785,
-              32.9304939
+              -96.64238985,
+              32.894393900000004
             ],
             [
-              -96.64317785,
-              32.9307939
+              -96.64238985,
+              32.8946939
             ],
             [
-              -96.64347785,
-              32.9307939
+              -96.64268985,
+              32.8946939
             ],
             [
-              -96.64347785,
-              32.9304939
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 41,
-        "address": "10XX WYLAND DR Garland TX",
-        "incident": "INFO-THEFT",
-        "short_description": "Theft Report",
-        "district": "34",
-        "date": "07/16/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.61768,
-              32.91821535
-            ],
-            [
-              -96.6166539,
-              32.91821535
-            ],
-            [
-              -96.6166539,
-              32.91851535
-            ],
-            [
-              -96.61768,
-              32.91851535
-            ],
-            [
-              -96.61768,
-              32.91821535
+              -96.64268985,
+              32.894393900000004
             ]
           ]
         ]
       },
       "properties": {
         "id": 43,
-        "address": "11XX BAY SHORE DR Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "35",
-        "date": "07/16/2026"
+        "address": "8XX W MILLER RD Garland TX",
+        "incident": "BURGLARY-BLDG",
+        "short_description": "Building Burglary",
+        "district": "36",
+        "date": "08/21/2026"
       }
     },
     {
@@ -1376,35 +1376,35 @@
         "coordinates": [
           [
             [
-              -96.6203058,
-              32.91822
+              -96.634029,
+              32.912510499999996
             ],
             [
-              -96.6191502,
-              32.91822
+              -96.633459,
+              32.912510499999996
             ],
             [
-              -96.6191502,
-              32.91852
+              -96.633459,
+              32.9128105
             ],
             [
-              -96.6203058,
-              32.91852
+              -96.634029,
+              32.9128105
             ],
             [
-              -96.6203058,
-              32.91822
+              -96.634029,
+              32.912510499999996
             ]
           ]
         ]
       },
       "properties": {
         "id": 44,
-        "address": "9XX BAY SHORE DR Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "35",
-        "date": "07/16/2026"
+        "address": "2XX MAIN ST Garland TX",
+        "incident": "INFO-IDENTITY THEFT",
+        "short_description": "Identity Theft Report",
+        "district": "36",
+        "date": "08/21/2026"
       }
     },
     {
@@ -1414,35 +1414,35 @@
         "coordinates": [
           [
             [
-              -96.6203058,
-              32.91822
+              -96.6284047,
+              32.896751
             ],
             [
-              -96.6191502,
-              32.91822
+              -96.6273373,
+              32.896751
             ],
             [
-              -96.6191502,
-              32.91852
+              -96.6273373,
+              32.897051
             ],
             [
-              -96.6203058,
-              32.91852
+              -96.6284047,
+              32.897051
             ],
             [
-              -96.6203058,
-              32.91822
+              -96.6284047,
+              32.896751
             ]
           ]
         ]
       },
       "properties": {
         "id": 45,
-        "address": "9XX BAY SHORE DR Garland TX",
-        "incident": "THEFT-FIREARM",
-        "short_description": "Firearm Theft",
-        "district": "35",
-        "date": "07/16/2026"
+        "address": "3XX ALTO DR Garland TX",
+        "incident": "THEFT-ALL OTHER-L/T $100",
+        "short_description": "Theft",
+        "district": "37",
+        "date": "08/17/2026"
       }
     },
     {
@@ -1452,35 +1452,35 @@
         "coordinates": [
           [
             [
-              -96.611059,
-              32.898608
+              -96.627188,
+              32.902879
             ],
             [
-              -96.61014,
-              32.898608
+              -96.624,
+              32.902879
             ],
             [
-              -96.61014,
-              32.899414
+              -96.624,
+              32.903179
             ],
             [
-              -96.611059,
-              32.899414
+              -96.627188,
+              32.903179
             ],
             [
-              -96.611059,
-              32.898608
+              -96.627188,
+              32.902879
             ]
           ]
         ]
       },
       "properties": {
         "id": 47,
-        "address": "14XX WHIPPOORWILL DR Garland TX",
+        "address": "2XX CASALITA DR Garland TX",
         "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
+        "short_description": "Aggravated Assault",
         "district": "37",
-        "date": "07/13/2026"
+        "date": "08/22/2026"
       }
     },
     {
@@ -1490,35 +1490,35 @@
         "coordinates": [
           [
             [
-              -96.624,
-              32.903154
+              -96.624547,
+              32.900302
             ],
             [
-              -96.6237,
-              32.903154
+              -96.624149,
+              32.900302
             ],
             [
-              -96.6237,
-              32.903792
+              -96.624149,
+              32.900602
             ],
             [
-              -96.624,
-              32.903792
+              -96.624547,
+              32.900602
             ],
             [
-              -96.624,
-              32.903154
+              -96.624547,
+              32.900302
             ]
           ]
         ]
       },
       "properties": {
         "id": 48,
-        "address": "11XX CUERO DR Garland TX",
-        "incident": "BURGLARY-HAB",
-        "short_description": "Residential Burglary",
+        "address": "3XX E TAYLOR DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
+        "short_description": "Theft",
         "district": "37",
-        "date": "07/17/2026"
+        "date": "08/22/2026"
       }
     },
     {
@@ -1528,35 +1528,35 @@
         "coordinates": [
           [
             [
-              -96.673492,
-              32.881877
+              -96.64938049999999,
+              32.889542
             ],
             [
-              -96.672752,
-              32.881877
+              -96.6490805,
+              32.889542
             ],
             [
-              -96.672752,
-              32.882177
+              -96.6490805,
+              32.892403
             ],
             [
-              -96.673492,
-              32.882177
+              -96.64938049999999,
+              32.892403
             ],
             [
-              -96.673492,
-              32.881877
+              -96.64938049999999,
+              32.889542
             ]
           ]
         ]
       },
       "properties": {
         "id": 49,
-        "address": "29XX NATIONAL CT Garland TX",
-        "incident": "THEFT CATALYTIC CONVERTER <30K TO REPLACE",
-        "short_description": "Catalytic Converter Theft",
+        "address": "21XX CAMDEN DR Garland TX",
+        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+        "short_description": "Vandalism",
         "district": "41",
-        "date": "07/13/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -1566,35 +1566,73 @@
         "coordinates": [
           [
             [
-              -96.68162265000001,
-              32.8883921
+              -96.6485157,
+              32.9409019
             ],
             [
-              -96.68132265,
-              32.8883921
+              -96.6482157,
+              32.9409019
             ],
             [
-              -96.68132265,
-              32.8898636
+              -96.6482157,
+              32.9422495
             ],
             [
-              -96.68162265000001,
-              32.8898636
+              -96.6485157,
+              32.9422495
             ],
             [
-              -96.68162265000001,
-              32.8883921
+              -96.6485157,
+              32.9409019
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 50,
+        "address": "27XX GARLAND AVE Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "short_description": "Unauthorized Vehicle Use",
+        "district": "41",
+        "date": "08/20/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.62835220000001,
+              32.8801925
+            ],
+            [
+              -96.6280522,
+              32.8801925
+            ],
+            [
+              -96.6280522,
+              32.881419
+            ],
+            [
+              -96.62835220000001,
+              32.881419
+            ],
+            [
+              -96.62835220000001,
+              32.8801925
             ]
           ]
         ]
       },
       "properties": {
         "id": 51,
-        "address": "23XX EXECUTIVE DR Garland TX",
-        "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
-        "short_description": "Mail Fraud Report",
-        "district": "41",
-        "date": "07/16/2026"
+        "address": "29XX GARDENIA DR Garland TX",
+        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+        "short_description": "Vandalism",
+        "district": "42",
+        "date": "08/17/2026"
       }
     },
     {
@@ -1604,35 +1642,35 @@
         "coordinates": [
           [
             [
-              -96.660607,
-              32.8813463
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.660307,
-              32.8813463
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.660307,
-              32.882458
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.660607,
-              32.882458
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.660607,
-              32.8813463
+              -96.6243893,
+              32.8830597
             ]
           ]
         ]
       },
       "properties": {
         "id": 53,
-        "address": "27XX WIMBLEDON CT Garland TX",
-        "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
-        "district": "41",
-        "date": "07/17/2026"
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
+        "district": "42",
+        "date": "08/19/2026"
       }
     },
     {
@@ -1642,35 +1680,35 @@
         "coordinates": [
           [
             [
-              -96.660607,
-              32.8813463
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.660307,
-              32.8813463
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.660307,
-              32.882458
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.660607,
-              32.882458
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.660607,
-              32.8813463
+              -96.6243893,
+              32.8830597
             ]
           ]
         ]
       },
       "properties": {
         "id": 54,
-        "address": "27XX WIMBLEDON CT Garland TX",
-        "incident": "ASSAULT-AGG-D/W",
-        "short_description": "Aggravated Assault with Weapon",
-        "district": "41",
-        "date": "07/17/2026"
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
+        "district": "42",
+        "date": "08/19/2026"
       }
     },
     {
@@ -1680,35 +1718,35 @@
         "coordinates": [
           [
             [
-              -96.61446445,
-              32.8887961
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.61416445,
-              32.8887961
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.61416445,
-              32.889551
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.61446445,
-              32.889551
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.61446445,
-              32.8887961
+              -96.6243893,
+              32.8830597
             ]
           ]
         ]
       },
       "properties": {
         "id": 55,
-        "address": "24XX HIGHDALE DR Garland TX",
-        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Vandalism",
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
+        "short_description": "Fraud Report",
         "district": "42",
-        "date": "07/13/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -1718,35 +1756,35 @@
         "coordinates": [
           [
             [
-              -96.61797,
-              32.881503
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.616435,
-              32.881503
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.616435,
-              32.88313
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.61797,
-              32.88313
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.61797,
-              32.881503
+              -96.6243893,
+              32.8830597
             ]
           ]
         ]
       },
       "properties": {
         "id": 56,
-        "address": "10XX E CENTERVILLE RD Garland TX",
-        "incident": "INFO-IDENTITY THEFT",
-        "short_description": "Identity Theft Report",
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
+        "short_description": "Fraud Report",
         "district": "42",
-        "date": "07/14/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -1756,35 +1794,35 @@
         "coordinates": [
           [
             [
-              -96.6241473,
-              32.87872715
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.6233516,
-              32.87872715
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.6233516,
-              32.87902715
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.6241473,
-              32.87902715
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.6241473,
-              32.87872715
+              -96.6243893,
+              32.8830597
             ]
           ]
         ]
       },
       "properties": {
         "id": 57,
-        "address": "6XX KEEN DR Garland TX",
-        "incident": "BURGLARY-BLDG",
-        "short_description": "Building Burglary",
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "short_description": "Theft",
         "district": "42",
-        "date": "07/14/2026"
+        "date": "08/19/2026"
       }
     },
     {
@@ -1794,35 +1832,73 @@
         "coordinates": [
           [
             [
-              -96.6241473,
-              32.87872715
+              -96.6243893,
+              32.8830597
             ],
             [
-              -96.6233516,
-              32.87872715
+              -96.6227897,
+              32.8830597
             ],
             [
-              -96.6233516,
-              32.87902715
+              -96.6227897,
+              32.8837828
             ],
             [
-              -96.6241473,
-              32.87902715
+              -96.6243893,
+              32.8837828
             ],
             [
-              -96.6241473,
-              32.87872715
+              -96.6243893,
+              32.8830597
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 58,
+        "address": "7XX DONALD DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
+        "short_description": "Theft",
+        "district": "42",
+        "date": "08/20/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.64512225,
+              32.8927566
+            ],
+            [
+              -96.64482224999999,
+              32.8927566
+            ],
+            [
+              -96.64482224999999,
+              32.894214
+            ],
+            [
+              -96.64512225,
+              32.894214
+            ],
+            [
+              -96.64512225,
+              32.8927566
             ]
           ]
         ]
       },
       "properties": {
         "id": 59,
-        "address": "6XX KEEN DR Garland TX",
-        "incident": "BURGLARY-BLDG",
-        "short_description": "Building Burglary",
+        "address": "20XX S GLENBROOK DR Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "short_description": "Unauthorized Vehicle Use",
         "district": "42",
-        "date": "07/18/2026"
+        "date": "08/20/2026"
       }
     },
     {
@@ -1832,73 +1908,149 @@
         "coordinates": [
           [
             [
-              -96.6241473,
-              32.87872715
+              -96.6503045,
+              32.86815495
             ],
             [
-              -96.6233516,
-              32.87872715
+              -96.648437,
+              32.86815495
             ],
             [
-              -96.6233516,
-              32.87902715
+              -96.648437,
+              32.86845495
             ],
             [
-              -96.6241473,
-              32.87902715
+              -96.6503045,
+              32.86845495
             ],
             [
-              -96.6241473,
-              32.87872715
+              -96.6503045,
+              32.86815495
             ]
           ]
         ]
       },
       "properties": {
-        "id": 60,
-        "address": "6XX KEEN DR Garland TX",
-        "incident": "BURGLARY-BLDG",
-        "short_description": "Building Burglary",
-        "district": "42",
-        "date": "07/18/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.6503814,
-              32.87844965
-            ],
-            [
-              -96.649436,
-              32.87844965
-            ],
-            [
-              -96.649436,
-              32.87874965
-            ],
-            [
-              -96.6503814,
-              32.87874965
-            ],
-            [
-              -96.6503814,
-              32.87844965
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 61,
-        "address": "15XX W KINGSLEY RD Garland TX",
-        "incident": "INFO-VEH THEFT",
-        "short_description": "Vehicle Theft Report",
+        "id": 62,
+        "address": "14XX DOUGLAS DR Garland TX",
+        "incident": "BURGLARY-HAB",
+        "short_description": "Habitation Burglary",
         "district": "43",
-        "date": "07/12/2026"
+        "date": "08/20/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6120651,
+              32.8769562
+            ],
+            [
+              -96.611718,
+              32.8769562
+            ],
+            [
+              -96.611718,
+              32.877335
+            ],
+            [
+              -96.6120651,
+              32.877335
+            ],
+            [
+              -96.6120651,
+              32.8769562
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 63,
+        "address": "13XX COLONEL DR Garland TX",
+        "incident": "THEFT-MAIL <10 ADDRESSES",
+        "short_description": "Mail Theft",
+        "district": "45",
+        "date": "08/17/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.617413,
+              32.8663594
+            ],
+            [
+              -96.6163156,
+              32.8663594
+            ],
+            [
+              -96.6163156,
+              32.867414
+            ],
+            [
+              -96.617413,
+              32.867414
+            ],
+            [
+              -96.617413,
+              32.8663594
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 64,
+        "address": "39XX CAMBRIDGE DR Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "short_description": "Unauthorized Vehicle Use",
+        "district": "45",
+        "date": "08/22/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.6547268,
+              32.8620911
+            ],
+            [
+              -96.653476,
+              32.8620911
+            ],
+            [
+              -96.653476,
+              32.863894
+            ],
+            [
+              -96.6547268,
+              32.863894
+            ],
+            [
+              -96.6547268,
+              32.8620911
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 65,
+        "address": "18XX MARKETPLACE DR Garland TX",
+        "incident": "BURGLARY-VEH",
+        "short_description": "Vehicle Burglary",
+        "district": "46",
+        "date": "08/16/2026"
       }
     },
     {
@@ -1933,10 +2085,10 @@
       "properties": {
         "id": 66,
         "address": "18XX NORTHWEST HWY Garland TX",
-        "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft",
-        "district": "43",
-        "date": "07/17/2026"
+        "incident": "OTHER AGENCY- THEFT-FIREARM",
+        "short_description": "Firearm Theft",
+        "district": "46",
+        "date": "08/18/2026"
       }
     },
     {
@@ -1946,35 +2098,35 @@
         "coordinates": [
           [
             [
-              -96.6566521,
-              32.86392695
+              -96.6547268,
+              32.8620911
             ],
             [
-              -96.6544862,
-              32.86392695
+              -96.653476,
+              32.8620911
             ],
             [
-              -96.6544862,
-              32.864226949999995
+              -96.653476,
+              32.863894
             ],
             [
-              -96.6566521,
-              32.864226949999995
+              -96.6547268,
+              32.863894
             ],
             [
-              -96.6566521,
-              32.86392695
+              -96.6547268,
+              32.8620911
             ]
           ]
         ]
       },
       "properties": {
         "id": 67,
-        "address": "18XX NORTHWEST HWY Garland TX",
-        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-        "short_description": "Unauthorized Vehicle Use",
-        "district": "43",
-        "date": "07/17/2026"
+        "address": "18XX MARKETPLACE DR Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "short_description": "Shoplifting",
+        "district": "46",
+        "date": "08/18/2026"
       }
     },
     {
@@ -1984,35 +2136,35 @@
         "coordinates": [
           [
             [
-              -96.62233,
-              32.8616004
+              -96.6547268,
+              32.8620911
             ],
             [
-              -96.6214283,
-              32.8616004
+              -96.653476,
+              32.8620911
             ],
             [
-              -96.6214283,
-              32.862556
+              -96.653476,
+              32.863894
             ],
             [
-              -96.62233,
-              32.862556
+              -96.6547268,
+              32.863894
             ],
             [
-              -96.62233,
-              32.8616004
+              -96.6547268,
+              32.8620911
             ]
           ]
         ]
       },
       "properties": {
         "id": 68,
-        "address": "42XX DUCK CREEK DR Garland TX",
-        "incident": "THEFT-ALL OTHER-$2,500 L/T $30,000",
-        "short_description": "Theft",
-        "district": "45",
-        "date": "07/12/2026"
+        "address": "18XX MARKETPLACE DR Garland TX",
+        "incident": "INFO-THEFT",
+        "short_description": "Theft Report",
+        "district": "46",
+        "date": "08/19/2026"
       }
     },
     {
@@ -2022,35 +2174,35 @@
         "coordinates": [
           [
             [
-              -96.60960045,
-              32.8759411
+              -96.6467714,
+              32.8578235
             ],
             [
-              -96.60930044999999,
-              32.8759411
+              -96.646085,
+              32.8578235
             ],
             [
-              -96.60930044999999,
-              32.8762411
+              -96.646085,
+              32.8584026
             ],
             [
-              -96.60960045,
-              32.8762411
+              -96.6467714,
+              32.8584026
             ],
             [
-              -96.60960045,
-              32.8759411
+              -96.6467714,
+              32.8578235
             ]
           ]
         ]
       },
       "properties": {
         "id": 69,
-        "address": "15XX MERRIMAC TRL Garland TX",
-        "incident": "INFO-IDENTITY THEFT",
-        "short_description": "Identity Theft Report",
-        "district": "45",
-        "date": "07/16/2026"
+        "address": "11XX W CENTERVILLE RD Garland TX",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
+        "short_description": "Shoplifting",
+        "district": "51",
+        "date": "08/17/2026"
       }
     },
     {
@@ -2060,35 +2212,35 @@
         "coordinates": [
           [
             [
-              -96.6226688,
-              32.8702103
+              -96.6467714,
+              32.8578235
             ],
             [
-              -96.622052,
-              32.8702103
+              -96.646085,
+              32.8578235
             ],
             [
-              -96.622052,
-              32.870951
+              -96.646085,
+              32.8584026
             ],
             [
-              -96.6226688,
-              32.870951
+              -96.6467714,
+              32.8584026
             ],
             [
-              -96.6226688,
-              32.8702103
+              -96.6467714,
+              32.8578235
             ]
           ]
         ]
       },
       "properties": {
         "id": 70,
-        "address": "3XX XAVIER DR Garland TX",
-        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Vandalism",
-        "district": "45",
-        "date": "07/17/2026"
+        "address": "11XX W CENTERVILLE RD Garland TX",
+        "incident": "THEFT-SHOPLIFTING-L/T $100",
+        "short_description": "Shoplifting",
+        "district": "51",
+        "date": "08/21/2026"
       }
     },
     {
@@ -2098,35 +2250,35 @@
         "coordinates": [
           [
             [
-              -96.6547268,
-              32.8620911
+              -96.633696,
+              32.863291
             ],
             [
-              -96.653476,
-              32.8620911
+              -96.630187,
+              32.863291
             ],
             [
-              -96.653476,
-              32.863894
+              -96.630187,
+              32.864987
             ],
             [
-              -96.6547268,
-              32.863894
+              -96.633696,
+              32.864987
             ],
             [
-              -96.6547268,
-              32.8620911
+              -96.633696,
+              32.863291
             ]
           ]
         ]
       },
       "properties": {
         "id": 71,
-        "address": "18XX MARKETPLACE DR Garland TX",
-        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
-        "short_description": "Shoplifting",
-        "district": "46",
-        "date": "07/14/2026"
+        "address": "3XX ROLLINGRIDGE LN Garland TX",
+        "incident": "INFO-BURGLARY",
+        "short_description": "Burglary Report",
+        "district": "51",
+        "date": "08/22/2026"
       }
     },
     {
@@ -2136,35 +2288,35 @@
         "coordinates": [
           [
             [
-              -96.6547268,
-              32.8620911
+              -96.638436,
+              32.907300000000006
             ],
             [
-              -96.653476,
-              32.8620911
+              -96.636936,
+              32.907300000000006
             ],
             [
-              -96.653476,
-              32.863894
+              -96.636936,
+              32.9088
             ],
             [
-              -96.6547268,
-              32.863894
+              -96.638436,
+              32.9088
             ],
             [
-              -96.6547268,
-              32.8620911
+              -96.638436,
+              32.907300000000006
             ]
           ]
         ]
       },
       "properties": {
         "id": 72,
-        "address": "18XX MARKETPLACE DR Garland TX",
+        "address": "5XX W I30 FRWY Garland TX",
         "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
-        "district": "46",
-        "date": "07/14/2026"
+        "district": "52",
+        "date": "08/16/2026"
       }
     },
     {
@@ -2174,35 +2326,35 @@
         "coordinates": [
           [
             [
-              -96.6547268,
-              32.8620911
+              -96.638436,
+              32.907300000000006
             ],
             [
-              -96.653476,
-              32.8620911
+              -96.636936,
+              32.907300000000006
             ],
             [
-              -96.653476,
-              32.863894
+              -96.636936,
+              32.9088
             ],
             [
-              -96.6547268,
-              32.863894
+              -96.638436,
+              32.9088
             ],
             [
-              -96.6547268,
-              32.8620911
+              -96.638436,
+              32.907300000000006
             ]
           ]
         ]
       },
       "properties": {
         "id": 73,
-        "address": "18XX MARKETPLACE DR Garland TX",
-        "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft",
-        "district": "46",
-        "date": "07/17/2026"
+        "address": "5XX W I30 FRWY Garland TX",
+        "incident": "THEFT-SHOPLIFTING-L/T $100",
+        "short_description": "Shoplifting",
+        "district": "52",
+        "date": "08/16/2026"
       }
     },
     {
@@ -2212,35 +2364,35 @@
         "coordinates": [
           [
             [
-              -96.624878,
-              32.853107
+              -96.6131762,
+              32.8449339
             ],
             [
-              -96.624263,
-              32.853107
+              -96.6105865,
+              32.8449339
             ],
             [
-              -96.624263,
-              32.853802
+              -96.6105865,
+              32.8465961
             ],
             [
-              -96.624878,
-              32.853802
+              -96.6131762,
+              32.8465961
             ],
             [
-              -96.624878,
-              32.853107
+              -96.6131762,
+              32.8449339
             ]
           ]
         ]
       },
       "properties": {
         "id": 74,
-        "address": "53XX CREEK CT Garland TX",
-        "incident": "UNAUTHORIZED USE MOTOR VEHICLE-(CRIM ATT)",
-        "short_description": "Unauthorized Vehicle Use",
-        "district": "51",
-        "date": "07/17/2026"
+        "address": "4XX COUNTRY VIEW LN Garland TX",
+        "incident": "THEFT-ALL OTHER-L/T $100",
+        "short_description": "Theft",
+        "district": "52",
+        "date": "08/17/2026"
       }
     },
     {
@@ -2275,10 +2427,10 @@
       "properties": {
         "id": 75,
         "address": "5XX W I30 FRWY Garland TX",
-        "incident": "THEFT-SHOPLIFTING-L/T $100",
+        "incident": "THEFT-SHOPLIFTING-$100 L/T $750",
         "short_description": "Shoplifting",
         "district": "52",
-        "date": "07/14/2026"
+        "date": "08/20/2026"
       }
     },
     {
@@ -2288,73 +2440,35 @@
         "coordinates": [
           [
             [
-              -96.59581915,
-              32.843934
+              -96.638436,
+              32.907300000000006
             ],
             [
-              -96.59551915,
-              32.843934
+              -96.636936,
+              32.907300000000006
             ],
             [
-              -96.59551915,
-              32.8454145
+              -96.636936,
+              32.9088
             ],
             [
-              -96.59581915,
-              32.8454145
+              -96.638436,
+              32.9088
             ],
             [
-              -96.59581915,
-              32.843934
+              -96.638436,
+              32.907300000000006
             ]
           ]
         ]
       },
       "properties": {
         "id": 76,
-        "address": "58XX BROADWAY BLVD Garland TX",
-        "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft",
-        "district": "52",
-        "date": "07/15/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.638436,
-              32.907300000000006
-            ],
-            [
-              -96.636936,
-              32.907300000000006
-            ],
-            [
-              -96.636936,
-              32.9088
-            ],
-            [
-              -96.638436,
-              32.9088
-            ],
-            [
-              -96.638436,
-              32.907300000000006
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 77,
         "address": "5XX W I30 FRWY Garland TX",
-        "incident": "THEFT-SHOPLIFTING-L/T $100",
-        "short_description": "Shoplifting",
+        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
+        "short_description": "Vandalism",
         "district": "52",
-        "date": "07/17/2026"
+        "date": "08/21/2026"
       }
     },
     {
@@ -2364,35 +2478,35 @@
         "coordinates": [
           [
             [
-              -96.6052032,
-              32.864079000000004
+              -96.638436,
+              32.907300000000006
             ],
             [
-              -96.604857,
-              32.864079000000004
+              -96.636936,
+              32.907300000000006
             ],
             [
-              -96.604857,
-              32.864379
+              -96.636936,
+              32.9088
             ],
             [
-              -96.6052032,
-              32.864379
+              -96.638436,
+              32.9088
             ],
             [
-              -96.6052032,
-              32.864079000000004
+              -96.638436,
+              32.907300000000006
             ]
           ]
         ]
       },
       "properties": {
         "id": 78,
-        "address": "40XX BROADWAY BLVD Garland TX",
-        "incident": "THEFT OF SERVICE-L/T $100",
-        "short_description": "Service Theft",
-        "district": "53",
-        "date": "07/13/2026"
+        "address": "5XX W I30 FRWY Garland TX",
+        "incident": "THEFT-ALL OTHER-L/T $100",
+        "short_description": "Theft",
+        "district": "52",
+        "date": "08/22/2026"
       }
     },
     {
@@ -2402,35 +2516,35 @@
         "coordinates": [
           [
             [
-              -96.6051126,
-              32.8513451
+              -96.59670765,
+              32.8503556
             ],
             [
-              -96.6043767,
-              32.8513451
+              -96.59640765,
+              32.8503556
             ],
             [
-              -96.6043767,
-              32.8526895
+              -96.59640765,
+              32.8506556
             ],
             [
-              -96.6051126,
-              32.8526895
+              -96.59670765,
+              32.8506556
             ],
             [
-              -96.6051126,
-              32.8513451
+              -96.59670765,
+              32.8503556
             ]
           ]
         ]
       },
       "properties": {
         "id": 79,
-        "address": "51XX LONGHORN TRL Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "54XX LOVING DR Garland TX",
+        "incident": "ASSAULT-AGG-D/W",
+        "short_description": "Aggravated Assault",
         "district": "53",
-        "date": "07/14/2026"
+        "date": "08/16/2026"
       }
     },
     {
@@ -2440,35 +2554,35 @@
         "coordinates": [
           [
             [
-              -96.6051126,
-              32.8513451
+              -96.611058,
+              32.8581641
             ],
             [
-              -96.6043767,
-              32.8513451
+              -96.6098,
+              32.8581641
             ],
             [
-              -96.6043767,
-              32.8526895
+              -96.6098,
+              32.859467
             ],
             [
-              -96.6051126,
-              32.8526895
+              -96.611058,
+              32.859467
             ],
             [
-              -96.6051126,
-              32.8513451
+              -96.611058,
+              32.8581641
             ]
           ]
         ]
       },
       "properties": {
         "id": 80,
-        "address": "51XX LONGHORN TRL Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "46XX OAKWOOD DR Garland TX",
+        "incident": "CRIMINAL MISCHIEF L/T $100",
+        "short_description": "Vandalism",
         "district": "53",
-        "date": "07/14/2026"
+        "date": "08/16/2026"
       }
     },
     {
@@ -2478,35 +2592,35 @@
         "coordinates": [
           [
             [
-              -96.6046344,
-              32.852548
+              -96.59612855,
+              32.8463517
             ],
             [
-              -96.60426,
-              32.852548
+              -96.59582855000001,
+              32.8463517
             ],
             [
-              -96.60426,
-              32.8537529
+              -96.59582855000001,
+              32.846651699999995
             ],
             [
-              -96.6046344,
-              32.8537529
+              -96.59612855,
+              32.846651699999995
             ],
             [
-              -96.6046344,
-              32.852548
+              -96.59612855,
+              32.8463517
             ]
           ]
         ]
       },
       "properties": {
         "id": 81,
-        "address": "50XX STAGECOACH LN Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
+        "address": "56XX BROADWAY BLVD Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
+        "short_description": "Theft",
         "district": "53",
-        "date": "07/14/2026"
+        "date": "08/21/2026"
       }
     },
     {
@@ -2516,111 +2630,35 @@
         "coordinates": [
           [
             [
-              -96.604274,
-              32.850433
+              -96.5689032,
+              32.85132275
             ],
             [
-              -96.603252,
-              32.850433
+              -96.568572,
+              32.85132275
             ],
             [
-              -96.603252,
-              32.8515017
+              -96.568572,
+              32.85162275
             ],
             [
-              -96.604274,
-              32.8515017
+              -96.5689032,
+              32.85162275
             ],
             [
-              -96.604274,
-              32.850433
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 82,
-        "address": "52XX LONGHORN TRL Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "53",
-        "date": "07/14/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.604274,
-              32.850433
-            ],
-            [
-              -96.603252,
-              32.850433
-            ],
-            [
-              -96.603252,
-              32.8515017
-            ],
-            [
-              -96.604274,
-              32.8515017
-            ],
-            [
-              -96.604274,
-              32.850433
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 83,
-        "address": "52XX LONGHORN TRL Garland TX",
-        "incident": "BURGLARY-VEH",
-        "short_description": "Vehicle Burglary",
-        "district": "53",
-        "date": "07/14/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.60382535,
-              32.8617
-            ],
-            [
-              -96.60352535,
-              32.8617
-            ],
-            [
-              -96.60352535,
-              32.8624368
-            ],
-            [
-              -96.60382535,
-              32.8624368
-            ],
-            [
-              -96.60382535,
-              32.8617
+              -96.5689032,
+              32.85132275
             ]
           ]
         ]
       },
       "properties": {
         "id": 84,
-        "address": "42XX BROADWAY BLVD Garland TX",
-        "incident": "THEFT-VEHICLE (NON-MOTOR VEH)-$2,500 L/T $30,000",
-        "short_description": "Vehicle Theft",
-        "district": "53",
-        "date": "07/14/2026"
+        "address": "41XX EASTON MEADOWS DR Garland TX",
+        "incident": "BURGLARY-VEH",
+        "short_description": "Vehicle Burglary",
+        "district": "54",
+        "date": "08/21/2026"
       }
     },
     {
@@ -2630,35 +2668,35 @@
         "coordinates": [
           [
             [
-              -96.60434,
-              32.8624442
+              -96.62506549999999,
+              32.875928300000005
             ],
             [
-              -96.6037399,
-              32.8624442
+              -96.6235655,
+              32.875928300000005
             ],
             [
-              -96.6037399,
-              32.864161
+              -96.6235655,
+              32.8774283
             ],
             [
-              -96.60434,
-              32.864161
+              -96.62506549999999,
+              32.8774283
             ],
             [
-              -96.60434,
-              32.8624442
+              -96.62506549999999,
+              32.875928300000005
             ]
           ]
         ]
       },
       "properties": {
         "id": 85,
-        "address": "41XX BROADWAY BLVD Garland TX",
-        "incident": "THEFT-ALL OTHER-$100 L/T $750",
-        "short_description": "Theft",
-        "district": "53",
-        "date": "07/14/2026"
+        "address": "5XX E I30 FRWY Garland TX",
+        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
+        "short_description": "Unauthorized Vehicle Use",
+        "district": "54",
+        "date": "08/21/2026"
       }
     },
     {
@@ -2668,73 +2706,35 @@
         "coordinates": [
           [
             [
-              -96.6060881,
-              32.85138
+              -96.5759588,
+              32.8404019
             ],
             [
-              -96.605635,
-              32.85138
+              -96.575347,
+              32.8404019
             ],
             [
-              -96.605635,
-              32.8526448
+              -96.575347,
+              32.841893
             ],
             [
-              -96.6060881,
-              32.8526448
+              -96.5759588,
+              32.841893
             ],
             [
-              -96.6060881,
-              32.85138
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 86,
-        "address": "51XX PRESTON TRL Garland TX",
-        "incident": "CRIMINAL MISCHIEF L/T $100",
-        "short_description": "Vandalism",
-        "district": "53",
-        "date": "07/16/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.5780269,
-              32.85096685
-            ],
-            [
-              -96.577088,
-              32.85096685
-            ],
-            [
-              -96.577088,
-              32.85126685
-            ],
-            [
-              -96.5780269,
-              32.85126685
-            ],
-            [
-              -96.5780269,
-              32.85096685
+              -96.5759588,
+              32.8404019
             ]
           ]
         ]
       },
       "properties": {
         "id": 87,
-        "address": "34XX BOBTOWN RD Garland TX",
-        "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$750 L/T $2,500",
-        "short_description": "Motor Vehicle Parts Theft",
-        "district": "54",
-        "date": "07/12/2026"
+        "address": "36XX ARBOR TRL Garland TX",
+        "incident": "INFO-THEFT/MAIL/FRAUD-INFORMATION REPORT ONLY",
+        "short_description": "Fraud Report",
+        "district": "55",
+        "date": "08/17/2026"
       }
     },
     {
@@ -2744,35 +2744,35 @@
         "coordinates": [
           [
             [
-              -96.5738426,
-              32.8520787
+              -96.58487600000001,
+              32.835686
             ],
             [
-              -96.5733343,
-              32.8520787
+              -96.584576,
+              32.835686
             ],
             [
-              -96.5733343,
-              32.8523787
+              -96.584576,
+              32.836361
             ],
             [
-              -96.5738426,
-              32.8523787
+              -96.58487600000001,
+              32.836361
             ],
             [
-              -96.5738426,
-              32.8520787
+              -96.58487600000001,
+              32.835686
             ]
           ]
         ]
       },
       "properties": {
         "id": 88,
-        "address": "37XX EASTON MEADOWS DR Garland TX",
-        "incident": "THEFT-ALL OTHER-L/T $100",
-        "short_description": "Theft",
-        "district": "54",
-        "date": "07/12/2026"
+        "address": "64XX FAIRCOVE CIR Garland TX",
+        "incident": "BURGLARY-HAB",
+        "short_description": "Habitation Burglary",
+        "district": "55",
+        "date": "08/20/2026"
       }
     },
     {
@@ -2782,35 +2782,73 @@
         "coordinates": [
           [
             [
-              -96.5749904,
-              32.8520807
+              -96.540188,
+              32.8607105
             ],
             [
-              -96.574217,
-              32.8520807
+              -96.5394535,
+              32.8607105
             ],
             [
-              -96.574217,
-              32.8523807
+              -96.5394535,
+              32.861585
             ],
             [
-              -96.5749904,
-              32.8523807
+              -96.540188,
+              32.861585
             ],
             [
-              -96.5749904,
-              32.8520807
+              -96.540188,
+              32.8607105
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 89,
+        "address": "45XX CHAHA RD Garland TX",
+        "incident": "INFO-THEFT",
+        "short_description": "Theft Report",
+        "district": "56",
+        "date": "08/18/2026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.55225,
+              32.856417
+            ],
+            [
+              -96.5518564,
+              32.856417
+            ],
+            [
+              -96.5518564,
+              32.857413
+            ],
+            [
+              -96.55225,
+              32.857413
+            ],
+            [
+              -96.55225,
+              32.856417
             ]
           ]
         ]
       },
       "properties": {
         "id": 90,
-        "address": "36XX EASTON MEADOWS DR Garland TX",
-        "incident": "ROBBERY - AGG - INDIV",
-        "short_description": "Aggravated Robbery",
-        "district": "54",
-        "date": "07/13/2026"
+        "address": "49XX PENINSULA WY Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
+        "short_description": "Theft",
+        "district": "56",
+        "date": "08/20/2026"
       }
     },
     {
@@ -2820,225 +2858,35 @@
         "coordinates": [
           [
             [
-              -96.5641215,
-              32.858489
+              -96.5478988,
+              32.8545589
             ],
             [
-              -96.5638215,
-              32.858489
+              -96.5463988,
+              32.8545589
             ],
             [
-              -96.5638215,
-              32.858789
+              -96.5463988,
+              32.856058899999994
             ],
             [
-              -96.5641215,
-              32.858789
+              -96.5478988,
+              32.856058899999994
             ],
             [
-              -96.5641215,
-              32.858489
+              -96.5478988,
+              32.8545589
             ]
           ]
         ]
       },
       "properties": {
         "id": 91,
-        "address": "47XX CARLTON CT Garland TX",
-        "incident": "INFO-IDENTITY THEFT",
-        "short_description": "Identity Theft Report",
-        "district": "54",
-        "date": "07/13/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.5958461,
-              32.8445623
-            ],
-            [
-              -96.5955461,
-              32.8445623
-            ],
-            [
-              -96.5955461,
-              32.8457406
-            ],
-            [
-              -96.5958461,
-              32.8457406
-            ],
-            [
-              -96.5958461,
-              32.8445623
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 92,
-        "address": "57XX BROADWAY BLVD Garland TX",
-        "incident": "THEFT-ALL OTHER-$750 L/T $2,500",
+        "address": "56XX MARINA DR Garland TX",
+        "incident": "THEFT-ALL OTHER-$100 L/T $750",
         "short_description": "Theft",
-        "district": "54",
-        "date": "07/14/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.5775628,
-              32.850962450000004
-            ],
-            [
-              -96.575631,
-              32.850962450000004
-            ],
-            [
-              -96.575631,
-              32.85126245
-            ],
-            [
-              -96.5775628,
-              32.85126245
-            ],
-            [
-              -96.5775628,
-              32.850962450000004
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 93,
-        "address": "35XX BOBTOWN RD Garland TX",
-        "incident": "THEFT-MOTOR VEH PARTS/ACCESSORIES-$100 L/T $750",
-        "short_description": "Motor Vehicle Parts Theft",
-        "district": "54",
-        "date": "07/18/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.568016,
-              32.8483765
-            ],
-            [
-              -96.566475,
-              32.8483765
-            ],
-            [
-              -96.566475,
-              32.848676499999996
-            ],
-            [
-              -96.568016,
-              32.848676499999996
-            ],
-            [
-              -96.568016,
-              32.8483765
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 94,
-        "address": "42XX BOBTOWN RD Garland TX",
-        "incident": "UNAUTHORIZED USE MOTOR VEHICLE",
-        "short_description": "Unauthorized Vehicle Use",
-        "district": "55",
-        "date": "07/15/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.587625,
-              32.835493
-            ],
-            [
-              -96.585402,
-              32.835493
-            ],
-            [
-              -96.585402,
-              32.835793
-            ],
-            [
-              -96.587625,
-              32.835793
-            ],
-            [
-              -96.587625,
-              32.835493
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 95,
-        "address": "28XX GUTHRIE RD Garland TX",
-        "incident": "THEFT-MAIL <10 ADDRESSES",
-        "short_description": "Mail Theft",
-        "district": "55",
-        "date": "07/16/2026"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -96.636585,
-              32.887661
-            ],
-            [
-              -96.635085,
-              32.887661
-            ],
-            [
-              -96.635085,
-              32.889160999999994
-            ],
-            [
-              -96.636585,
-              32.889160999999994
-            ],
-            [
-              -96.636585,
-              32.887661
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "id": 96,
-        "address": "4XX W I30 FRWY Garland TX",
-        "incident": "CRIMINAL MISCHIEF $100 L/T $750",
-        "short_description": "Vandalism",
-        "district": "55",
-        "date": "07/18/2026"
+        "district": "56",
+        "date": "08/21/2026"
       }
     }
   ]

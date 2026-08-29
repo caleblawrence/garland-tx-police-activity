@@ -1,38 +1,38 @@
 [
   {
-    "id": 7,
-    "date": "07/15/2026",
-    "incident": "SEXUAL ASSLT-RAPE",
+    "id": 52,
+    "date": "08/18/2026",
+    "incident": "SEXUAL ASSLT CHILD",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "23",
-    "report_period": "07/12/2026 - 07/18/2026",
-    "short_description": "Sexual Assault"
+    "district": "42",
+    "report_period": "08/16/2026 - 08/22/2026",
+    "short_description": "Child Sexual Assault"
   },
   {
-    "id": 8,
-    "date": "07/18/2026",
+    "id": 77,
+    "date": "08/21/2026",
     "incident": "INJURY TO A CHILD-BI",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "23",
-    "report_period": "07/12/2026 - 07/18/2026",
+    "district": "52",
+    "report_period": "08/16/2026 - 08/22/2026",
     "short_description": "Child Injury"
   },
   {
-    "id": 20,
-    "date": "07/18/2026",
-    "incident": "INJURY TO A CHILD-BI",
+    "id": 82,
+    "date": "08/17/2026",
+    "incident": "SEXUAL ASSLT-AGG-RAPE",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "26",
-    "report_period": "07/12/2026 - 07/18/2026",
-    "short_description": "Child Injury"
+    "district": "54",
+    "report_period": "08/16/2026 - 08/22/2026",
+    "short_description": "Aggravated Sexual Assault"
   },
   {
-    "id": 63,
-    "date": "07/13/2026",
-    "incident": "SEXUAL ASSLT-RAPE",
+    "id": 83,
+    "date": "08/17/2026",
+    "incident": "SEXUAL ASSLT-AGG-RAPE",
     "location": "ADDRESS CONFIDENTIAL",
-    "district": "43",
-    "report_period": "07/12/2026 - 07/18/2026",
-    "short_description": "Sexual Assault"
+    "district": "54",
+    "report_period": "08/16/2026 - 08/22/2026",
+    "short_description": "Aggravated Sexual Assault"
   }
 ]
