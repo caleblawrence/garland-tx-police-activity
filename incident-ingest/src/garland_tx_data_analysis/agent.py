@@ -41,10 +41,18 @@ PDF_PATH = f"{WORK_DIR}/police_incidents.pdf"
 INCIDENTS_JSON_PATH = f"{WORK_DIR}/extracted_incidents.json"
 ENRICHED_JSON_PATH = f"{WORK_DIR}/enriched_incidents.json"
 
-# The main agent plans, audits and decides, so it runs on the strongest model.
-# Relabelling offence codes is mechanical string work, and this project has
-# always used Haiku for it — keep that.
-MODEL = os.getenv("GARLAND_MODEL", "anthropic:claude-opus-5")
+# Both on Haiku. The main agent used to plan, audit and decide, which was worth
+# the strongest model; it no longer does any of those. The parse reconciles
+# itself, the store refuses a week that does not add up, the period check is a
+# query, and a labelled code keeps its label. What is left is calling four
+# tools in order and writing a readable account of what happened.
+#
+# If a run starts dropping steps — skipping the run report, storing before
+# checking — that is the signal to move this back up rather than to add more
+# prose to the prompt. One variable, no code change:
+#
+#     GARLAND_MODEL=anthropic:claude-sonnet-5 uv run run_agent
+MODEL = os.getenv("GARLAND_MODEL", "anthropic:claude-haiku-4-5")
 LABEL_MODEL = os.getenv("GARLAND_LABEL_MODEL", "anthropic:claude-haiku-4-5")
 
 

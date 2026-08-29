@@ -190,11 +190,17 @@ git show 06211cd:incident-ingest/src/garland_tx_data_analysis/backfill.py
 
 | Variable | Default | Used by |
 |---|---|---|
-| `GARLAND_MODEL` | `anthropic:claude-opus-5` | the main agent |
+| `GARLAND_MODEL` | `anthropic:claude-haiku-4-5` | the main agent |
 | `GARLAND_LABEL_MODEL` | `anthropic:claude-haiku-4-5` | the offence labeller |
 
-Labelling is mechanical string work and has always run on Haiku here. The
-planning, auditing and stop/go decisions run on Opus.
+Both Haiku. The main agent ran on Opus when it planned, audited and decided;
+it no longer does any of those. The parse reconciles itself, the store refuses
+a week that doesn't add up, the period check is a query, and a labelled code
+keeps its label. What's left is calling four tools in order and writing a
+readable account of the run.
+
+If runs start dropping steps, move it back up rather than adding more prose to
+the prompt:
 
 ```bash
 GARLAND_MODEL=anthropic:claude-sonnet-5 uv run run_agent
