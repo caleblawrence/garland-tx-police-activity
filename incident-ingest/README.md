@@ -70,7 +70,7 @@ src/garland_tx_data_analysis/
   agent.py    the deep agent, its subagent, and their prompts
   tools.py    download · parse · read raw text · which codes need a label · store
   main.py     entrypoint; streams the run so you can watch it work
-tests/        48 tests over the tools
+tests/        50 tests over the tools
 ```
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
@@ -281,6 +281,34 @@ it cannot rename a code the weekly pipeline or the backfill already decided.
 The one distinction worth stating: taking the car is Motor Vehicle Theft,
 taking its catalytic converter is Theft. Folding parts theft into vehicle theft
 would hide that it fell from 6.7% of all incidents in 2022 to 2.4% in 2026.
+
+### The monthly brief
+
+Each month carries a short written summary, shown at the top of the site.
+
+```bash
+uv run python -m garland_tx_data_analysis.monthly_summary --month 2026-06
+uv run python -m garland_tx_data_analysis.monthly_summary --all --apply
+```
+
+**Every number is computed in code. The model only writes sentences.** It is
+handed a block of figures — totals, the comparison with the previous month, the
+categories that moved most, the busiest districts — and never sees a row, never
+counts anything, and cannot introduce a figure of its own.
+
+Then every numeral it wrote is checked back against that block, and a summary
+containing a number the data does not have is **discarded rather than shown**.
+That is not caution for its own sake: a model asked to describe a table will
+produce plausible numbers, and this is a public page about crime. All 53 months
+passed on the first run; the check stays because the run that fails is the one
+it exists for.
+
+Two things the prose may not do, stated in the prompt:
+
+- call this "crime" — it is reported incidents in eight categories, a narrower
+  thing than crime
+- explain why anything changed — this data cannot support a cause, and implying
+  one on a public crime page does real harm
 
 ## Models
 

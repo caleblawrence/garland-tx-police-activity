@@ -183,8 +183,10 @@ const main = async () => {
     JSON.stringify(geojson, null, 2)
   );
 
+  // The weekly map is one week of one report. The incident browser covers
+  // February 2022 onward, so that is the front door now and this is map.html.
   const mapHtml = readFileSync(path.join(projectRoot, "src/map.html"), "utf-8");
-  writeFileSync(path.join(projectRoot, "dist/index.html"), mapHtml);
+  writeFileSync(path.join(projectRoot, "dist/map.html"), mapHtml);
   const aboutHtml = readFileSync(
     path.join(projectRoot, "src/about.html"),
     "utf-8"
