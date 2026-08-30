@@ -102,14 +102,30 @@
       .empty { text-align: center; color: var(--text-subtle); padding: 40px 0; }
       .brief {
         background: var(--surface); border: 1px solid var(--border);
-        border-left: 3px solid var(--accent); border-radius: var(--radius);
-        box-shadow: var(--shadow); padding: 18px 22px; margin-bottom: 18px;
+        border-radius: var(--radius); box-shadow: var(--shadow);
+        padding: 22px 26px 18px; margin-bottom: 22px;
       }
-      .brief h2 { margin: 0 0 6px; font-size: 16px; }
-      .brief p { margin: 0; color: var(--text-muted); }
+      .brief .head {
+        display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .brief .kicker {
+        font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+        text-transform: uppercase; color: var(--accent);
+      }
+      .brief .month {
+        font-size: 19px; font-weight: 700; letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      .brief .rule { flex: 1; height: 1px; background: var(--border); min-width: 24px; }
+      .brief .incomplete { font-size: 12px; color: var(--text-subtle); }
+      .brief p {
+        margin: 0; color: var(--text); font-size: 16px; line-height: 1.7;
+        max-width: 68ch;
+      }
       .brief .by {
-        margin-top: 10px; font-size: 11px; color: var(--text-subtle);
-        text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+        margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+        font-size: 12px; color: var(--text-subtle);
       }
       .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
       .pill {
@@ -172,24 +188,21 @@
       <div class="eyebrow">Garland, Texas</div>
       <h1>Every incident the city has published</h1>
       <p class="lede">
-        30,973 police incidents from Garland's monthly Crime Watch reports,
-        February 2022 onward. Filter by category, district, offence or street,
-        or start from one of the categories below.
-      </p>
-      <p class="lede">
-        <a href="map.html">This week's map</a> is built from a different report —
-        the weekly one — and is plotted rather than listed. The two are kept
-        separate on purpose: they overlap in time, and at different grains there
-        is no honest way to tell one duplicate from two real incidents.
+        30,973 incidents from Garland's police reports, February 2022 onward.
+        The city publishes these monthly, so the newest weeks are not here yet —
+        for those, see <a href="map.html">this week's map</a>.
       </p>
 
       <div class="brief" id="brief" hidden>
-        <h2 id="brief-month"></h2>
+        <div class="head">
+          <span class="kicker" id="brief-kicker">Monthly brief</span>
+          <span class="month" id="brief-month"></span>
+          <span class="rule"></span>
+          <span class="incomplete" id="brief-incomplete"></span>
+        </div>
         <p id="brief-text"></p>
         <div class="by" id="brief-by"></div>
       </div>
-
-      <div id="coverage-note" class="note" hidden></div>
 
       <div class="pills" id="pills"></div>
 
@@ -328,16 +341,6 @@
             .join("");
         buildOffenceList();
 
-        const incomplete = DATA.months.filter((m) => m.shortfall_rows > 0);
-        if (incomplete.length) {
-          const total = incomplete.reduce((s, m) => s + m.shortfall_rows, 0);
-          $("coverage-note").hidden = false;
-          $("coverage-note").textContent =
-            `${total} incidents across ${incomplete.length} months are declared by ` +
-            `the reports but absent from their PDF text, so they are not listed ` +
-            `here: ${incomplete.map((m) => monthLabel(m.month)).join(", ")}.`;
-        }
-
         buildPills();
 
         mapObj = L.map("district-map", {
@@ -455,11 +458,22 @@
           return;
         }
         $("brief").hidden = false;
-        $("brief-month").textContent =
-          from === to ? monthLabel(month) : `Latest month · ${monthLabel(month)}`;
+        $("brief-kicker").textContent =
+          from === to ? "Monthly brief" : "Latest monthly brief";
+        $("brief-month").textContent = monthLabel(month);
         $("brief-text").textContent = record.summary;
         $("brief-by").textContent =
-          "Written by Claude from the month's figures · every number checked against the source data";
+          "Written by Claude from this month's figures. Every number is checked " +
+          "against the source data before it is published.";
+
+        // The banner listing all twelve incomplete months was 23 rows out of
+        // 30,973 taking up more of the page than anything else on it. The fact
+        // still matters, but only to someone reading that month — so it shows
+        // there and nowhere else.
+        $("brief-incomplete").textContent = record.shortfall_rows
+          ? `${record.shortfall_rows} incident${record.shortfall_rows === 1 ? "" : "s"}` +
+            " declared by the report are missing from its own text"
+          : "";
       }
 
       function renderInsight() {
