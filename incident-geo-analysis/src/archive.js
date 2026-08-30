@@ -72,7 +72,17 @@ const outJson = path.join(projectRoot, "dist/archive.json");
 writeFileSync(outJson, JSON.stringify(payload));
 
 const html = readFileSync(path.join(projectRoot, "src/archive.html"), "utf-8");
-writeFileSync(path.join(projectRoot, "dist/archive.html"), html);
+writeFileSync(path.join(projectRoot, "dist/index.html"), html);
+
+// archive.html was the front door for a day. Anyone who bookmarked or shared it
+// in that window gets moved rather than a 404.
+writeFileSync(
+  path.join(projectRoot, "dist/archive.html"),
+  '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<title>Moved</title><meta http-equiv="refresh" content="0; url=index.html">' +
+    '<link rel="canonical" href="index.html"></head>' +
+    '<body>This page is now <a href="index.html">the incident browser</a>.</body></html>'
+);
 
 // The city's own police district polygons, simplified from
 // maps.garlandtx.gov/arcgis/rest/services/CityMap/Public_Safety (layer 4).

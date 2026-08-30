@@ -1034,6 +1034,44 @@ def test_an_unrecognised_code_is_visible_rather_than_absorbed():
     assert categorise("") == "Other"
 
 
+def test_a_summary_may_not_contain_a_number_the_data_does_not_have():
+    """The guard that lets a model near a public crime page at all.
+
+    A model asked to describe a table will produce plausible figures. Every
+    numeral it writes is checked back against the block it was given, and a
+    summary carrying one that is not there is discarded rather than shown.
+    """
+    from garland_tx_data_analysis.monthly_summary import verify
+
+    stats = {
+        "month": "June 2026",
+        "incidents_this_month": 442,
+        "incidents_last_month": 417,
+        "change_from_last_month": 25,
+        "by_category_this_month": {"Theft": 199},
+        "busiest_districts": {"31": 47},
+    }
+
+    assert verify("There were 442 incidents, up 25 from 417.", stats) == []
+    assert verify("Theft reached 199 in June 2026.", stats) == []
+    assert verify("District 31 recorded 47.", stats) == []
+
+    assert verify("Reported incidents fell 12% to 442.", stats) == ["12%"]
+    assert verify("There were 442 incidents, including 7 homicides.", stats) == ["7"]
+    assert verify("Theft rose to 200.", stats) == ["200"], (
+        "a number one away from a real one is exactly what has to be caught"
+    )
+
+
+def test_a_negative_change_is_allowed_in_either_spelling():
+    """`change_from_last_month: -48` may be written as "a decrease of 48"."""
+    from garland_tx_data_analysis.monthly_summary import verify
+
+    stats = {"incidents_this_month": 475, "change_from_last_month": -48}
+    assert verify("475 incidents, a decrease of 48.", stats) == []
+    assert verify("475 incidents, down 49.", stats) == ["49"]
+
+
 def test_download_sends_browser_user_agent(monkeypatch, tmp_path):
     """garlandtx.gov 404s the default python-requests UA, which used to make the
     run silently fall back to whatever stale PDF was already on disk."""

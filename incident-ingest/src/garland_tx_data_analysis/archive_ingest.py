@@ -45,6 +45,16 @@ from garland_tx_data_analysis.tools import (
     ensure_schema,
 )
 
+MONTHLY_SUMMARIES_SQL = """
+CREATE TABLE IF NOT EXISTS monthly_summaries (
+    report_month text PRIMARY KEY,
+    summary      text NOT NULL,
+    stats        jsonb NOT NULL,
+    model        text NOT NULL,
+    generated_at timestamptz NOT NULL DEFAULT now()
+);
+"""
+
 ARCHIVE_PAGE = "https://www.garlandtx.gov/406/Crime-Watch-Reports"
 ARCHIVE_ITEM = "https://www.garlandtx.gov/Archive.aspx?ADID={archive_id}"
 EXPORT_PATH = f"{WORK_DIR}/archive_incidents.json"
@@ -246,6 +256,9 @@ def export(path: str = EXPORT_PATH) -> dict:
     with connect() as conn:
         ensure_schema(conn)
         with conn.cursor() as cur:
+            # Owned by monthly_summary.py, but the export must not fail on a
+            # database where summaries have never been generated.
+            cur.execute(MONTHLY_SUMMARIES_SQL)
             cur.execute(
                 """
                 SELECT m.report_month, m.district, m.occurred_on, m.incident,
@@ -269,6 +282,12 @@ def export(path: str = EXPORT_PATH) -> dict:
             ]
             cur.execute(
                 """
+                SELECT report_month, summary FROM monthly_summaries
+                """
+            )
+            summaries = dict(cur.fetchall())
+            cur.execute(
+                """
                 SELECT report_month, declared_total, stored_total,
                        unattributed_rows, shortfall_rows
                   FROM monthly_reports ORDER BY report_month
@@ -282,6 +301,7 @@ def export(path: str = EXPORT_PATH) -> dict:
                     "unattributed_rows": r[3],
                     "shortfall_rows": r[4],
                     "complete": r[4] == 0,
+                    "summary": summaries.get(r[0]),
                 }
                 for r in cur.fetchall()
             ]

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Archive · Garland TX Police Incidents</title>
+    <title>Garland TX Police Incidents</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -100,6 +100,17 @@
         border-radius: 10px; padding: 10px 14px; margin-bottom: 18px;
       }
       .empty { text-align: center; color: var(--text-subtle); padding: 40px 0; }
+      .brief {
+        background: var(--surface); border: 1px solid var(--border);
+        border-left: 3px solid var(--accent); border-radius: var(--radius);
+        box-shadow: var(--shadow); padding: 18px 22px; margin-bottom: 18px;
+      }
+      .brief h2 { margin: 0 0 6px; font-size: 16px; }
+      .brief p { margin: 0; color: var(--text-muted); }
+      .brief .by {
+        margin-top: 10px; font-size: 11px; color: var(--text-subtle);
+        text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+      }
       .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
       .pill {
         display: inline-flex; align-items: baseline; gap: 7px; cursor: pointer;
@@ -152,20 +163,31 @@
   </head>
   <body>
     <nav class="navbar">
-      <a href="index.html">Map</a>
-      <a href="archive.html" class="active">Archive</a>
+      <a href="index.html" class="active">Incidents</a>
+      <a href="map.html">This Week's Map</a>
       <a href="about.html">About</a>
     </nav>
 
     <div class="container">
-      <div class="eyebrow">Monthly Archive</div>
-      <h1>Every month Garland has published</h1>
+      <div class="eyebrow">Garland, Texas</div>
+      <h1>Every incident the city has published</h1>
       <p class="lede">
-        The city's monthly Crime Watch reports, back to February 2022. This is a
-        separate dataset from the weekly map: different reports, a different
-        grain, and no geocoding — so nothing here is plotted, and nothing here
-        can contradict the map.
+        30,973 police incidents from Garland's monthly Crime Watch reports,
+        February 2022 onward. Filter by category, district, offence or street,
+        or start from one of the categories below.
       </p>
+      <p class="lede">
+        <a href="map.html">This week's map</a> is built from a different report —
+        the weekly one — and is plotted rather than listed. The two are kept
+        separate on purpose: they overlap in time, and at different grains there
+        is no honest way to tell one duplicate from two real incidents.
+      </p>
+
+      <div class="brief" id="brief" hidden>
+        <h2 id="brief-month"></h2>
+        <p id="brief-text"></p>
+        <div class="by" id="brief-by"></div>
+      </div>
 
       <div id="coverage-note" class="note" hidden></div>
 
@@ -422,6 +444,24 @@
       let districtLayer = null;
       let mapObj = null;
 
+      function renderBrief(from, to) {
+        // One month in view gets that month's brief; any wider range gets the
+        // most recent, since a brief describes a month against the one before
+        // it and cannot be stretched over a range.
+        const month = from === to ? from : DATA.months[DATA.months.length - 1].month;
+        const record = DATA.months.find((m) => m.month === month);
+        if (!record || !record.summary) {
+          $("brief").hidden = true;
+          return;
+        }
+        $("brief").hidden = false;
+        $("brief-month").textContent =
+          from === to ? monthLabel(month) : `Latest month · ${monthLabel(month)}`;
+        $("brief-text").textContent = record.summary;
+        $("brief-by").textContent =
+          "Written by Claude from the month's figures · every number checked against the source data";
+      }
+
       function renderInsight() {
         const cat = $("category").value === "" ? null : +$("category").value;
         $("pills").querySelectorAll(".pill").forEach((b) => {
@@ -552,6 +592,7 @@
         filtered.sort((a, b) => cmp(a, b) * state.dir);
 
         $("count").textContent = filtered.length.toLocaleString();
+        renderBrief(from, to);
         renderInsight();
         $("span").textContent =
           from === to ? monthLabel(from) : `${monthLabel(from)} – ${monthLabel(to)}`;
