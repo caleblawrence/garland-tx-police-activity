@@ -310,6 +310,41 @@ Two things the prose may not do, stated in the prompt:
 - explain why anything changed — this data cannot support a cause, and implying
   one on a public crime page does real harm
 
+## The FBI's figures
+
+A third source, kept apart from the other two: what Garland PD reported to the
+FBI under UCR/NIBRS, monthly since January 2019.
+
+```bash
+uv run python -m garland_tx_data_analysis.fbi_ucr --fetch --export
+```
+
+Needs a free key from [api.data.gov](https://api.data.gov/signup/) in
+`FBI_CDE_API_KEY`. Garland PD is agency `TX0571100`.
+
+**910 rows, 91 months, ten categories.** It gives two things the city's own
+reports cannot:
+
+- **Clearances.** Nothing in the incident reports says whether anything was
+  solved. Homicide clears at 81% over this period; motor vehicle theft at 11%.
+- **Comparison.** Garland against Texas and the nation, per 100,000. Violent
+  crime runs well below both (20.8 against 34.3 and 30.7); motor vehicle theft
+  runs well above (32.8 against 25.4 and 20.6).
+
+It also reaches back to 2019, where the monthly archive starts in February
+2022, and currently runs a month ahead of it.
+
+**These figures do not match the archive, and are not meant to.** UCR counts
+offences within incidents on a national standard, dated by report; the city's
+report is a curated selected-incident list, dated by occurrence. Different
+definitions, different timing. Separate tables, separate page, and the page
+says so.
+
+One limit worth stating plainly: the public CDE vocabulary is these ten
+categories only. Weapons and drug offences are rejected as invalid offence ids
+on every endpoint, so the categories the city's report omits are not
+recoverable here either.
+
 ## Models
 
 | Variable | Default | Used by |
