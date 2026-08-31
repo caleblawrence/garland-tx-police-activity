@@ -75,8 +75,8 @@ tests/        50 tests over the tools
 
 **Tools** — `download_weekly_report` (browser UA, verifies it really got a PDF),
 `parse_incidents` (parse, reconcile, and check whether this week is already
-stored), `read_report_text` (raw page text, so the
-you can look at the source), `unlabelled_incident_types` (which offence
+stored), `read_report_text` (raw page text, so you
+can look at the source), `unlabelled_incident_types` (which offence
 codes have never been named), `store_incidents` (label, append to Postgres,
 write the map's JSON).
 
@@ -91,6 +91,78 @@ a numbered district failing to reconcile — already determined that verdict, an
 the diagnosis it wrote was prose about a handful of source lines that are now
 simply printed. The halt moved into `store_incidents`, where it cannot be
 skipped.
+
+## How the run is wired
+
+```mermaid
+flowchart TD
+    RUN(["uv run run_agent"]) --> AGENT
+
+    AGENT["Main agent · Haiku<br/>chooses the order, writes the report"]
+    LABEL["offence-labeller · Haiku<br/>names a new code once, permanently"]
+
+    DL["download_weekly_report<br/>raises unless the body is a PDF"]
+    PARSE["parse_incidents<br/>reconciles against the district totals<br/>reports whether the week is already stored"]
+    UNL["unlabelled_incident_types<br/>usually returns nothing"]
+    STORE["store_incidents<br/>refuses a short week, dedupes by count"]
+    READ["read_report_text<br/>raw source, off the happy path"]
+
+    AGENT --> DL
+    AGENT --> PARSE
+    AGENT --> UNL
+    AGENT --> STORE
+    AGENT -. only when a parse fails .-> READ
+
+    UNL -- codes never seen --> LABEL
+    LABEL -- mapping --> STORE
+
+    STOP(["Run stops, nothing published"])
+    PARSE -- already stored, or rows lost --> STOP
+    STORE -- checks the parse summary itself --> STOP
+
+    PG[("Postgres<br/>incidents · labels · weeks")]
+    ENR["work/enriched_incidents.json"]
+    RPT["/run-report.md<br/>nothing verifies this"]
+    S2["Stage 2 — geocode, build dist/"]
+
+    STORE --> PG
+    STORE --> ENR
+    AGENT --> RPT
+    ENR --> S2
+
+    classDef model fill:#EEEDFE,stroke:#534AB7,color:#3C3489
+    classDef halt fill:#FCEBEB,stroke:#A32D2D,color:#791F1F
+    class AGENT,LABEL,RPT model
+    class STOP halt
+```
+
+Purple is the model. Everything else is settled in `tools.py`.
+
+**The arrows fan out from the agent rather than forming a chain, because nothing
+enforces the order.** Call `store_incidents` before `parse_incidents` and it
+returns `Error reading incidents JSON` — a data dependency, not a guard. The
+model really does choose the sequence.
+
+What it does not choose is the outcome:
+
+| The model decides | The tools decide |
+|---|---|
+| Which tool to call, and when | Whether a short week can be stored — `store_incidents` reads the parse summary and returns `REFUSED` on its own |
+| Whether to stop after a bad parse | Whether a label can change — a stored one always wins |
+| What to pass as `short_description_map` | Whether a duplicate week is inserted — dedup compares per-key counts |
+| Everything in the run report | Whether the week is already stored, and whether the districts add up |
+
+The halt is enforced twice on purpose. The prompt tells the agent to stop when a
+district comes up short, and `store_incidents` refuses regardless of what the
+agent decides — so a model that misreads the summary, or ignores it, still
+cannot publish a short week.
+
+**The one unchecked output is the run report.** Every figure in it is the model's
+assertion, and nothing verifies it. On the 08/16/2026 run the agent wrote that
+`store_incidents` refuses unreconciled weeks as though it had observed that,
+having never called the tool — true, but not witnessed. It is the human-facing
+summary of whether the week published correctly, so it is arguably the place
+that most needs the numeral check the monthly briefs already get.
 
 ## Running it
 
