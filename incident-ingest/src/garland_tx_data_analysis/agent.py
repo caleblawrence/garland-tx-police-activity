@@ -5,17 +5,17 @@ weekly incident PDF, extracts it, labels any offence code it has not seen
 before, stores the week, and reports what it did.
 
 The tools do the deterministic work, and where a decision has a right answer
-they make it rather than reporting it upward: the parse either reconciles
-against the report's own `District Total: N` lines or the store refuses the
-week, and a code that already has a label keeps it. What is left for the model
-is the part with no right answer — naming a new offence code, and writing an
-account of the run that a person can read.
+they make it rather than reporting it upward. The parse either reconciles
+against the report's own `District Total: N` lines or `store_incidents`
+refuses the week; a code that already has a label keeps it; whether a week is
+already stored is a database query. None of that is the model's to decide.
 
-There used to be an `extraction-auditor` subagent here, asked to read a failed
-parse and return a verdict the main agent would honour. The verdict was
-already determined by the arithmetic that woke it, and the diagnosis it wrote
-was prose about eight lines of source that are now simply printed. See
-`_district_block_lines` and `_reconciliation_gate` in tools.py.
+What is left for the model is the part with no right answer: naming an offence
+code nobody has seen before, and writing an account of the run that a person
+can read. When a parse fails, the failing district's raw source lines come
+back with it, so explaining the failure means quoting the source rather than
+reasoning about it — see `_district_block_lines` and `_reconciliation_gate` in
+tools.py.
 """
 
 import os
@@ -33,15 +33,15 @@ from garland_tx_data_analysis.tools import (
     unlabelled_incident_types,
 )
 
-# Both on Haiku. The main agent used to plan, audit and decide, which was worth
-# the strongest model; it no longer does any of those. The parse reconciles
-# itself, the store refuses a week that does not add up, the period check is a
-# query, and a labelled code keeps its label. What is left is calling four
-# tools in order and writing a readable account of what happened.
+# Both on Haiku. The main loop calls four tools in order, branches on two
+# status strings the tools compute for it, and writes a readable account of
+# what happened. Nothing in that needs a larger model: the judgment calls that
+# would have — whether the parse can be trusted, whether the week is already
+# stored — are settled in tools.py before the agent sees them.
 #
-# If a run starts dropping steps — skipping the run report, storing before
-# checking — that is the signal to move this back up rather than to add more
-# prose to the prompt. One variable, no code change:
+# If runs start dropping steps, skipping the run report or storing before
+# checking, raise this rather than adding more prose to the prompt. One
+# variable, no code change:
 #
 #     GARLAND_MODEL=anthropic:claude-sonnet-5 uv run run_agent
 MODEL = os.getenv("GARLAND_MODEL", "anthropic:claude-haiku-4-5")
@@ -121,9 +121,9 @@ The run, and the standing constraints on it:
 
 1. Download the report.
 
-2. Parse it, then read `period_check.status` in the
-   summary. It has already compared this week against the database; you cannot
-   check that yourself, so take what it says.
+2. Parse it, then read `period_check.status` in the summary. It has already
+   compared this week against the database; you cannot check that yourself, so
+   take what it says.
 
      - `new` — go on to step 3.
      - `partially-stored` — an earlier run stored part of this week and stopped.
@@ -152,9 +152,9 @@ The run, and the standing constraints on it:
    parse did not reconcile, and will refuse it if you try. Your job is to
    explain what went wrong, not to decide whether it matters.
 
-4. Call `unlabelled_incident_types`. Most weeks it returns
-   an empty `needing_labels`: every code in the report has been named before,
-   there is nothing to delegate, and you go straight to step 5.
+4. Call `unlabelled_incident_types`. Most weeks it returns an empty
+   `needing_labels`: every code in the report has been named before, there is
+   nothing to delegate, and you go straight to step 5.
 
    When it is not empty, delegate exactly that list to `offence-labeller`.
    Never send the full `unique_incident_types` list instead — a code that
@@ -169,10 +169,10 @@ The run, and the standing constraints on it:
    the map would show a raw offence code to the public.
 
 6. Write a short run report with `write_file` to `/run-report.md` — that path
-   exactly, starting with a single slash. Cover: the report period,
-   how many incidents were stored and how many were new to the database,
-   whether the parse reconciled, any offence code named for the first time,
-   and anything a person should act on. Then summarise it in your reply.
+   exactly, starting with a single slash. Cover: the report period, how many
+   incidents were stored and how many were new to the database, whether the
+   parse reconciled, any offence code named for the first time, and anything a
+   person should act on. Then summarise it in your reply.
 
 Report what actually happened. If a step failed or you skipped one, say so
 plainly — this pipeline's characteristic failure is looking successful while
@@ -182,21 +182,21 @@ publishing nothing, or publishing last week's data over again."""
 def build_backend() -> FilesystemBackend:
     """Give the agent's file tools the real run directory — and only that.
 
-    Without a backend, deepagents defaults to an in-memory state store: `ls`
-    finds nothing, and a written file never reaches disk. The run report was
-    silently lost, and nothing could read the parse output back.
+    A backend is required for them to touch disk at all: deepagents defaults to
+    an in-memory state store, where `ls` finds nothing and a written file goes
+    nowhere.
 
     Rooted at `work/` rather than the project, with `virtual_mode=True` so
     traversal (`..`, `~`) and outside-absolute paths are blocked. `.env` holds
     the Anthropic key and the Postgres URL, and `download_weekly_report` takes
-    an arbitrary URL — so a readable `.env` is a readable `.env` that can be
-    sent somewhere. (deepagents 0.7 grants no web_fetch, which an earlier
-    version of this comment claimed; the egress is the download tool.)
+    an arbitrary URL — so anything readable here is also sendable somewhere.
+    Confining the agent to `work/` keeps the credentials out of reach.
 
-    The tools see this directory as their root, so `work/extracted_incidents.json`
-    on disk is `/extracted_incidents.json` to them. Nothing in the system prompt
-    depends on knowing that any more: the pipeline tools default their own
-    paths, so the agent only ever names a file to its own file tools.
+    The file tools see this directory as their root, so
+    `work/extracted_incidents.json` on disk is `/extracted_incidents.json` to
+    them. The system prompt never has to explain that, because the pipeline
+    tools default their own paths: the only filenames the agent types are ones
+    it gives to its own file tools.
     """
     work = Path(WORK_DIR).resolve()
     work.mkdir(parents=True, exist_ok=True)
