@@ -74,9 +74,9 @@ mischief share one category and one label.
 **News item**:
 A published article about policing or public safety in Garland, tracked
 independently of the city's reports. Its remit is deliberately wider than the
-selected offence categories: a child dying in a hot car is neither a crime the
-reports cover nor a record they will ever hold, and is exactly the kind of
-thing this exists to surface.
+selected offence categories: explosive devices found in a park are neither a
+crime the reports cover nor a record they will ever hold, and are exactly the
+kind of thing this exists to surface.
 
 One article is one news item. Follow-up coverage of an incident already
 reported — an arrest, a charge, a verdict — is a new item rather than an update

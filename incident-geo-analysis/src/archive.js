@@ -71,6 +71,17 @@ mkdirSync(path.join(projectRoot, "dist"), { recursive: true });
 const outJson = path.join(projectRoot, "dist/archive.json");
 writeFileSync(outJson, JSON.stringify(payload));
 
+// The featured news items, if any have been pinned. Absent is normal: ingest
+// fills a pool, and nothing reaches the page until a person writes a title and
+// summary for it by hand.
+const newsPath =
+  process.env.NEWS_JSON_PATH ||
+  path.join(repoRoot, "incident-ingest", "work", "news_items.json");
+const news = existsSync(newsPath)
+  ? JSON.parse(readFileSync(newsPath, "utf-8"))
+  : { items: [] };
+writeFileSync(path.join(projectRoot, "dist/news.json"), JSON.stringify(news));
+
 const html = readFileSync(path.join(projectRoot, "src/archive.html"), "utf-8");
 writeFileSync(path.join(projectRoot, "dist/index.html"), html);
 
@@ -95,6 +106,10 @@ copyFileSync(
 );
 
 const kb = (p) => (readFileSync(p).length / 1024).toFixed(0);
+console.log(
+  `news: ${news.items.length} featured item(s)` +
+    (news.items.length ? "" : " — nothing pinned, the block will not render")
+);
 console.log(
   `archive: ${rows.length} incidents across ${data.months.length} months, ` +
     `${codes.length} offence codes`

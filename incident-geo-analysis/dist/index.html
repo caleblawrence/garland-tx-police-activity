@@ -127,6 +127,33 @@
         margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
         font-size: 12px; color: var(--text-subtle);
       }
+      .news { margin-bottom: 18px; }
+      .news h2 { margin: 0 0 8px; }
+      .news .items { display: flex; flex-direction: column; gap: 6px; }
+      .news article {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 10px; box-shadow: var(--shadow); padding: 10px 14px;
+      }
+      .news h3 {
+        margin: 0 0 3px; font-size: 14px; font-weight: 600;
+        letter-spacing: -0.01em; line-height: 1.35;
+      }
+      .news h3 a { color: var(--text); text-decoration: none; }
+      .news h3 a:hover { color: var(--accent); }
+      /* Two lines is enough to say what happened; the rest is a click away.
+         Without the clamp each summary ran to three or four lines and the
+         block pushed the archive off the first screen. */
+      .news p {
+        margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.5;
+        max-width: 74ch; display: -webkit-box; -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .news .meta {
+        margin-top: 5px; font-size: 11px; color: var(--text-subtle);
+        display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+      }
+      .news .meta a { color: var(--text-subtle); }
+      .news .rule { color: var(--border); }
       .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
       .pill {
         display: inline-flex; align-items: baseline; gap: 7px; cursor: pointer;
@@ -203,6 +230,11 @@
         <p id="brief-text"></p>
         <div class="by" id="brief-by"></div>
       </div>
+
+      <section class="news" id="news" hidden>
+        <h2>Highlighted news stories</h2>
+        <div class="items" id="news-items"></div>
+      </section>
 
       <div class="pills" id="pills"></div>
 
@@ -307,6 +339,38 @@
           month: "long", year: "numeric", timeZone: "UTC",
         });
       };
+
+      // Nothing renders unless something has been pinned. An empty block is the
+      // honest state, not a gap to fill: the pool is curated, not published.
+      fetch("news.json")
+        .then((r) => r.json())
+        .then(({ items }) => {
+          if (!items || !items.length) return;
+          const esc = (v) =>
+            String(v).replace(/[&<>"]/g, (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+            );
+          $("news-items").innerHTML = items
+            .map((i) => {
+              const when = new Date(i.published_on + "T00:00:00Z").toLocaleDateString(
+                undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }
+              );
+              const record = i.incident_id
+                ? `<span class="rule">·</span><span>linked to a reported incident</span>`
+                : "";
+              return (
+                `<article><h3><a href="${esc(i.url)}" target="_blank" rel="noopener">` +
+                `${esc(i.title)}</a></h3><p>${esc(i.summary)}</p>` +
+                `<div class="meta"><span>${when}</span>` +
+                (i.outlet ? `<span class="rule">·</span><span>${esc(i.outlet)}</span>` : "") +
+                record +
+                `</div></article>`
+              );
+            })
+            .join("");
+          $("news").hidden = false;
+        })
+        .catch(() => {});
 
       fetch("archive.json")
         .then((r) => r.json())
