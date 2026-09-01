@@ -12,6 +12,7 @@
 #
 # Env vars:
 #   SKIP_AGENT=1  Skip step 1 (reuse the existing enriched_incidents.json).
+#   SKIP_NEWS=1   Skip gathering news.
 #   SKIP_GEO=1    Skip step 2.
 
 set -euo pipefail
@@ -80,6 +81,23 @@ PYCHECK
     echo "  The last run parsed a week it never stored. Not rebuilding." >&2
     exit 1
   fi
+fi
+
+# News runs whether or not the agent stored a week. A bad PDF and a stale news
+# pool are unrelated failures, and coupling them means one silently stops the
+# other. Nothing here publishes: it fills a pool to feature from by hand.
+if [[ "${SKIP_NEWS:-0}" != "1" ]]; then
+  echo "==> Gathering news in $AGENT_DIR"
+  cd "$AGENT_DIR"
+  NEWS="python -m garland_tx_data_analysis.news_ingest"
+  if [[ -x ".venv/bin/python" ]]; then
+    .venv/bin/$NEWS --since "$(date -v-14d +%Y-%m-%d 2>/dev/null || date -d '14 days ago' +%Y-%m-%d)" --apply ||       echo "  news ingest failed; continuing" >&2
+    .venv/bin/$NEWS --export || echo "  news export failed; continuing" >&2
+  elif command -v uv >/dev/null 2>&1; then
+    uv run $NEWS --since "$(date -v-14d +%Y-%m-%d 2>/dev/null || date -d '14 days ago' +%Y-%m-%d)" --apply ||       echo "  news ingest failed; continuing" >&2
+    uv run $NEWS --export || echo "  news export failed; continuing" >&2
+  fi
+  cd "$REPO_ROOT"
 fi
 
 if [[ "${SKIP_GEO:-0}" != "1" ]]; then

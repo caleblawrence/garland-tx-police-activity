@@ -127,6 +127,23 @@
         margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
         font-size: 12px; color: var(--text-subtle);
       }
+      .news { margin-bottom: 22px; }
+      .news h2 { margin: 0 0 10px; }
+      .news .items { display: flex; flex-direction: column; gap: 10px; }
+      .news article {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px;
+      }
+      .news h3 { margin: 0 0 6px; font-size: 16px; letter-spacing: -0.01em; }
+      .news h3 a { color: var(--text); text-decoration: none; }
+      .news h3 a:hover { color: var(--accent); }
+      .news p { margin: 0; color: var(--text-muted); font-size: 15px; max-width: 68ch; }
+      .news .meta {
+        margin-top: 8px; font-size: 12px; color: var(--text-subtle);
+        display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+      }
+      .news .meta a { color: var(--text-subtle); }
+      .news .rule { color: var(--border); }
       .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
       .pill {
         display: inline-flex; align-items: baseline; gap: 7px; cursor: pointer;
@@ -203,6 +220,11 @@
         <p id="brief-text"></p>
         <div class="by" id="brief-by"></div>
       </div>
+
+      <section class="news" id="news" hidden>
+        <h2>In the news</h2>
+        <div class="items" id="news-items"></div>
+      </section>
 
       <div class="pills" id="pills"></div>
 
@@ -307,6 +329,38 @@
           month: "long", year: "numeric", timeZone: "UTC",
         });
       };
+
+      // Nothing renders unless something has been pinned. An empty block is the
+      // honest state, not a gap to fill: the pool is curated, not published.
+      fetch("news.json")
+        .then((r) => r.json())
+        .then(({ items }) => {
+          if (!items || !items.length) return;
+          const esc = (v) =>
+            String(v).replace(/[&<>"]/g, (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+            );
+          $("news-items").innerHTML = items
+            .map((i) => {
+              const when = new Date(i.published_on + "T00:00:00Z").toLocaleDateString(
+                undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }
+              );
+              const record = i.incident_id
+                ? `<span class="rule">·</span><span>linked to a reported incident</span>`
+                : "";
+              return (
+                `<article><h3><a href="${esc(i.url)}" target="_blank" rel="noopener">` +
+                `${esc(i.title)}</a></h3><p>${esc(i.summary)}</p>` +
+                `<div class="meta"><span>${when}</span>` +
+                (i.outlet ? `<span class="rule">·</span><span>${esc(i.outlet)}</span>` : "") +
+                record +
+                `</div></article>`
+              );
+            })
+            .join("");
+          $("news").hidden = false;
+        })
+        .catch(() => {});
 
       fetch("archive.json")
         .then((r) => r.json())
