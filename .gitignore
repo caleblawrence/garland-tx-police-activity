@@ -212,8 +212,12 @@ cython_debug/
 .cursorindexingignore
 .vercel
 
-# Claude Code session state (includes throwaway worktrees)
-.claude/
+# Claude Code session state (includes throwaway worktrees). Contents are
+# ignored rather than the directory itself, so that skills committed to the
+# repo can be re-included below — a directory-level ignore cannot be undone
+# by a negation beneath it.
+.claude/*
+!.claude/skills/
 
 # Everything the agent downloads or generates on a run: the weekly PDF, the
 # extracted and enriched JSON, and its run report. Stage 2 reads the enriched
