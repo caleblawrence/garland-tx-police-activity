@@ -89,6 +89,26 @@ def search(query: str, start: date, end: date) -> list[dict]:
 
 GARLAND = re.compile(r"\bgarland\b", re.I)
 
+# Our own source, which matches on any address containing GARLAND AVE and would
+# arrive every run. It is the data this site already ingests, not coverage of it.
+EXCLUDED_URLS = re.compile(r"garlandtx\.gov/DocumentCenter", re.I)
+
+# Garland is a surname before it is a city, and the index does not care which
+# you meant. A bare-word filter over ten months returned NBA trade coverage of
+# Darius Garland, Hunter Biden on Merrick Garland, an Alex Garland film and an
+# NHL deadline deal — 33 of 101 rows. Excluding the people is far more precise
+# than requiring a Texas signal, which drops real stories: Tavily's snippets
+# are short, and "Double shooting shuts down Garland park" never says Texas.
+PEOPLE_NAMED_GARLAND = re.compile(
+    r"\b(darius|merrick|judy|beverly|bonnie|alex|conor|hank|red)\s+garland\b", re.I
+)
+
+# The filter is otherwise a bare word on purpose. Requiring "Garland" in the headline
+# would drop real coverage — the hot-car death ran as "5-year-old girl dies
+# inside hot car in North Texas" on two outlets — and a tighter rule costs
+# recall on a pool nobody publishes from without reading. An occasional
+# unrelated story is a row that never gets featured.
+
 
 def _outlet(url: str) -> Optional[str]:
     m = re.match(r"https?://(?:www\.)?([^/]+)", url or "")
@@ -104,10 +124,10 @@ def to_item(result: dict, fallback_day: date) -> Optional[dict]:
     """
     url = (result.get("url") or "").strip()
     title = (result.get("title") or "").strip()
-    if not url or not title:
+    if not url or not title or EXCLUDED_URLS.search(url):
         return None
     body = f"{title} {result.get('content') or ''}"
-    if not GARLAND.search(body):
+    if not GARLAND.search(body) or PEOPLE_NAMED_GARLAND.search(body):
         return None
 
     published = result.get("published_date") or result.get("published")
@@ -150,6 +170,31 @@ def nearby_titles(conn, day: date, window_days: int = 5) -> list[tuple[int, str,
         return [(r[0], r[1], r[2]) for r in cur.fetchall()]
 
 
+# Words that carry no signal about which incident a headline is about.
+_NOISE = {
+    "the", "a", "an", "in", "of", "to", "after", "for", "and", "on", "at",
+    "police", "say", "says", "said", "near", "outside", "new", "man", "woman",
+}
+
+# Only near-identical headlines are put to the model. Measured against real
+# pairs from the first backfill: genuine cross-outlet repeats of the hot-car
+# death scored 0.50 and 0.58, while every wrong merge the model made — an
+# arrest folded into the incident it followed, two separate park shootings —
+# scored 0.17 or less. The gate excludes all of them.
+SIMILARITY_GATE = 0.45
+
+
+def _title_tokens(title: str) -> set[str]:
+    words = re.sub(r"[^a-z0-9 ]", " ", (title or "").lower()).split()
+    return {w for w in words if len(w) > 2 and w not in _NOISE}
+
+
+def title_similarity(a: str, b: str) -> float:
+    """Jaccard overlap of two headlines' meaningful words."""
+    x, y = _title_tokens(a), _title_tokens(b)
+    return len(x & y) / len(x | y) if x | y else 0.0
+
+
 def is_duplicate(item: dict, neighbours: list[tuple[int, str, date]], ask: Callable) -> bool:
     """Whether this article covers a story already in the pool.
 
@@ -162,6 +207,19 @@ def is_duplicate(item: dict, neighbours: list[tuple[int, str, date]], ask: Calla
     """
     if not neighbours:
         return False
+
+    # Deleting a story is worse than keeping a repeat: a reader skips a
+    # duplicate, but a follow-up that was merged away is gone. So the model is
+    # only consulted about headlines that already look the same, and it can
+    # only ever veto a merge, never propose one.
+    close = [
+        n for n in neighbours
+        if title_similarity(item["source_title"], n[1]) >= SIMILARITY_GATE
+    ]
+    if not close:
+        return False
+    neighbours = close
+
     listing = "\n".join(f"{i}. {title}" for i, (_, title, _) in enumerate(neighbours, 1))
     answer = ask(
         "You are deduplicating local news coverage.\n\n"
@@ -240,6 +298,15 @@ def gather(start: date, end: date, apply: bool = False) -> dict:
                     continue
                 with connect() as conn:
                     neighbours = nearby_titles(conn, item["published_on"])
+                # Also compare against what this run has already kept. Nothing
+                # is written until the run ends, so without this the pool is
+                # only ever compared against previous runs and a story carried
+                # by five outlets on one day arrives five times.
+                neighbours += [
+                    (None, k["source_title"], k["published_on"])
+                    for k in kept
+                    if abs((k["published_on"] - item["published_on"]).days) <= 5
+                ]
                 if is_duplicate(item, neighbours, ask):
                     dropped_dupe += 1
                     continue
@@ -255,6 +322,61 @@ def gather(start: date, end: date, apply: bool = False) -> dict:
         "duplicates": dropped_dupe,
         "new": len(kept),
         "stored": stored,
+        "applied": apply,
+    }
+
+
+def dedupe_pool(apply: bool = False) -> dict:
+    """Collapse stories already in the pool that are the same event.
+
+    For a pool gathered before same-run comparison worked, and as a safety net
+    for anything the per-item check let through. Keeps the earliest row of each
+    cluster: first to report, and the one a follow-up would be measured against.
+    Never touches a featured row.
+    """
+    ask = _asker()
+    removed, kept_ids, merges = [], [], []
+    with connect() as conn:
+        ensure_schema(conn)
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT news_item_id, source_title, published_on, featured
+                  FROM news_items ORDER BY published_on, news_item_id
+                """
+            )
+            rows = cur.fetchall()
+
+    for item_id, title, day, featured in rows:
+        if item_id in removed:
+            continue
+        cluster = [
+            (i, t, d)
+            for i, t, d, f in rows
+            if i in kept_ids and abs((d - day).days) <= 5
+        ]
+        if featured:
+            kept_ids.append(item_id)
+            continue
+        if cluster and is_duplicate({"source_title": title}, cluster, ask):
+            removed.append(item_id)
+            merges.append((title, [t for _, t, _ in cluster]))
+        else:
+            kept_ids.append(item_id)
+
+    if apply and removed:
+        with connect() as conn, conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM news_items WHERE news_item_id = ANY(%s) AND NOT featured",
+                (removed,),
+            )
+    return {
+        "pool": len(rows),
+        "duplicates": len(removed),
+        "merges": [
+            {"dropped": d, "as_duplicate_of": c[-1] if c else None} for d, c in merges
+        ],
+        "remaining": len(rows) - (len(removed) if apply else 0),
         "applied": apply,
     }
 
@@ -316,6 +438,8 @@ def main(argv: list[str]) -> None:
     parser.add_argument("--apply", action="store_true", help="write; otherwise dry")
     parser.add_argument("--export", action="store_true",
                         help="write the JSON the site reads")
+    parser.add_argument("--dedupe-pool", action="store_true",
+                        help="collapse same-event stories already stored")
     parser.add_argument("--today", help="override today's date, for testing")
     args = parser.parse_args(argv)
 
@@ -330,6 +454,11 @@ def main(argv: list[str]) -> None:
         print(json.dumps(gather(start, today, apply=args.apply), indent=2, default=str))
         if not args.apply:
             print("\nDry run. Re-run with --apply to store.")
+
+    if args.dedupe_pool:
+        print(json.dumps(dedupe_pool(apply=args.apply), indent=2))
+        if not args.apply:
+            print("\nDry run. Re-run with --apply to delete.")
 
     if args.export:
         print(json.dumps(export(), indent=2))

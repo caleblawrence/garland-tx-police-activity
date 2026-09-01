@@ -45,6 +45,36 @@ def test_garland_can_be_mentioned_in_the_body_rather_than_the_headline():
     assert item["outlet"] == "wfaa.com"
 
 
+def test_garland_the_surname_is_not_garland_the_city():
+    """A bare-word filter over ten months returned 33 rows about people called
+    Garland: an NBA guard, a former attorney general, a film director, an NHL
+    winger. It is a surname before it is a city."""
+    for headline in [
+        "Clippers' Darius Garland: Not playing Friday - CBS Sports",
+        "Hunter Biden calls Merrick Garland the 'greatest mistake' made",
+        "Alex Garland's Elden Ring is in production",
+        "Blue Jackets start NHL trade deadline day by acquiring Conor Garland",
+    ]:
+        assert news_ingest.to_item(_result(headline), fallback_day=date.today()) is None, headline
+
+    # The city still gets through without needing to say Texas anywhere.
+    assert news_ingest.to_item(
+        _result("Double shooting shuts down Garland park - CBS News"),
+        fallback_day=date(2026, 8, 24),
+    ) is not None
+
+
+def test_our_own_source_pdf_is_not_news():
+    """The weekly report matches on any address with GARLAND AVE in it, and
+    would arrive every single run. It is the data, not coverage of it."""
+    assert news_ingest.to_item(
+        _result("Weekly Selected Crime Incidents Report",
+                url="https://www.garlandtx.gov/DocumentCenter/View/802",
+                content="5 1535 2026R037999 THEFT-SHOPLIFTING 53XX N GARLAND AVE"),
+        fallback_day=date(2026, 8, 24),
+    ) is None
+
+
 def test_a_result_without_a_url_or_title_is_dropped():
     assert news_ingest.to_item({"title": "Garland thing", "url": ""}, date.today()) is None
     assert news_ingest.to_item({"title": "", "url": "https://x/1"}, date.today()) is None
@@ -64,22 +94,94 @@ def test_the_same_story_from_another_outlet_is_a_duplicate():
     assert news_ingest.is_duplicate(item, neighbours, lambda p: "DUPLICATE") is True
 
 
-def test_the_dedupe_prompt_protects_follow_up_coverage():
-    """An arrest weeks later is a new item, not a duplicate of the incident.
+def test_an_arrest_is_not_a_duplicate_of_the_incident_it_follows():
+    """'Mother charged in hot car death' reads almost like the death itself.
 
-    This is the whole reason a model reads the headlines rather than a
-    similarity score: 'hot car death' and 'mother charged in hot car death'
-    look almost identical and are different events.
+    Protected twice over: the similarity gate never puts the pair to the model,
+    and if a closer pair does get through, the prompt says a later development
+    is a new event.
     """
+    called = []
+    assert news_ingest.is_duplicate(
+        {"source_title": "Mother charged in Garland hot car death"},
+        [(1, "5-year-old dies after being left in hot car, Garland police say",
+          date(2026, 8, 18))],
+        lambda p: called.append(p) or "DUPLICATE",
+    ) is False
+    assert called == [], "the gate should settle this without a model call"
+
+
+def test_the_dedupe_prompt_still_protects_follow_ups_that_pass_the_gate():
     seen = {}
     news_ingest.is_duplicate(
-        {"source_title": "Mother charged in Garland hot car death"},
-        [(1, "5-year-old dies after being left in hot car, Garland police say", date(2026, 8, 18))],
+        {"source_title": "Garland hot car death: mother charged after 5-year-old dies"},
+        [(1, "Garland hot car death: 5-year-old dies after being left in vehicle",
+          date(2026, 8, 18))],
         lambda p: seen.setdefault("prompt", p) and "NEW",
     )
     prompt = seen["prompt"].lower()
     assert "not a duplicate" in prompt
     assert "arrest" in prompt and "charge" in prompt and "verdict" in prompt
+
+
+def test_two_outlets_in_one_run_are_compared_against_each_other(db, monkeypatch):
+    """The bug this catches: nothing is written until a run ends, so comparing
+    only against the database meant a story carried by five outlets on one day
+    arrived five times. The 10-month backfill stored three copies of the
+    hot-car death before this was fixed."""
+    hot_car = [
+        {"title": "5-year-old girl dies after being left in hot car outside Garland home",
+         "url": "https://www.cbsnews.com/a", "content": ""},
+        {"title": "5-year-old dies after being left in hot car outside her Garland home",
+         "url": "https://www.weau.com/b", "content": ""},
+        {"title": "5-Year-Old Girl Dies After Being Left in Hot Car Outside Garland Home",
+         "url": "https://people.com/c", "content": ""},
+    ]
+    monkeypatch.setattr(news_ingest, "QUERIES", ["one query"])
+    monkeypatch.setattr(news_ingest, "search", lambda q, s, e: hot_car)
+    # Every comparison that has something to compare against says DUPLICATE.
+    monkeypatch.setattr(news_ingest, "_asker", lambda: (lambda p: "DUPLICATE"))
+
+    result = news_ingest.gather(date(2026, 8, 18), date(2026, 8, 20), apply=True)
+
+    assert result["duplicates"] == 2, "the second and third outlet are the same story"
+    assert result["stored"] == 1
+
+    with connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT count(*) FROM news_items")
+        assert cur.fetchone()[0] == 1
+
+
+def test_a_follow_up_is_never_merged_even_if_the_model_says_so():
+    """The gate exists because the model got this wrong on real data.
+
+    It folded "A 17-year-old has been arrested" into "TEEN DIES: A 17-year-old
+    Wylie boy", and "Double shooting shuts down Garland park" into "Garland
+    teen charged after two juveniles shot at local park" — deleting the
+    follow-up coverage that answers whether anyone was caught. Both scored
+    0.17. The model is never asked about pairs that far apart.
+    """
+    always_yes = lambda p: "DUPLICATE"
+    for new_title, stored in [
+        ("A 17-year-old has been arrested in connection with a shooting",
+         "TEEN DIES: A 17-year-old Wylie boy"),
+        ("Double shooting shuts down Garland park",
+         "Garland teen charged after two juveniles shot at local park"),
+        ("Teen, man wounded after shooting at Garland park",
+         "Garland school parking lot shooting leaves 2 men injured"),
+    ]:
+        assert news_ingest.is_duplicate(
+            {"source_title": new_title}, [(1, stored, date(2026, 8, 24))], always_yes
+        ) is False, new_title
+
+
+def test_the_same_headline_from_another_outlet_still_merges():
+    assert news_ingest.is_duplicate(
+        {"source_title": "5-year-old girl dies after being left in hot car outside home"},
+        [(1, "5-year-old girl dies after being left inside vehicle outside Garland home",
+          date(2026, 8, 20))],
+        lambda p: "DUPLICATE",
+    ) is True
 
 
 def test_a_featured_item_cannot_exist_without_hand_written_text(db):
