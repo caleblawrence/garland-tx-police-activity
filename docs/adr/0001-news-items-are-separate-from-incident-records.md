@@ -11,8 +11,8 @@ optional link to an archive incident, and never merge with one.
 ## Considered options
 
 - **A join view over the archive.** Only works when a record exists. The stories
-  worth featuring — the March 2025 explosive devices near Wynne Park, the August
-  2026 hot-car death — have no record and never will, because no offence in the
+  worth featuring — the live explosive devices found near Wynne Park in March
+  2025, for one — have no record and never will, because no offence in the
   reports' eight categories was charged.
 - **A single "notable event" entity** holding news, records, or both. Rejected
   because it makes one table mean three things, and because the archive already

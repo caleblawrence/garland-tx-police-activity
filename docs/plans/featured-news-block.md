@@ -36,9 +36,9 @@ Checked during the session:
 | Garland PD press releases | **No feed exists.** Probed every CivicPlus department id |
 
 Two disqualifying facts. The feeds reach back **two days** — WFAA to 29 Aug,
-FOX 4 to 1 Sep — so they cannot backfill anything. And the hot-car death of
-18 August 2026, which prompted this check, was already outside that window while
-still being the most significant Garland story of the month.
+FOX 4 to 1 Sep — so they cannot backfill anything. The story that prompted this
+check was two weeks old and already outside the window, while still being the
+most significant Garland story of the month.
 
 Search finds it; feeds never would. Hence Tavily.
 
@@ -87,9 +87,10 @@ dry by default.
 - Tavily search scoped to Garland policing and public safety.
 - **Backfill once** over the last 10 months (Nov 2025 – Sep 2026).
 - **Dedupe on ingest.** `url` unique catches exact repeats. Cross-outlet repeats
-  need the LLM: the hot-car death returned eight URLs across WFAA, FOX 4, NBCDFW,
-  Yahoo, Audacy and Hoodline. Compare each candidate against items already stored
-  within a few days of it; store only what is genuinely new.
+  need the LLM: a single May carjacking returned three headlines from three
+  outlets, and a bigger story routinely returns five or more. Compare each
+  candidate against items already stored within a few days of it; store only
+  what is genuinely new.
 - Follow-up coverage is **not** a duplicate. An arrest story about an incident
   already reported is a new item.
 - `TAVILY_API_KEY` from the environment, `.env`, never committed.
@@ -101,9 +102,10 @@ Direct SQL, no tooling:
 ```sql
 UPDATE news_items
    SET featured = true,
-       display_title = 'Five-year-old dies in hot car outside Garland home',
-       display_summary = 'A child was left in a vehicle during an extreme heat '
-                         'warning and died. No charges have been filed.',
+       display_title = 'Live explosive devices found near a park',
+       display_summary = 'A passer-by found a suitcase with devices scattered '
+                         'nearby. A bomb unit made them safe. Nobody was hurt '
+                         'and no arrest has been made.',
        featured_at = now()
  WHERE news_item_id = 42;
 ```

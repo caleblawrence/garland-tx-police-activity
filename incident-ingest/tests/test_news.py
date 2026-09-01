@@ -20,8 +20,8 @@ def test_a_result_that_never_says_garland_is_dropped():
     category error on a page that is entirely about Garland.
     """
     keep = news_ingest.to_item(
-        _result("5-year-old dies after being left in hot car, Garland police say"),
-        fallback_day=date(2026, 8, 18),
+        _result("Live homemade explosives found near Garland park, officials say"),
+        fallback_day=date(2025, 3, 30),
     )
     assert keep is not None
 
@@ -88,14 +88,14 @@ def test_nothing_is_a_duplicate_when_the_pool_is_empty():
 
 
 def test_the_same_story_from_another_outlet_is_a_duplicate():
-    """Eight outlets carried the hot-car death. The pool should hold one."""
-    item = {"source_title": "5-year-old girl dies after being left in hot car, Garland police say"}
-    neighbours = [(1, "Girl, 5, dies after being left in car Tuesday, Garland Police say", date(2026, 8, 18))]
+    """Three outlets carried one May carjacking. The pool should hold one."""
+    item = {"source_title": "Garland police identify attempted carjacker who was shot, killed by driver - CBS News"}
+    neighbours = [(1, "Garland police identify attempted carjacker who was shot, killed by driver", date(2026, 5, 7))]
     assert news_ingest.is_duplicate(item, neighbours, lambda p: "DUPLICATE") is True
 
 
-def test_an_arrest_is_not_a_duplicate_of_the_incident_it_follows():
-    """'Mother charged in hot car death' reads almost like the death itself.
+def test_a_charging_decision_is_not_a_duplicate_of_the_incident_it_follows():
+    """A later development reads almost like the incident it followed.
 
     Protected twice over: the similarity gate never puts the pair to the model,
     and if a closer pair does get through, the prompt says a later development
@@ -103,9 +103,9 @@ def test_an_arrest_is_not_a_duplicate_of_the_incident_it_follows():
     """
     called = []
     assert news_ingest.is_duplicate(
-        {"source_title": "Mother charged in Garland hot car death"},
-        [(1, "5-year-old dies after being left in hot car, Garland police say",
-          date(2026, 8, 18))],
+        {"source_title": "Grand jury declines to charge driver in Garland carjacking"},
+        [(1, "Garland police identify attempted carjacker who was shot, killed by driver",
+          date(2026, 5, 7))],
         lambda p: called.append(p) or "DUPLICATE",
     ) is False
     assert called == [], "the gate should settle this without a model call"
@@ -114,9 +114,9 @@ def test_an_arrest_is_not_a_duplicate_of_the_incident_it_follows():
 def test_the_dedupe_prompt_still_protects_follow_ups_that_pass_the_gate():
     seen = {}
     news_ingest.is_duplicate(
-        {"source_title": "Garland hot car death: mother charged after 5-year-old dies"},
-        [(1, "Garland hot car death: 5-year-old dies after being left in vehicle",
-          date(2026, 8, 18))],
+        {"source_title": "Garland park explosives: reward offered after live devices found"},
+        [(1, "Garland park explosives: live devices found near abandoned suitcase",
+          date(2025, 3, 31))],
         lambda p: seen.setdefault("prompt", p) and "NEW",
     )
     prompt = seen["prompt"].lower()
@@ -128,17 +128,17 @@ def test_two_outlets_in_one_run_are_compared_against_each_other(db, monkeypatch)
     """The bug this catches: nothing is written until a run ends, so comparing
     only against the database meant a story carried by five outlets on one day
     arrived five times. The 10-month backfill stored three copies of the
-    hot-car death before this was fixed."""
-    hot_car = [
-        {"title": "5-year-old girl dies after being left in hot car outside Garland home",
+    same carjacking three times before this was fixed."""
+    one_story = [
+        {"title": "Garland police identify attempted carjacker who was shot, killed by driver",
          "url": "https://www.cbsnews.com/a", "content": ""},
-        {"title": "5-year-old dies after being left in hot car outside her Garland home",
-         "url": "https://www.weau.com/b", "content": ""},
-        {"title": "5-Year-Old Girl Dies After Being Left in Hot Car Outside Garland Home",
-         "url": "https://people.com/c", "content": ""},
+        {"title": "Garland police identify attempted carjacker who was shot, killed by a driver",
+         "url": "https://www.fox4news.com/b", "content": ""},
+        {"title": "Garland police identify attempted carjacker shot and killed by driver",
+         "url": "https://www.audacy.com/c", "content": ""},
     ]
     monkeypatch.setattr(news_ingest, "QUERIES", ["one query"])
-    monkeypatch.setattr(news_ingest, "search", lambda q, s, e: hot_car)
+    monkeypatch.setattr(news_ingest, "search", lambda q, s, e: one_story)
     # Every comparison that has something to compare against says DUPLICATE.
     monkeypatch.setattr(news_ingest, "_asker", lambda: (lambda p: "DUPLICATE"))
 
@@ -177,9 +177,9 @@ def test_a_follow_up_is_never_merged_even_if_the_model_says_so():
 
 def test_the_same_headline_from_another_outlet_still_merges():
     assert news_ingest.is_duplicate(
-        {"source_title": "5-year-old girl dies after being left in hot car outside home"},
-        [(1, "5-year-old girl dies after being left inside vehicle outside Garland home",
-          date(2026, 8, 20))],
+        {"source_title": "Garland police identify attempted carjacker who was shot, killed by driver"},
+        [(1, "Garland police identify attempted carjacker shot and killed by driver",
+          date(2026, 5, 7))],
         lambda p: "DUPLICATE",
     ) is True
 

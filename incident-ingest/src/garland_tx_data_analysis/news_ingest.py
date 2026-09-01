@@ -2,10 +2,10 @@
 """Gather news coverage of Garland policing into a pool to feature from.
 
 The city's reports cover eight offence categories and nothing else, so the
-events most worth showing are the ones they structurally cannot hold: the
-explosive devices found near Wynne Park in March 2025, the child who died in a
-hot car in August 2026. Neither produced a charge in those categories, so
-neither will ever be a record. This is where they live instead.
+events most worth showing are the ones they structurally cannot hold: the live
+explosive devices found near Wynne Park in March 2025, for instance, which
+produced no charge in any of those categories and so will never be a record.
+This is where they live instead.
 
 RSS cannot do it. The outlet feeds reach back two days, and Garland PD
 publishes no press feed at all — the city's own feed carried 26 items and no
@@ -44,9 +44,9 @@ EXPORT_PATH = f"{WORK_DIR}/news_items.json"
 MAX_RESULTS = 20
 BACKFILL_MONTHS = 10
 
-# Deliberately about Garland policing rather than Garland crime. A hot-car
-# death is neither a crime in the reports' categories nor a record they will
-# ever hold, and it is exactly what this is for.
+# Deliberately about Garland policing rather than Garland crime. Explosive
+# devices found in a park are neither a crime in the reports' categories nor a
+# record they will ever hold, and that is exactly what this is for.
 QUERIES = [
     "Garland Texas police",
     "Garland Texas shooting OR homicide OR assault",
@@ -104,10 +104,10 @@ PEOPLE_NAMED_GARLAND = re.compile(
 )
 
 # The filter is otherwise a bare word on purpose. Requiring "Garland" in the headline
-# would drop real coverage — the hot-car death ran as "5-year-old girl dies
-# inside hot car in North Texas" on two outlets — and a tighter rule costs
-# recall on a pool nobody publishes from without reading. An occasional
-# unrelated story is a row that never gets featured.
+# would drop real coverage: outlets regularly headline a story as "North Texas"
+# and name the city only in the body. A tighter rule costs recall on a pool
+# nobody publishes from without reading, and an occasional unrelated story is
+# just a row that never gets featured.
 
 
 def _outlet(url: str) -> Optional[str]:
@@ -177,10 +177,10 @@ _NOISE = {
 }
 
 # Only near-identical headlines are put to the model. Measured against real
-# pairs from the first backfill: genuine cross-outlet repeats of the hot-car
-# death scored 0.50 and 0.58, while every wrong merge the model made — an
-# arrest folded into the incident it followed, two separate park shootings —
-# scored 0.17 or less. The gate excludes all of them.
+# pairs from the first backfill: genuine cross-outlet repeats scored 0.50 and
+# above — two wire copies of the same carjacking reached 0.82 — while every
+# wrong merge the model made, including an arrest folded into the incident it
+# followed, scored 0.17 or less. The gate excludes all of them.
 SIMILARITY_GATE = 0.45
 
 
@@ -198,9 +198,9 @@ def title_similarity(a: str, b: str) -> float:
 def is_duplicate(item: dict, neighbours: list[tuple[int, str, date]], ask: Callable) -> bool:
     """Whether this article covers a story already in the pool.
 
-    A unique URL is not enough: the hot-car death of 18 August 2026 came back
-    as eight URLs across WFAA, FOX 4, NBCDFW, Yahoo, Audacy and Hoodline. Only
-    a reader can tell those are one story, so a model reads them.
+    A unique URL is not enough: one May 2026 carjacking came back under three
+    headlines from three outlets, and a single story routinely returns five or
+    more. Only a reader can tell those are one story, so a model reads them.
 
     Follow-up coverage is deliberately NOT a duplicate. An arrest reported
     weeks after the incident is a new item, and the prompt says so.

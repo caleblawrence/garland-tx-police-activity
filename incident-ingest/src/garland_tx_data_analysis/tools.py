@@ -653,7 +653,7 @@ CREATE TABLE IF NOT EXISTS incident_labels (
 -- News coverage of Garland policing and public safety. Deliberately not joined
 -- to the incident tables: the two describe overlapping events at different
 -- grains with no shared identifier, and the stories worth featuring — the
--- Wynne Park devices, the hot-car death — have no record at all, because no
+-- explosive devices found near Wynne Park — have no record at all, because no
 -- offence in the reports' eight categories was ever charged.
 -- See docs/adr/0001-news-items-are-separate-from-incident-records.md
 CREATE TABLE IF NOT EXISTS news_items (
