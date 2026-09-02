@@ -16,7 +16,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 const CHROME =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const PORT = 9333;
+const PORT = 9337;
 const BASE = process.argv[2] || "http://127.0.0.1:8080";
 const OUT = process.argv[3] || "docs/img";
 
@@ -120,23 +120,41 @@ const open = async (width, height) => {
 try {
   await waitForChrome();
 
-  // 1. Map overview
+  // 1. The incident browser — the front page
+  console.log("incidents…");
+  const browse = await open(1440, 1000);
+  await browse.go(`${BASE}/index.html`, 4000);
+  await browse.shot("incidents.png", { width: 1440, height: 1000 });
+
+  // 2. A category selected: summary, offence breakdown, district choropleth
+  console.log("category view…");
+  await browse.evaluate(`(() => {
+    const pill = [...document.querySelectorAll('.pill')]
+      .find(b => /burglary/i.test(b.textContent));
+    pill.click();
+    document.getElementById('insight').scrollIntoView({ block: 'start' });
+    return true;
+  })()`);
+  await sleep(1200);
+  await browse.shot("category.png", { width: 1440, height: 1000 });
+
+  // 3. Map overview — now a secondary page
   console.log("map overview…");
   const map = await open(1440, 900);
-  await map.go(`${BASE}/index.html`, 5000);
+  await map.go(`${BASE}/map.html`, 5000);
   // fitBounds frames the data against a wide viewport, which over-fits the
   // width and leaves the boxes as specks. Tighten onto the city core.
   await map.evaluate(`(map.setZoom(map.getZoom() + 2), map.getZoom())`);
   await sleep(2500);
   await map.shot("map-overview.png", { width: 1440, height: 900 });
 
-  // 2. Incident list expanded
+  // 4. Incident list expanded
   console.log("incident list…");
   await map.evaluate(`(document.getElementById('all-header').click(), true)`);
   await sleep(600);
   await map.shot("incident-list.png", { width: 1440, height: 900 });
 
-  // 3. A single incident, zoomed in with its popup open
+  // 5. A single incident, zoomed in with its popup open
   console.log("incident detail…");
   const picked = await map.evaluate(`(async () => {
     const items = await (await fetch('incidents.json?x=' + Math.random())).json();
@@ -150,17 +168,16 @@ try {
   await sleep(2500);
   await map.shot("incident-detail.png", { width: 1440, height: 900 });
 
-  // 4. About page
+  // 6. About page
   console.log("about page…");
   const about = await open(1440, 1000);
   await about.go(`${BASE}/about.html`, 3000);
   await about.shot("about.png", { width: 1440, height: 1000 });
 
-  // 5. Mobile map, for the layout note
+  // 7. Mobile, for the layout note
   console.log("mobile…");
   const mob = await open(390, 780);
-  await mob.go(`${BASE}/index.html`, 5000);
-  await mob.evaluate(`(document.getElementById('all-header').click(), true)`);
+  await mob.go(`${BASE}/index.html`, 4000);
   await sleep(600);
   await mob.shot("mobile.png", { width: 390, height: 780, scale: 3 });
 
