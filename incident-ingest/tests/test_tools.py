@@ -1049,12 +1049,20 @@ def test_a_summary_may_not_contain_a_number_the_data_does_not_have():
         "incidents_last_month": 417,
         "change_from_last_month": 25,
         "by_category_this_month": {"Theft": 199},
-        "busiest_districts": {"31": 47},
+        "busiest_areas": [
+            {"area": "south Garland", "around": "I-30 and Duck Creek",
+             "incidents": 47},
+        ],
     }
 
     assert verify("There were 442 incidents, up 25 from 417.", stats) == []
     assert verify("Theft reached 199 in June 2026.", stats) == []
-    assert verify("District 31 recorded 47.", stats) == []
+    assert verify("South Garland, around I-30 and Duck Creek, recorded 47.", stats) == []
+
+    # The 30 in I-30 is a road's name, not a figure the model chose. Counting
+    # it refused two real months for copying the block exactly as instructed.
+    assert verify("Most were around I-30.", stats) == []
+    assert verify("There were 30 robberies.", stats) == ["30"]
 
     assert verify("Reported incidents fell 12% to 442.", stats) == ["12%"]
     assert verify("There were 442 incidents, including 7 homicides.", stats) == ["7"]
