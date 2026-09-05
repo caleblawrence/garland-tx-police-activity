@@ -169,7 +169,10 @@ def stats_for(month: str) -> dict:
         return out
 
     cats, prior_cats = tally(this_rows, "category"), tally(prior_rows, "category")
-    changes = sorted(
+    # With no month before it, every category's "change" is its own count, and
+    # the block would tell the model that theft rose by 215 in the first month
+    # the archive holds. Nothing moved; there was nothing to move from.
+    changes = [] if not prior else sorted(
         (
             {
                 "category": c,
@@ -196,7 +199,7 @@ def stats_for(month: str) -> dict:
         "incidents_last_month": len(prior_rows) if prior else None,
         "change_from_last_month": (len(this_rows) - len(prior_rows)) if prior else None,
         "by_category_this_month": dict(sorted(cats.items(), key=lambda kv: -kv[1])),
-        "biggest_category_changes": changes[:4],
+        "biggest_category_changes": changes[:4] if prior else None,
         "most_common_offences": dict(
             sorted(offences.items(), key=lambda kv: -kv[1])[:5]
         ),

@@ -164,3 +164,23 @@ def test_feedback_names_the_rule_and_quotes_what_broke_it():
     assert "7.2" in result.feedback
     assert "information reports" in result.feedback
     assert "reported incidents" in result.feedback
+
+
+def test_the_first_month_reports_no_category_changes():
+    """Nothing moved in the first month; there was nothing to move from.
+
+    `stats_for` used to subtract an empty prior month, so every category came
+    back as having risen by its entire count — the block telling the model that
+    theft rose by 215 in February 2022.
+    """
+    from garland_tx_data_analysis.monthly_summary import stats_for  # noqa: F401
+    # Pure-logic stand-in for the shape stats_for now produces.
+    first = dict(STATS, previous_month=None, incidents_last_month=None,
+                 change_from_last_month=None, biggest_category_changes=None)
+    result = evaluate_summary(
+        "Garland police reported 442 incidents in June 2026. Theft was the most "
+        "common crime at 199, and robbery accounted for 3. North Garland, "
+        "around Garland Road and Belt Line, recorded the most at 33.",
+        first,
+    )
+    assert result.publishable
