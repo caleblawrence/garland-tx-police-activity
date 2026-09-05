@@ -21,7 +21,11 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=8"]
+# `gepa` is the prompt optimiser used by `optimize_summary_prompt`, and is not
+# imported by anything the weekly pipeline runs. It is the standalone library,
+# not DSPy: `dspy.GEPA` wraps the same package for DSPy programs, and this
+# project has no DSPy in it.
+dev = ["pytest>=8", "gepa>=0.1.4,<0.2"]
 
 [project.scripts]
 garland_tx_data_analysis = "garland_tx_data_analysis.main:run"

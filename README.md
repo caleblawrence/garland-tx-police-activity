@@ -182,7 +182,7 @@ Or `./scripts/run-weekly.sh` for the whole thing.
 ## Tests
 
 ```bash
-cd incident-ingest && uv run pytest tests/    # 64 tests
+cd incident-ingest && uv run pytest tests/    # 73 tests
 ```
 
 ```bash
@@ -207,7 +207,9 @@ incident-ingest/               Python — everything that reads a PDF or writes 
   src/.../archive_ingest.py    the 53 monthly reports
   src/.../news_ingest.py       news search, filtering and dedupe
   src/.../categories.py        offence codes to the report's own categories
-  tests/                       64 tests
+  src/.../summary_metric.py    scores a monthly summary against its own rules
+  src/.../optimize_summary_prompt.py   evolves that prompt with GEPA
+  tests/                       73 tests
 
 incident-geo-analysis/         Node — everything that renders
   src/archive.js               the incident browser and news block

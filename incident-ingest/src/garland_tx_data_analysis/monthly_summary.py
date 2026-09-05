@@ -209,17 +209,32 @@ def verify(summary: str, stats: dict) -> list[str]:
     return unverified
 
 
-def write_summary(month: str, model_name: str = LABEL_MODEL) -> dict:
-    stats = stats_for(month)
-    model = init_chat_model(model_name)
+def generate(
+    stats: dict,
+    system_prompt: str = SYSTEM_PROMPT,
+    model=None,
+    model_name: str = LABEL_MODEL,
+) -> str:
+    """One paragraph from one stats block: the only place the model is asked.
+
+    The prompt is a parameter so `optimize_summary_prompt` scores candidate
+    prompts through this exact call rather than a copy of it. A copy would
+    drift, and an optimiser tuning a prompt against a call the pipeline does
+    not make is worse than no optimiser at all.
+    """
+    model = model or init_chat_model(model_name)
     reply = model.invoke(
-        [("system", SYSTEM_PROMPT), ("user", json.dumps(stats, indent=1))]
+        [("system", system_prompt), ("user", json.dumps(stats, indent=1))]
     )
     text = reply.content
     if isinstance(text, list):
         text = " ".join(p.get("text", "") for p in text if isinstance(p, dict))
-    text = " ".join(str(text).split())
+    return " ".join(str(text).split())
 
+
+def write_summary(month: str, model_name: str = LABEL_MODEL) -> dict:
+    stats = stats_for(month)
+    text = generate(stats, model_name=model_name)
     unverified = verify(text, stats)
     return {
         "month": month,
