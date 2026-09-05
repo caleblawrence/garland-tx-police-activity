@@ -44,28 +44,44 @@ REPORTED_CATEGORIES = (
     "criminal mischief",
 )
 
-# "Never call this 'crime'." `criminal mischief` is a category name and must
-# survive, so the word is matched on its own rather than as a prefix.
+# The total counts reported incidents, information reports included, so calling
+# it a crime count is false rather than merely loose. The word itself is allowed
+# where it is accurate — burglary is a crime — so this is scoped to the
+# aggregate: the word in the same sentence as the month's total, or as the
+# subject of a movement verb ("crime fell"), which is the same claim without
+# the number. `criminal mischief` is a category name and survives either way,
+# because the word is matched whole.
 CRIME_WORD = re.compile(r"\bcrimes?\b", re.I)
+CRIME_MOVED = re.compile(
+    r"\bcrimes?\s+(?:rose|fell|climbed|dropped|increased|decreased|was\s+(?:up|down))\b",
+    re.I,
+)
+
+# District numbers are not in the figures at all, so any the model writes are
+# unfounded — it has nothing to have read them from.
+DISTRICT_NUMBER = re.compile(r"\bdistricts?\s+\d", re.I)
 
 # "Never explain why anything changed. No causes, no speculation, no 'likely',
 # no 'driven by'." Speculation is included because a hedge is a cause with a
 # disclaimer attached, and reads on the page as the same claim.
 CAUSAL = re.compile(
-    r"\b(?:because|due to|driven by|likely|caused by|as a result|attributed to"
-    r"|owing to|stems? from|stemming from|thanks to|explains?|why"
-    r"|reflects?|reflecting|suggests?|suggesting|indicates?|indicating"
-    r"|possibly|perhaps|may have|appears to|seems? to)\b",
+    r"\b(?:because|due to|driven by|caused by|as a result|attributed to"
+    r"|owing to|stems? from|stemming from|thanks to|reflects?|reflecting"
+    r"|likely|possibly|perhaps|may have|appears to|seems? to)\b",
     re.I,
 )
 
 # "Do not editorialise about whether a month was good or bad, safe or unsafe."
 # The dramatising verbs are here too: `surged` asserts a character to a change
 # that a count of reported incidents cannot carry.
+# "notable"/"significant" are here because the model actually reached for them:
+# it called sexual assault reports tripling "a significant shift", and scored
+# full marks for it.
 EDITORIAL = re.compile(
     r"\b(?:good|bad|safe|unsafe|dangerous|concerning|alarming|worrying"
-    r"|troubling|encouraging|reassuring|worryingly|dramatic(?:ally)?"
-    r"|surge[ds]?|spike[ds]?|plummet(?:ed|ing)?|soar(?:ed|ing)?)\b",
+    r"|troubling|encouraging|reassuring|dramatic(?:ally)?|notable|notably"
+    r"|significant(?:ly)?|surge[ds]?|spike[ds]?|plummet(?:ed|ing)?"
+    r"|soar(?:ed|ing)?)\b",
     re.I,
 )
 
@@ -142,12 +158,31 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "rather than shown."
         )
 
-    said_crime = CRIME_WORD.findall(text)
-    if said_crime:
+    total = stats.get("incidents_this_month")
+    aggregate_crime = CRIME_MOVED.search(text) or any(
+        CRIME_WORD.search(sent)
+        and total is not None
+        and (str(total) in sent or f"{total:,}" in sent)
+        for sent in _sentences(text)
+    )
+    if aggregate_crime:
         hard.append(
-            f"Called this \"{said_crime[0]}\". These are reported incidents in "
-            "eight named categories, which is a narrower thing than crime. "
-            "Write \"reported incidents\", or name the categories."
+            f"Called the month's total ({total}) a number of crimes. That total "
+            "includes information reports — a found-property report, an "
+            "abandoned vehicle — which record that something was reported, not "
+            "that an offence was established, so the count is not a crime "
+            "count. Write \"incidents\" or \"reported incidents\" for the "
+            "total. The word is fine where it is accurate: burglary is a crime."
+        )
+
+    district = DISTRICT_NUMBER.search(text)
+    if district:
+        hard.append(
+            f"Wrote \"{district.group(0)}\". District numbers are not in your "
+            "figures, so there was nothing to read that from, and a reader does "
+            "not know where a district is. Use `area` and `around` from "
+            "`busiest_areas` instead — \"north Garland, around Garland Road and "
+            "Belt Line\"."
         )
 
     causal = CAUSAL.findall(text)
@@ -161,9 +196,11 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 
     # --- form and coverage ------------------------------------------------
     sentences = _sentences(text)
-    if not 2 <= len(sentences) <= 4:
+    if not 3 <= len(sentences) <= 4:
         soft.append(
-            f"Wrote {len(sentences)} sentence(s); the brief asks for 2 to 4."
+            f"Wrote {len(sentences)} sentence(s); the brief asks for 3 to 4. "
+            "Two cannot carry the total, the comparison, the categories that "
+            "moved and where they happened."
         )
 
     if MARKDOWN.search(text):
@@ -192,11 +229,18 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "total moved, using figures from the block."
         )
 
-    named = _named_categories(text)
-    if len(named) < 2:
+    if not _named_categories(text):
         soft.append(
-            f"Named {len(named)} of the eight categories. Say which ones moved, "
-            "by name, rather than describing movement in the abstract."
+            "Named no category. Say which ones moved, by name, rather than "
+            "describing movement in the abstract."
+        )
+
+    areas = stats.get("busiest_areas") or []
+    if areas and areas[0]["area"].split(" ")[0].lower() not in text.lower():
+        soft.append(
+            f"Never said where. The busiest was {areas[0]['area']}, around "
+            f"{areas[0]['around']} — copy that phrasing rather than inventing "
+            "a way to describe the location."
         )
 
     return _to_score(hard, soft, bool(stats.get("previous_month")))
@@ -205,8 +249,8 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 # Soft checks that apply to a month with a predecessor. The first month in the
 # archive is scored out of one fewer, so it is not marked down for a
 # comparison it could not make.
-_SOFT_CHECKS = 6
-_HARD_CHECKS = 3
+_SOFT_CHECKS = 7
+_HARD_CHECKS = 4
 
 
 def _to_score(hard: list[str], soft: list[str], has_prior: bool) -> Score:

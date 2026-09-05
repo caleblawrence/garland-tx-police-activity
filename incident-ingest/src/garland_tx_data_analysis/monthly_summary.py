@@ -12,12 +12,23 @@ plausible numbers, and this is a public page about crime — a wrong figure here
 is worse than no summary at all.
 
 Two things the prose is forbidden from doing, enforced in the prompt and
-checked by eye in review:
+scored by `summary_metric`:
 
-  - calling this "crime". It is reported incidents in the eight categories the
-    report covers, which is a narrower thing.
+  - calling the total a number of crimes. The total includes information
+    reports — a found-property report, an abandoned vehicle — which record a
+    report rather than an established offence, so "442 crimes" is false by the
+    22 of them June 2026 contained. "Incidents" is the honest word because it
+    is the one broad enough to cover both. The word itself is fine where it is
+    accurate: burglary is a crime.
   - explaining why anything changed. This data cannot support a cause, and an
     implied one on a public crime map does real harm.
+
+Districts never reach the model. A reader does not know where district 31 is,
+and the figures used to hand over `{"31": 33}` — a district number and a count
+side by side as though they were the same kind of thing. `districts.py` turns
+one into "north Garland, around Garland Road and Belt Line" before the model
+sees it, on the same principle as every number here: the pipeline settles what
+has a right answer, and the model only writes.
 
     uv run python -m garland_tx_data_analysis.monthly_summary --month 2026-06
     uv run python -m garland_tx_data_analysis.monthly_summary --all
@@ -34,6 +45,7 @@ from langchain.chat_models import init_chat_model
 
 from garland_tx_data_analysis.agent import LABEL_MODEL
 from garland_tx_data_analysis.categories import categorise
+from garland_tx_data_analysis.districts import busiest_areas
 from garland_tx_data_analysis.tools import connect, ensure_schema
 
 SYSTEM_PROMPT = """You write one short paragraph describing a month of Garland
@@ -44,23 +56,48 @@ those figures, copied exactly. Do not calculate anything — not a total, not a
 difference, not a percentage. If a number you want is not in the block, write
 the sentence without it.
 
-Write 2 to 4 sentences. Cover:
+Write 3 to 4 sentences. Cover:
   - how many incidents were reported, and how that compares with the month
     before,
   - the categories that moved most, in either direction,
-  - one thing a reader would find genuinely notable — an unusual offence, a
-    concentration in a district, a category at its highest or lowest.
+  - where in the city the most were recorded, from `busiest_areas`.
 
-Rules:
-  - Never call this "crime". It is reported incidents in the categories this
-    report covers: murder, sexual assault, aggravated assault, robbery,
-    burglary, theft, motor vehicle theft and criminal mischief. Say "reported
-    incidents" or name the categories.
-  - Never explain why anything changed. No causes, no speculation, no "likely",
-    no "driven by". This data cannot support a cause, and suggesting one on a
-    public crime page does real harm.
-  - Do not editorialise about whether a month was good or bad, safe or unsafe.
-  - Plain sentences. No headings, no bullets, no markdown.
+If a fourth sentence earns its place, use it for one thing a reader would find
+genuinely notable — an unusual offence, a category at its highest or lowest.
+Three sentences that cover the month are better than four with a filler.
+
+Naming the total:
+  - The total counts reported incidents, not crimes. It includes information
+    reports — a found-property report, an abandoned vehicle — which record that
+    something was reported, not that an offence was established. Calling the
+    total a number of crimes is factually wrong, not merely loose. Write
+    "incidents" or "reported incidents".
+  - "Crime" is fine where it is accurate. Murder, robbery and burglary are
+    crimes and may be called that. The rule is about the total, not the word.
+
+Where things happened:
+  - Use `area` and `around` from `busiest_areas`, copied as given: "north
+    Garland, around Garland Road and Belt Line".
+  - Never write a district number. They are not in your figures, and they mean
+    nothing to a reader who lives there.
+
+Never explain why anything changed:
+  - Stating a relationship between two figures is description, and is welcome:
+    "theft rose by 27 while robbery fell by 11".
+  - Asserting a reason that is not in the figures is explanation, and is
+    forbidden — no "because", "due to", "driven by", "caused by", "as a result
+    of", "reflects", and no hedged version either: no "likely", "possibly",
+    "appears to", "may have". This data cannot support a cause, and suggesting
+    one on a public page about policing does real harm.
+
+Do not editorialise:
+  - Not about whether a month was good or bad, safe or unsafe, dangerous,
+    concerning, alarming, worrying, troubling, encouraging or reassuring.
+  - Not by dramatising a change: no "surged", "spiked", "plummeted", "soared",
+    "dramatic", "notable", "notably", "significant" or "significantly". A
+    figure rose by 27, and that is the whole claim.
+
+Plain sentences. No headings, no bullets, no markdown.
 
 Return only the paragraph."""
 
@@ -163,14 +200,18 @@ def stats_for(month: str) -> dict:
         "most_common_offences": dict(
             sorted(offences.items(), key=lambda kv: -kv[1])[:5]
         ),
-        "busiest_districts": dict(
-            sorted(districts.items(), key=lambda kv: -kv[1])[:3]
-        ),
+        "busiest_areas": busiest_areas(districts),
         "rows_the_report_declared": declared,
         "rows_stored": stored,
         "rows_not_attributable_to_a_district": unattributed,
         "rows_missing_from_the_report_text": shortfall,
     }
+
+
+# Values that are names rather than figures. "I-30" is a road, and letting its
+# 30 into the allowed set would quietly widen the check the page's byline
+# promises the reader — "every number is checked against the source data".
+PROSE_KEYS = {"area", "around"}
 
 
 def _allowed_numerals(stats: dict) -> set[str]:
@@ -187,7 +228,8 @@ def _allowed_numerals(stats: dict) -> set[str]:
         elif isinstance(value, dict):
             for k, v in value.items():
                 walk(k)
-                walk(v)
+                if k not in PROSE_KEYS:
+                    walk(v)
         elif isinstance(value, list):
             for v in value:
                 walk(v)
@@ -199,8 +241,31 @@ def _allowed_numerals(stats: dict) -> set[str]:
     return {a.replace(",", "").rstrip("%") for a in allowed}
 
 
+def _without_supplied_names(summary: str, stats: dict) -> str:
+    """The prose with the place names the block handed over removed.
+
+    `busiest_areas` supplies "I-30 and Duck Creek" and the prompt tells the
+    model to copy that phrasing as given. The 30 in I-30 is part of a road's
+    name, not a figure, so counting it as one accuses the model of inventing a
+    number it was instructed to write — and refuses the month for obeying.
+
+    Only phrases the pipeline itself supplied are removed, so this cannot
+    excuse a numeral the model chose.
+    """
+    phrases: list[str] = []
+    for area in stats.get("busiest_areas") or []:
+        for value in (area.get("around"), area.get("area")):
+            if value:
+                phrases.append(value)
+                phrases.extend(part for part in value.split(" and ") if part)
+    for phrase in sorted(phrases, key=len, reverse=True):
+        summary = re.sub(re.escape(phrase), " ", summary, flags=re.I)
+    return summary
+
+
 def verify(summary: str, stats: dict) -> list[str]:
     """Numerals in the prose that no figure in the stats block accounts for."""
+    summary = _without_supplied_names(summary, stats)
     allowed = _allowed_numerals(stats)
     unverified = []
     for token in NUMERAL.findall(summary):
