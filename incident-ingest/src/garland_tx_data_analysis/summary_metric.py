@@ -149,8 +149,7 @@ def _supplied_places(stats: dict) -> set[str]:
         for phrase in (area.get("around") or "").split(" and "):
             if phrase:
                 out.add(phrase.strip().lower())
-    serious = stats.get("most_serious") or {}
-    for incident in serious.get("incidents") or []:
+    for incident in stats.get("serious_incidents") or []:
         # An intersection names two streets, and either may be written.
         for part in re.split(r"\s+at\s+", incident.get("street") or ""):
             if part:
@@ -214,8 +213,8 @@ def evaluate_summary(text: str, stats: dict) -> Score:
         hard.append(
             f"Named a street that is not in your figures: \"{invented[0]}\". The "
             "only streets you may name are the ones the block gives you, in "
-            "`busiest_areas` and `most_serious`. A plausible-sounding street is "
-            "an invention about where a crime happened, and nothing checks it "
+            "`busiest_areas` and `serious_incidents`. A plausible-sounding street "
+            "is an invention about where a crime happened, and nothing checks it "
             "for the reader."
         )
 
@@ -240,11 +239,9 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 
     # --- form and coverage ------------------------------------------------
     sentences = _sentences(text)
-    if not 3 <= len(sentences) <= 4:
+    if not 2 <= len(sentences) <= 4:
         soft.append(
-            f"Wrote {len(sentences)} sentence(s); the brief asks for 3 to 4. "
-            "Two cannot carry the total, the comparison, the categories that "
-            "moved and where they happened."
+            f"Wrote {len(sentences)} sentence(s); the brief asks for 2 to 4."
         )
 
     if MARKDOWN.search(text):
@@ -279,24 +276,6 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "describing movement in the abstract."
         )
 
-    # The brief is supposed to open with the worst thing the month contained.
-    # Checked on the first sentence, not on the paragraph, because "mentioned
-    # it somewhere" is what the model already does — it leads with the total
-    # and drops the killing into sentence three, which is the burial the rule
-    # exists to prevent.
-    serious = stats.get("most_serious") or {}
-    if serious:
-        named = (serious["incidents"][0]["offence"] if serious.get("incidents")
-                 else serious["category"])
-        opening = (sentences[0] if sentences else "").lower()
-        if named.lower() not in opening:
-            soft.append(
-                f"Did not open with the most serious thing that happened "
-                f"({named.lower()}). Theft is the biggest number in nearly "
-                "every month, and opening with it buries a killing under a "
-                "shoplifting count. It goes in the first sentence."
-            )
-
     areas = stats.get("busiest_areas") or []
     if areas and areas[0]["area"].split(" ")[0].lower() not in text.lower():
         soft.append(
@@ -311,7 +290,7 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 # Soft checks that apply to a month with a predecessor. The first month in the
 # archive is scored out of one fewer, so it is not marked down for a
 # comparison it could not make.
-_SOFT_CHECKS = 8  # the lead check replaced the weaker mention check
+_SOFT_CHECKS = 6
 _HARD_CHECKS = 5
 
 

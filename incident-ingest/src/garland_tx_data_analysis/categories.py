@@ -85,21 +85,13 @@ def categorise(code: str) -> str:
     return OTHER
 
 
-# Severity, for a brief that opens with the worst thing that happened rather
-# than the most numerous. The order is the report's own — every page lists the
-# categories in this sequence — so it is the publisher's ranking rather than
-# one invented here, on the same principle as the categories themselves.
+# The categories the summary is given incident-by-incident, in the report's own
+# order — the sequence printed on every page, so the ranking is the publisher's
+# and not one invented here.
 #
-# It stops at Robbery. Below that the categories are property offences, and a
-# brief that opened "the most serious offence was a burglary" every quiet month
-# would be a crime blotter rather than a summary of one.
+# This is a volume boundary, not an editorial one. All eleven categories cannot
+# go into the figures individually; these four run 34 to 69 incidents a month,
+# which fits. What the summary then does with them — which to lead on, how many
+# to name, whether to name any — is the prompt's decision and nothing here
+# constrains it.
 SEVERE_CATEGORIES = [MURDER, SEXUAL_ASSAULT, AGGRAVATED_ASSAULT, ROBBERY]
-
-# Sexual assault is ranked but never described. The city withholds the address
-# of every one of these — that withholding is a decision about a victim's
-# safety, not a gap — and the offence labels carry detail ("Aggravated Child
-# Sexual Assault") that in a month with one report, in a named part of a city
-# of this size, works to identify. So the brief may say the category and the
-# count and nothing else. Same reasoning as ADR 0002: the page names roles,
-# never people, and a detail that narrows to one person is a name in effect.
-NEVER_DESCRIBED = {SEXUAL_ASSAULT}

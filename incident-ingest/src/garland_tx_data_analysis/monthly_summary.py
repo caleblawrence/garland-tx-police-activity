@@ -44,11 +44,7 @@ from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 
 from garland_tx_data_analysis.agent import LABEL_MODEL
-from garland_tx_data_analysis.categories import (
-    NEVER_DESCRIBED,
-    SEVERE_CATEGORIES,
-    categorise,
-)
+from garland_tx_data_analysis.categories import SEVERE_CATEGORIES, categorise
 from garland_tx_data_analysis.districts import (
     area_of,
     busiest_areas,
@@ -64,63 +60,23 @@ those figures, copied exactly. Do not calculate anything — not a total, not a
 difference, not a percentage. If a number you want is not in the block, write
 the sentence without it.
 
-Write 3 to 4 sentences.
-
-Open with `most_serious`, the worst thing the month contained. Theft is the
-biggest number in almost every month, and opening with it buries a killing
-under a shoplifting count.
-  - If it lists incidents, say what happened and roughly where: "the most
-    serious was a manslaughter in south-central Garland, on Vista Drive".
-  - If it gives only a category and a count, say only that: "there were 33
-    aggravated assaults". No place, no detail. Those are withheld on purpose,
-    or too many to name, and you have not been told which one to pick.
-  - If it is absent, open with the total.
-
-Then cover:
+Write 2 to 4 sentences. Cover:
   - how many incidents were reported, and how that compares with the month
     before,
   - the categories that moved most, in either direction,
-  - where in the city the most were recorded, from `busiest_areas`.
+  - one thing a reader would find genuinely notable — an unusual offence, a
+    concentration in a district, a category at its highest or lowest.
 
-Those need not be one sentence each. Three that read well beat four with a
-filler in them.
-
-Naming the total:
-  - The total counts reported incidents, not crimes. It includes information
-    reports — a found-property report, an abandoned vehicle — which record that
-    something was reported, not that an offence was established. Calling the
-    total a number of crimes is factually wrong, not merely loose. Write
-    "incidents" or "reported incidents".
-  - "Crime" is fine where it is accurate. Murder, robbery and burglary are
-    crimes and may be called that. The rule is about the total, not the word.
-
-Where things happened:
-  - Use the `area` and `around` you are given. The phrasing is yours — "up
-    northwest by Belt Line and Jupiter" reads better than repeating the block
-    — but the area and the street names must be ones you were handed.
-  - Never name a street you were not given. There is no list of streets in
-    your figures beyond those, and a plausible-sounding one is an invention
-    about where a crime happened.
-  - Never write a district number. They are not in your figures, and they mean
-    nothing to a reader who lives there.
-
-Never explain why anything changed:
-  - Stating a relationship between two figures is description, and is welcome:
-    "theft rose by 27 while robbery fell by 11".
-  - Asserting a reason that is not in the figures is explanation, and is
-    forbidden — no "because", "due to", "driven by", "caused by", "as a result
-    of", "reflects", and no hedged version either: no "likely", "possibly",
-    "appears to", "may have". This data cannot support a cause, and suggesting
-    one on a public page about policing does real harm.
-
-Do not editorialise:
-  - Not about whether a month was good or bad, safe or unsafe, dangerous,
-    concerning, alarming, worrying, troubling, encouraging or reassuring.
-  - Not by dramatising a change: no "surged", "spiked", "plummeted", "soared",
-    "dramatic", "notable", "notably", "significant" or "significantly". A
-    figure rose by 27, and that is the whole claim.
-
-Plain sentences. No headings, no bullets, no markdown.
+Rules:
+  - Never call this "crime". It is reported incidents in the categories this
+    report covers: murder, sexual assault, aggravated assault, robbery,
+    burglary, theft, motor vehicle theft and criminal mischief. Say "reported
+    incidents" or name the categories.
+  - Never explain why anything changed. No causes, no speculation, no "likely",
+    no "driven by". This data cannot support a cause, and suggesting one on a
+    public crime page does real harm.
+  - Do not editorialise about whether a month was good or bad, safe or unsafe.
+  - Plain sentences. No headings, no bullets, no markdown.
 
 Return only the paragraph."""
 
@@ -216,7 +172,7 @@ def stats_for(month: str) -> dict:
     districts = tally(this_rows, "district")
 
     return {
-        "most_serious": _most_serious(this_rows, labels),
+        "serious_incidents": _serious_incidents(this_rows, labels),
         "month": _month_label(month),
         "previous_month": _month_label(prior) if prior else None,
         "incidents_this_month": len(this_rows),
@@ -238,7 +194,7 @@ def stats_for(month: str) -> dict:
 # Values that are names rather than figures. "I-30" is a road, and letting its
 # 30 into the allowed set would quietly widen the check the page's byline
 # promises the reader — "every number is checked against the source data".
-PROSE_KEYS = {"area", "around"}
+PROSE_KEYS = {"area", "around", "street", "offence", "category"}
 
 
 def _allowed_numerals(stats: dict) -> set[str]:
@@ -285,6 +241,10 @@ def _without_supplied_names(summary: str, stats: dict) -> str:
             if value:
                 phrases.append(value)
                 phrases.extend(part for part in value.split(" and ") if part)
+    for incident in stats.get("serious_incidents") or []:
+        if incident.get("street"):
+            phrases.append(incident["street"])
+            phrases.extend(p for p in incident["street"].split(" at ") if p)
     for phrase in sorted(phrases, key=len, reverse=True):
         summary = re.sub(re.escape(phrase), " ", summary, flags=re.I)
     return summary
@@ -398,41 +358,29 @@ if __name__ == "__main__":
     main(sys.argv[1:])
 
 
-# How many incidents in a category can be named individually before naming them
-# stops being a summary and starts being a list.
-NAMEABLE = 3
+def _serious_incidents(rows: list[tuple], labels: dict[str, str]) -> list[dict]:
+    """Every offence against a person the month contained, worst first.
 
+    Handed over whole, and the summary decides what to do with it. Which one to
+    open on, how many to name, whether a category with thirty entries is better
+    given as a count — those are judgments, they belong in the prompt where they
+    can be argued with and tuned, and nothing here pre-empts them.
 
-def _most_serious(rows: list[tuple], labels: dict[str, str]) -> dict | None:
-    """The worst thing that happened, for a brief that opens with it.
-
-    The most numerous category is theft in almost every month, and leading with
-    it buries a killing under a shoplifting count. This finds the highest
-    category on the report's own severity order that the month actually
-    contains, and — when there are few enough to name — says what each one was
-    and roughly where.
-
-    Two things it will not do. It never gives a location for a category in
-    `NEVER_DESCRIBED`, or for any withheld address. And it names nothing at all
-    once a category runs past `NAMEABLE`, because "there were 33 aggravated
-    assaults" is the honest shape of that month; picking three to describe
-    would be this file deciding which three mattered.
+    `street` is None where the city withholds the address, which it does for
+    every sexual assault in the archive and for some others. That withholding
+    is the protection, and it comes from the source rather than from a rule
+    written here: a category-level ban would have added nothing except taking
+    the decision away from the prompt.
     """
-    for category in SEVERE_CATEGORIES:
-        matching = [r for r in rows if categorise(r[0]) == category]
-        if not matching:
-            continue
-        entry: dict = {"category": category, "count": len(matching)}
-        if category in NEVER_DESCRIBED or len(matching) > NAMEABLE:
-            return entry
-        entry["incidents"] = [
-            {
-                "offence": labels.get(code, code),
-                "area": f"{area_of(district)} Garland" if area_of(district) else None,
-                "street": street_name(location),
-            }
-            for code, district, location in matching
-        ]
-        return entry
-    return None
-
+    order = {category: i for i, category in enumerate(SEVERE_CATEGORIES)}
+    matching = [r for r in rows if categorise(r[0]) in order]
+    matching.sort(key=lambda r: order[categorise(r[0])])
+    return [
+        {
+            "offence": labels.get(code, code),
+            "category": categorise(code),
+            "area": f"{area_of(district)} Garland" if area_of(district) else None,
+            "street": street_name(location),
+        }
+        for code, district, location in matching
+    ]

@@ -188,11 +188,12 @@ def test_the_first_month_reports_no_category_changes():
 
 SERIOUS = dict(
     STATS,
-    most_serious={
-        "category": "Murder", "count": 1,
-        "incidents": [{"offence": "Manslaughter", "area": "south-central Garland",
-                       "street": "Vista Drive"}],
-    },
+    serious_incidents=[
+        {"offence": "Manslaughter", "category": "Murder",
+         "area": "south-central Garland", "street": "Vista Drive"},
+        {"offence": "Aggravated Robbery", "category": "Robbery",
+         "area": "north Garland", "street": "Belt Line"},
+    ],
 )
 
 LEADS_WITH_IT = (
@@ -224,24 +225,35 @@ def test_a_supplied_street_passes_under_any_phrasing():
         SERIOUS).publishable
 
 
-def test_burying_the_most_serious_incident_costs_score():
-    """Theft is the biggest number nearly every month; leading with it buries a
-    killing under a shoplifting count."""
-    buried = ("Garland police reported 442 incidents, up from 417 in May. Theft "
-              "was the most common crime at 199, up 27, while robbery fell by 11 "
-              "to 3. North Garland, around Garland Road and Belt Line, recorded 33.")
-    result = evaluate_summary(buried, SERIOUS)
-    assert result.publishable
-    assert any("manslaughter" in x for x in result.soft)
+def test_nothing_dictates_what_a_summary_opens_with():
+    """Order is the prompt's business, and GEPA's to optimise.
+
+    A summary that leads with the total rather than the month's manslaughter
+    is not wrong here. It may well be worse, and a hand-written gold set is
+    how that gets settled — not a rule in this file about sentence one.
+    """
+    leads_with_total = (
+        "Garland police reported 442 incidents, up from 417 in May. Theft was "
+        "the most common crime at 199, up 27, while robbery fell by 11 to 3. "
+        "North Garland, around Garland Road and Belt Line, recorded 33.")
+    assert evaluate_summary(leads_with_total, SERIOUS).publishable
+    assert evaluate_summary(LEADS_WITH_IT, SERIOUS).publishable
 
 
 def test_a_withheld_category_can_be_counted_but_never_placed():
     """The city withholds these addresses on purpose; the block gives none."""
-    withheld = dict(STATS, most_serious={"category": "Sexual Assault", "count": 10})
-    counted = ("There were 10 sexual assaults reported. Garland police reported "
-               "442 incidents, up from 417 in May. Theft reached 199. North "
-               "Garland, around Garland Road and Belt Line, recorded 33.")
+    # Every sexual assault in the archive arrives with a withheld address, so
+    # the figures carry the incident and no place for it. Nothing else stops
+    # the model attaching one.
+    withheld = dict(STATS, serious_incidents=[
+        {"offence": "Sexual Assault", "category": "Sexual Assault",
+         "area": "west Garland", "street": None},
+    ])
+    counted = ("A sexual assault was reported in west Garland. Garland police "
+               "reported 442 incidents, up from 417 in May. Theft reached 199. "
+               "North Garland, around Garland Road and Belt Line, recorded 33.")
     assert evaluate_summary(counted, withheld).publishable
     assert not evaluate_summary(
-        counted.replace("reported.", "reported, one on Maple Road."), withheld
+        counted.replace("in west Garland.", "on Maple Road in west Garland."),
+        withheld,
     ).publishable
