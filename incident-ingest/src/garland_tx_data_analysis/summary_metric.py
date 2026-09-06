@@ -90,6 +90,16 @@ MARKDOWN = re.compile(r"(?:^|\n)\s*(?:[-*+]\s|#{1,6}\s)|\*\*|__|`")
 
 SENTENCE = re.compile(r"[^.!?]+[.!?]")
 
+# A named street is the one invention `verify` cannot see: it checks numerals,
+# and "on Oak Street" contains none. The block supplies every street the brief
+# is allowed to use, so any other is made up — and a made-up street attached to
+# a killing is the worst sentence this page could print.
+STREET_MENTION = re.compile(
+    r"\b((?:[A-Z][\w'-]+\s+){1,3}"
+    r"(?:Street|Road|Drive|Avenue|Boulevard|Lane|Court|Circle|Trail|Place|"
+    r"Parkway|Freeway|Highway|Expressway))\b"
+)
+
 # Enough to show the month moved, without demanding a particular phrasing.
 COMPARISON = re.compile(
     r"\b(?:more|fewer|less|up|down|higher|lower|increase[ds]?|decrease[ds]?"
@@ -130,6 +140,25 @@ def _mentions_comparison(text: str, stats: dict) -> bool:
     previous = (stats.get("previous_month") or "").split(" ")[0]
     return bool(previous and previous.lower() in text.lower()
                 and COMPARISON.search(text))
+
+
+def _supplied_places(stats: dict) -> set[str]:
+    """Every street the figures handed over, in the spellings a writer would use."""
+    out: set[str] = set()
+    for area in stats.get("busiest_areas") or []:
+        for phrase in (area.get("around") or "").split(" and "):
+            if phrase:
+                out.add(phrase.strip().lower())
+    serious = stats.get("most_serious") or {}
+    for incident in serious.get("incidents") or []:
+        # An intersection names two streets, and either may be written.
+        for part in re.split(r"\s+at\s+", incident.get("street") or ""):
+            if part:
+                out.add(part.strip().lower())
+    # "Vista Drive" and a bare "Vista" are the same road to a reader.
+    for name in list(out):
+        out.add(name.rsplit(" ", 1)[0])
+    return out
 
 
 def _named_categories(text: str) -> list[str]:
@@ -173,6 +202,21 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "that an offence was established, so the count is not a crime "
             "count. Write \"incidents\" or \"reported incidents\" for the "
             "total. The word is fine where it is accurate: burglary is a crime."
+        )
+
+    supplied = _supplied_places(stats)
+    invented = [
+        m for m in STREET_MENTION.findall(text)
+        if m.strip().lower() not in supplied
+        and m.strip().lower().rsplit(" ", 1)[0] not in supplied
+    ]
+    if invented:
+        hard.append(
+            f"Named a street that is not in your figures: \"{invented[0]}\". The "
+            "only streets you may name are the ones the block gives you, in "
+            "`busiest_areas` and `most_serious`. A plausible-sounding street is "
+            "an invention about where a crime happened, and nothing checks it "
+            "for the reader."
         )
 
     district = DISTRICT_NUMBER.search(text)
@@ -235,12 +279,23 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "describing movement in the abstract."
         )
 
+    serious = stats.get("most_serious") or {}
+    if serious.get("incidents"):
+        offence = serious["incidents"][0]["offence"]
+        if offence.lower() not in text.lower():
+            soft.append(
+                f"Never mentioned the most serious thing that happened: a "
+                f"{offence.lower()}. It is the first item in the figures for a "
+                "reason — theft is the biggest number nearly every month, and "
+                "opening with it buries this."
+            )
+
     areas = stats.get("busiest_areas") or []
     if areas and areas[0]["area"].split(" ")[0].lower() not in text.lower():
         soft.append(
             f"Never said where. The busiest was {areas[0]['area']}, around "
-            f"{areas[0]['around']} — copy that phrasing rather than inventing "
-            "a way to describe the location."
+            f"{areas[0]['around']}. Word it however reads best, but the area "
+            "and the streets must be the ones you were given."
         )
 
     return _to_score(hard, soft, bool(stats.get("previous_month")))
@@ -249,8 +304,8 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 # Soft checks that apply to a month with a predecessor. The first month in the
 # archive is scored out of one fewer, so it is not marked down for a
 # comparison it could not make.
-_SOFT_CHECKS = 7
-_HARD_CHECKS = 4
+_SOFT_CHECKS = 8
+_HARD_CHECKS = 5
 
 
 def _to_score(hard: list[str], soft: list[str], has_prior: bool) -> Score:

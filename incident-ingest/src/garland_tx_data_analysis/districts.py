@@ -16,15 +16,18 @@ lookup it can get wrong with nothing checking it.
 Areas are the area-weighted centroid of each district's polygon in
 `incident-geo-analysis/src/police-districts.geojson` (the city's own ArcGIS
 boundaries), bucketed against the centre of the districts' bounding box:
-beyond a third of the way out is north/south and east/west, anything nearer
-the middle is central. Landmarks are the two most frequent street names across
+beyond a third of the way out is north/south and east/west; between a fifth
+and a third, with no east/west component, is north-central or south-central;
+anything nearer the middle is central. That middle band exists because district
+42 sits at -0.28 and reads as south-central to someone who lives there — which
+is what a reader called it before this file did. Landmarks are the two most frequent street names across
 all 30,973 archived incidents in that district — the roads incidents actually
 happen on, not the ones printed largest on a map.
 
 It is a table rather than a computation because the Python side does not
 depend on the Node side's build output, and because the buckets wanted a human
-pass: `41` computes as west and reads as southwest, `42` computes as central
-and sits low. Those were left as computed. If the city redraws its districts,
+pass: `41` computes as west and reads as southwest on the department's own
+map, and is left as computed. If the city redraws its districts,
 regenerate rather than patch, and re-read the whole table.
 
 ## What is deliberately not here
@@ -34,6 +37,8 @@ department's own grouping, but it is a patrol grouping and not a geographic
 one — sector 40 spans west, central, southwest and south. "Sector 40" is as
 meaningless to a reader as "District 41", so it buys nothing.
 """
+
+import re
 
 # district -> (area, the two streets its incidents most often sit on)
 DISTRICTS: dict[str, tuple[str, str]] = {
@@ -52,7 +57,7 @@ DISTRICTS: dict[str, tuple[str, str]] = {
     "36": ("central", "Miller and Edgefield"),
     "37": ("central", "First and Miller"),
     "41": ("west", "Shiloh and Garland Road"),
-    "42": ("central", "Centerville and Miller"),
+    "42": ("south-central", "Centerville and Miller"),
     "43": ("southwest", "LBJ Freeway and Northwest Highway"),
     "44": ("south", "Northwest Highway and Saturn"),
     "45": ("south", "Broadway and Duck Creek"),
@@ -68,9 +73,59 @@ DISTRICTS: dict[str, tuple[str, str]] = {
 # The order areas are reported in when two are equally busy, so a tie does not
 # reshuffle the page from month to month.
 AREA_ORDER = [
-    "north", "northeast", "northwest", "central", "east", "west",
-    "south", "southeast", "southwest",
+    "north", "northeast", "northwest", "north-central", "central",
+    "east", "west", "south-central", "south", "southeast", "southwest",
 ]
+
+
+STREET_SUFFIX = {
+    "ST": "Street", "RD": "Road", "DR": "Drive", "LN": "Lane", "AVE": "Avenue",
+    "BLVD": "Boulevard", "PKWY": "Parkway", "CT": "Court", "CIR": "Circle",
+    "WAY": "Way", "TRL": "Trail", "PL": "Place", "FRWY": "Freeway",
+    "FWY": "Freeway", "EXPY": "Expressway", "HWY": "Highway",
+}
+
+CONFIDENTIAL = "ADDRESS CONFIDENTIAL"
+
+
+def street_name(location: str) -> str | None:
+    """A street from an address, with the house number taken off.
+
+    The monthly reports carry exact addresses — `302 E VISTA DR`, not the
+    `3XX` block the weekly report uses. Naming the house where somebody was
+    killed is a different act from naming the street, and the brief has no use
+    for the number, so it never leaves this function.
+
+    Intersections arrive as `FOREST LN / S JUPITER ROAD` and come back as
+    "Forest Lane at Jupiter Road". Both halves are real streets and a summary
+    may name either, so they are kept as two rather than collapsed into one
+    unparseable name — which is what made a correct "Jupiter Road" read as an
+    invention.
+
+    Returns None for a withheld address. The city withholds some deliberately,
+    and a summary must say nothing rather than something vague-but-locating.
+    """
+    raw = (location or "").upper().strip()
+    if not raw or CONFIDENTIAL in raw:
+        return None
+    parts = [_one_street(p) for p in re.split(r"\s*/\s*", raw)]
+    named = [p for p in parts if p]
+    return " at ".join(named) if named else None
+
+
+def _one_street(raw: str) -> str | None:
+    """One side of an address: no house number, no directional, suffix spelled."""
+    words = re.sub(r"^[\dX]+\s+", "", raw.strip()).split()
+    if not words:
+        return None
+    # A leading N/S/E/W distinguishes two halves of one road. Dropped, because
+    # the brief always says the area as well, and "north Garland, on Garland
+    # Road" is how somebody would say it aloud.
+    if words[0] in {"N", "S", "E", "W", "NE", "NW", "SE", "SW"} and len(words) > 1:
+        words = words[1:]
+    if len(words) > 1 and words[-1].rstrip(".") in STREET_SUFFIX:
+        words = words[:-1] + [STREET_SUFFIX[words[-1].rstrip(".")]]
+    return " ".join(w if w in STREET_SUFFIX.values() else w.title() for w in words)
 
 
 def area_of(district: str) -> str | None:

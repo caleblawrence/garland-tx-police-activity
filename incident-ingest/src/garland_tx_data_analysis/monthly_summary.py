@@ -44,8 +44,16 @@ from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 
 from garland_tx_data_analysis.agent import LABEL_MODEL
-from garland_tx_data_analysis.categories import categorise
-from garland_tx_data_analysis.districts import busiest_areas
+from garland_tx_data_analysis.categories import (
+    NEVER_DESCRIBED,
+    SEVERE_CATEGORIES,
+    categorise,
+)
+from garland_tx_data_analysis.districts import (
+    area_of,
+    busiest_areas,
+    street_name,
+)
 from garland_tx_data_analysis.tools import connect, ensure_schema
 
 SYSTEM_PROMPT = """You write one short paragraph describing a month of Garland
@@ -56,15 +64,26 @@ those figures, copied exactly. Do not calculate anything — not a total, not a
 difference, not a percentage. If a number you want is not in the block, write
 the sentence without it.
 
-Write 3 to 4 sentences. Cover:
+Write 3 to 4 sentences.
+
+Open with `most_serious`, the worst thing the month contained. Theft is the
+biggest number in almost every month, and opening with it buries a killing
+under a shoplifting count.
+  - If it lists incidents, say what happened and roughly where: "the most
+    serious was a manslaughter in south-central Garland, on Vista Drive".
+  - If it gives only a category and a count, say only that: "there were 33
+    aggravated assaults". No place, no detail. Those are withheld on purpose,
+    or too many to name, and you have not been told which one to pick.
+  - If it is absent, open with the total.
+
+Then cover:
   - how many incidents were reported, and how that compares with the month
     before,
   - the categories that moved most, in either direction,
   - where in the city the most were recorded, from `busiest_areas`.
 
-If a fourth sentence earns its place, use it for one thing a reader would find
-genuinely notable — an unusual offence, a category at its highest or lowest.
-Three sentences that cover the month are better than four with a filler.
+Those need not be one sentence each. Three that read well beat four with a
+filler in them.
 
 Naming the total:
   - The total counts reported incidents, not crimes. It includes information
@@ -76,8 +95,12 @@ Naming the total:
     crimes and may be called that. The rule is about the total, not the word.
 
 Where things happened:
-  - Use `area` and `around` from `busiest_areas`, copied as given: "north
-    Garland, around Garland Road and Belt Line".
+  - Use the `area` and `around` you are given. The phrasing is yours — "up
+    northwest by Belt Line and Jupiter" reads better than repeating the block
+    — but the area and the street names must be ones you were handed.
+  - Never name a street you were not given. There is no list of streets in
+    your figures beyond those, and a plausible-sounding one is an invention
+    about where a crime happened.
   - Never write a district number. They are not in your figures, and they mean
     nothing to a reader who lives there.
 
@@ -135,8 +158,8 @@ def stats_for(month: str) -> dict:
 
             def rows_for(m):
                 cur.execute(
-                    """SELECT incident, district FROM monthly_incidents
-                        WHERE report_month = %s""",
+                    """SELECT incident, district, location
+                         FROM monthly_incidents WHERE report_month = %s""",
                     (m,),
                 )
                 return cur.fetchall()
@@ -163,7 +186,7 @@ def stats_for(month: str) -> dict:
 
     def tally(rows, key):
         out: dict[str, int] = {}
-        for code, district in rows:
+        for code, district, _ in rows:
             k = categorise(code) if key == "category" else district
             out[k] = out.get(k, 0) + 1
         return out
@@ -186,13 +209,14 @@ def stats_for(month: str) -> dict:
     )
 
     offences: dict[str, int] = {}
-    for code, _ in this_rows:
+    for code, _, _ in this_rows:
         label = labels.get(code, code)
         offences[label] = offences.get(label, 0) + 1
 
     districts = tally(this_rows, "district")
 
     return {
+        "most_serious": _most_serious(this_rows, labels),
         "month": _month_label(month),
         "previous_month": _month_label(prior) if prior else None,
         "incidents_this_month": len(this_rows),
@@ -372,3 +396,43 @@ def main(argv: list[str]) -> None:
 if __name__ == "__main__":
     load_dotenv(override=True)
     main(sys.argv[1:])
+
+
+# How many incidents in a category can be named individually before naming them
+# stops being a summary and starts being a list.
+NAMEABLE = 3
+
+
+def _most_serious(rows: list[tuple], labels: dict[str, str]) -> dict | None:
+    """The worst thing that happened, for a brief that opens with it.
+
+    The most numerous category is theft in almost every month, and leading with
+    it buries a killing under a shoplifting count. This finds the highest
+    category on the report's own severity order that the month actually
+    contains, and — when there are few enough to name — says what each one was
+    and roughly where.
+
+    Two things it will not do. It never gives a location for a category in
+    `NEVER_DESCRIBED`, or for any withheld address. And it names nothing at all
+    once a category runs past `NAMEABLE`, because "there were 33 aggravated
+    assaults" is the honest shape of that month; picking three to describe
+    would be this file deciding which three mattered.
+    """
+    for category in SEVERE_CATEGORIES:
+        matching = [r for r in rows if categorise(r[0]) == category]
+        if not matching:
+            continue
+        entry: dict = {"category": category, "count": len(matching)}
+        if category in NEVER_DESCRIBED or len(matching) > NAMEABLE:
+            return entry
+        entry["incidents"] = [
+            {
+                "offence": labels.get(code, code),
+                "area": f"{area_of(district)} Garland" if area_of(district) else None,
+                "street": street_name(location),
+            }
+            for code, district, location in matching
+        ]
+        return entry
+    return None
+

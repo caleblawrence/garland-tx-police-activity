@@ -184,3 +184,64 @@ def test_the_first_month_reports_no_category_changes():
         first,
     )
     assert result.publishable
+
+
+SERIOUS = dict(
+    STATS,
+    most_serious={
+        "category": "Murder", "count": 1,
+        "incidents": [{"offence": "Manslaughter", "area": "south-central Garland",
+                       "street": "Vista Drive"}],
+    },
+)
+
+LEADS_WITH_IT = (
+    "The most serious incident in June 2026 was a manslaughter in south-central "
+    "Garland, on Vista Drive. Garland police reported 442 incidents, up from 417 "
+    "in May. Theft was the most common crime at 199, up 27. "
+    "North Garland, around Garland Road and Belt Line, recorded the most at 33."
+)
+
+
+def test_a_street_the_figures_never_supplied_is_a_publish_blocker():
+    """`verify` checks numerals, and "on Oak Street" contains none.
+
+    A plausible street attached to a killing is the worst sentence this page
+    could print, and nothing else in the metric can see it.
+    """
+    result = evaluate_summary(
+        LEADS_WITH_IT.replace("Vista Drive", "Oak Street"), SERIOUS)
+    assert not result.publishable
+    assert "Oak Street" in result.feedback
+
+
+def test_a_supplied_street_passes_under_any_phrasing():
+    """The prompt lets the model word the location naturally."""
+    assert evaluate_summary(LEADS_WITH_IT, SERIOUS).publishable
+    assert evaluate_summary(
+        LEADS_WITH_IT.replace("North Garland, around Garland Road and Belt Line,",
+                              "Up north by Garland Road and Belt Line, it"),
+        SERIOUS).publishable
+
+
+def test_burying_the_most_serious_incident_costs_score():
+    """Theft is the biggest number nearly every month; leading with it buries a
+    killing under a shoplifting count."""
+    buried = ("Garland police reported 442 incidents, up from 417 in May. Theft "
+              "was the most common crime at 199, up 27, while robbery fell by 11 "
+              "to 3. North Garland, around Garland Road and Belt Line, recorded 33.")
+    result = evaluate_summary(buried, SERIOUS)
+    assert result.publishable
+    assert any("manslaughter" in x for x in result.soft)
+
+
+def test_a_withheld_category_can_be_counted_but_never_placed():
+    """The city withholds these addresses on purpose; the block gives none."""
+    withheld = dict(STATS, most_serious={"category": "Sexual Assault", "count": 10})
+    counted = ("There were 10 sexual assaults reported. Garland police reported "
+               "442 incidents, up from 417 in May. Theft reached 199. North "
+               "Garland, around Garland Road and Belt Line, recorded 33.")
+    assert evaluate_summary(counted, withheld).publishable
+    assert not evaluate_summary(
+        counted.replace("reported.", "reported, one on Maple Road."), withheld
+    ).publishable

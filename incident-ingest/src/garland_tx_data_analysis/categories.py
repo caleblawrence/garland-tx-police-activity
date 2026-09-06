@@ -83,3 +83,23 @@ def categorise(code: str) -> str:
         if pattern.search(normalised):
             return category
     return OTHER
+
+
+# Severity, for a brief that opens with the worst thing that happened rather
+# than the most numerous. The order is the report's own — every page lists the
+# categories in this sequence — so it is the publisher's ranking rather than
+# one invented here, on the same principle as the categories themselves.
+#
+# It stops at Robbery. Below that the categories are property offences, and a
+# brief that opened "the most serious offence was a burglary" every quiet month
+# would be a crime blotter rather than a summary of one.
+SEVERE_CATEGORIES = [MURDER, SEXUAL_ASSAULT, AGGRAVATED_ASSAULT, ROBBERY]
+
+# Sexual assault is ranked but never described. The city withholds the address
+# of every one of these — that withholding is a decision about a victim's
+# safety, not a gap — and the offence labels carry detail ("Aggravated Child
+# Sexual Assault") that in a month with one report, in a named part of a city
+# of this size, works to identify. So the brief may say the category and the
+# count and nothing else. Same reasoning as ADR 0002: the page names roles,
+# never people, and a detail that narrows to one person is a name in effect.
+NEVER_DESCRIBED = {SEXUAL_ASSAULT}
