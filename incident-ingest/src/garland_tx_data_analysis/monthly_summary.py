@@ -99,6 +99,60 @@ def _month_label(month: str) -> str:
     return date(int(y), int(m), 1).strftime("%B %Y")
 
 
+_HISTORY: dict[str, dict[str, int]] | None = None
+
+
+def _history() -> dict[str, dict[str, int]]:
+    """Every month's count per category, for the whole archive.
+
+    Cached for the life of the process. `stats_for` is called 53 times in a row
+    by the optimiser, and re-reading 30,973 rows each time to answer "is this
+    the lowest June on record" would make that unusable.
+    """
+    global _HISTORY
+    if _HISTORY is None:
+        with connect() as conn:
+            ensure_schema(conn)
+            with conn.cursor() as cur:
+                cur.execute("SELECT report_month, incident FROM monthly_incidents")
+                rows = cur.fetchall()
+        table: dict[str, dict[str, int]] = {}
+        for report_month, code in rows:
+            bucket = table.setdefault(report_month, {})
+            category = categorise(code)
+            bucket[category] = bucket.get(category, 0) + 1
+        _HISTORY = table
+    return _HISTORY
+
+
+def _category_history(month: str, categories: dict[str, int]) -> dict:
+    """Where this month's count for each category sits in the whole archive.
+
+    Without this the summary cannot say a category is high or low, only that it
+    moved since last month — and the prompt asks for exactly that judgment. It
+    was reaching it by guessing: "robbery fell to 3, an unusually low figure"
+    scored full marks with nothing behind it. Robbery at 3 is in fact the lowest
+    of all 53 months, which is the most notable thing about that month and was
+    invisible here.
+
+    `rank` counts from the top, so 1 is the highest month on record for that
+    category and `months_compared` is the lowest.
+    """
+    history = _history()
+    months = sorted(history)
+    out = {}
+    for category, count in categories.items():
+        series = [history[m].get(category, 0) for m in months]
+        out[category] = {
+            "this_month": count,
+            "lowest_month_on_record": min(series),
+            "highest_month_on_record": max(series),
+            "rank": sum(1 for n in series if n > count) + 1,
+            "months_compared": len(series),
+        }
+    return out
+
+
 def stats_for(month: str) -> dict:
     """Every figure the summary is allowed to contain."""
     with connect() as conn:
@@ -114,7 +168,7 @@ def stats_for(month: str) -> dict:
 
             def rows_for(m):
                 cur.execute(
-                    """SELECT incident, district, location
+                    """SELECT incident, district, location, occurred_on
                          FROM monthly_incidents WHERE report_month = %s""",
                     (m,),
                 )
@@ -142,7 +196,7 @@ def stats_for(month: str) -> dict:
 
     def tally(rows, key):
         out: dict[str, int] = {}
-        for code, district, _ in rows:
+        for code, district, *_ in rows:
             k = categorise(code) if key == "category" else district
             out[k] = out.get(k, 0) + 1
         return out
@@ -165,11 +219,32 @@ def stats_for(month: str) -> dict:
     )
 
     offences: dict[str, int] = {}
-    for code, _, _ in this_rows:
+    offence_categories: dict[str, str] = {}
+    for code, *_ in this_rows:
         label = labels.get(code, code)
         offences[label] = offences.get(label, 0) + 1
+        offence_categories[label] = categorise(code)
 
     districts = tally(this_rows, "district")
+
+    # Where each category actually concentrated. The prompt asks for "a
+    # concentration in a district" and `busiest_areas` cannot answer it: that
+    # is every category at once, so it says where the city is busy, never
+    # where burglary is.
+    by_area: dict[str, dict[str, int]] = {}
+    for code, district, *_ in this_rows:
+        area = area_of(district)
+        if area is None:
+            continue
+        bucket = by_area.setdefault(categorise(code), {})
+        bucket[f"{area} Garland"] = bucket.get(f"{area} Garland", 0) + 1
+    category_areas = {
+        category: [
+            {"area": a, "incidents": n}
+            for a, n in sorted(areas.items(), key=lambda kv: -kv[1])[:3]
+        ]
+        for category, areas in by_area.items()
+    }
 
     return {
         "serious_incidents": _serious_incidents(this_rows, labels),
@@ -180,21 +255,24 @@ def stats_for(month: str) -> dict:
         "change_from_last_month": (len(this_rows) - len(prior_rows)) if prior else None,
         "by_category_this_month": dict(sorted(cats.items(), key=lambda kv: -kv[1])),
         "biggest_category_changes": changes[:4] if prior else None,
-        "most_common_offences": dict(
-            sorted(offences.items(), key=lambda kv: -kv[1])[:5]
-        ),
+        # Carries its category, because `Theft` is both an offence label with
+        # 92 incidents and a category with 199, and a paragraph that used both
+        # without saying which was which read as a contradiction.
+        "most_common_offences": [
+            {"offence": label, "within_category": offence_categories[label],
+             "incidents": n}
+            for label, n in sorted(offences.items(), key=lambda kv: -kv[1])[:5]
+        ],
+        "category_history": _category_history(month, cats),
+        "category_areas": category_areas,
         "busiest_areas": busiest_areas(districts),
-        "rows_the_report_declared": declared,
-        "rows_stored": stored,
-        "rows_not_attributable_to_a_district": unattributed,
-        "rows_missing_from_the_report_text": shortfall,
     }
 
 
 # Values that are names rather than figures. "I-30" is a road, and letting its
 # 30 into the allowed set would quietly widen the check the page's byline
 # promises the reader — "every number is checked against the source data".
-PROSE_KEYS = {"area", "around", "street", "offence", "category"}
+PROSE_KEYS = {"area", "around", "street", "offence", "category", "date"}
 
 
 def _allowed_numerals(stats: dict) -> set[str]:
@@ -245,6 +323,9 @@ def _without_supplied_names(summary: str, stats: dict) -> str:
         if incident.get("street"):
             phrases.append(incident["street"])
             phrases.extend(p for p in incident["street"].split(" at ") if p)
+        # "14 June" copied whole is fine; a bare 14 used as a count is not.
+        if incident.get("date"):
+            phrases.append(incident["date"])
     for phrase in sorted(phrases, key=len, reverse=True):
         summary = re.sub(re.escape(phrase), " ", summary, flags=re.I)
     return summary
@@ -381,6 +462,7 @@ def _serious_incidents(rows: list[tuple], labels: dict[str, str]) -> list[dict]:
             "category": categorise(code),
             "area": f"{area_of(district)} Garland" if area_of(district) else None,
             "street": street_name(location),
+            "date": occurred_on.strftime("%-d %B") if occurred_on else None,
         }
-        for code, district, location in matching
+        for code, district, location, occurred_on in matching
     ]
