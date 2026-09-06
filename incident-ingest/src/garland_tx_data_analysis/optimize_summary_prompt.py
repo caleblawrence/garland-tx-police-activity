@@ -62,8 +62,10 @@ REFLECTION_MODEL = os.getenv("GARLAND_REFLECTION_MODEL", "anthropic:claude-opus-
 # The component GEPA evolves. One named prompt, matching the one real prompt.
 COMPONENT = "monthly_summary_system_prompt"
 
-TRAINSET_PATH = Path(WORK_DIR) / "summary_trainset.json"
-RUN_DIR = Path(WORK_DIR) / "gepa_summary"
+TRAINSET_PATH = Path(__file__).resolve().parent.parent.parent / WORK_DIR / "summary_trainset.json"
+# Anchored to the package root, not the working directory: a run launched from
+# anywhere else scattered its output into a second  tree.
+RUN_DIR = Path(__file__).resolve().parent.parent.parent / WORK_DIR / "gepa_summary"
 
 # Every month is one Haiku call, and the months are independent, so the wall
 # clock is worth spending threads on. Modest, to stay clear of rate limits.
@@ -256,7 +258,6 @@ def main(argv: list[str]) -> None:
         reflection_lm=reflector(),
         max_metric_calls=args.budget,
         run_dir=str(RUN_DIR),
-        display_progress_bar=True,
         seed=0,
     )
 

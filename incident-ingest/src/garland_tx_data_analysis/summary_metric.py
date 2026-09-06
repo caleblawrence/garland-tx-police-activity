@@ -279,15 +279,22 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "describing movement in the abstract."
         )
 
+    # The brief is supposed to open with the worst thing the month contained.
+    # Checked on the first sentence, not on the paragraph, because "mentioned
+    # it somewhere" is what the model already does — it leads with the total
+    # and drops the killing into sentence three, which is the burial the rule
+    # exists to prevent.
     serious = stats.get("most_serious") or {}
-    if serious.get("incidents"):
-        offence = serious["incidents"][0]["offence"]
-        if offence.lower() not in text.lower():
+    if serious:
+        named = (serious["incidents"][0]["offence"] if serious.get("incidents")
+                 else serious["category"])
+        opening = (sentences[0] if sentences else "").lower()
+        if named.lower() not in opening:
             soft.append(
-                f"Never mentioned the most serious thing that happened: a "
-                f"{offence.lower()}. It is the first item in the figures for a "
-                "reason — theft is the biggest number nearly every month, and "
-                "opening with it buries this."
+                f"Did not open with the most serious thing that happened "
+                f"({named.lower()}). Theft is the biggest number in nearly "
+                "every month, and opening with it buries a killing under a "
+                "shoplifting count. It goes in the first sentence."
             )
 
     areas = stats.get("busiest_areas") or []
@@ -304,7 +311,7 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 # Soft checks that apply to a month with a predecessor. The first month in the
 # archive is scored out of one fewer, so it is not marked down for a
 # comparison it could not make.
-_SOFT_CHECKS = 8
+_SOFT_CHECKS = 8  # the lead check replaced the weaker mention check
 _HARD_CHECKS = 5
 
 
