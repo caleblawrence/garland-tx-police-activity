@@ -88,11 +88,15 @@ def build_trainset(refresh: bool = False, gold_only: bool = False) -> list[dict]
     """
     if TRAINSET_PATH.exists() and not refresh:
         cached = json.loads(TRAINSET_PATH.read_text())
-        # A cache written before a field was added to the figures block scores
-        # against data the model is no longer given — it reported two months as
-        # naming a street "not in your figures" when the street was right there.
-        # Cheap to detect: the shape of one block against the shape on disk.
-        if cached and set(cached[0]["stats"]) == set(stats_for(cached[0]["month"])):
+        # A cache written before the figures block changed scores against data
+        # the model is no longer given — it twice reported a month as naming a
+        # street "not in your figures" when the street was right in front of it,
+        # once for a field that had been added and once for a street whose
+        # spelling had been corrected. Comparing keys caught the first and
+        # missed the second, so compare the whole block.
+        sample = cached[0] if cached else None
+        if sample and json.dumps(sample["stats"], sort_keys=True, default=str) == \
+                json.dumps(stats_for(sample["month"]), sort_keys=True, default=str):
             return cached
         print("  figures block has changed shape since this cache was written; "
               "rebuilding it")
