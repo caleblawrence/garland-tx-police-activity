@@ -123,9 +123,48 @@ def _one_street(raw: str) -> str | None:
     # Road" is how somebody would say it aloud.
     if words[0] in {"N", "S", "E", "W", "NE", "NW", "SE", "SW"} and len(words) > 1:
         words = words[1:]
+    # "MC CREE" arrives as two words and is one name. Merge before casing.
+    merged: list[str] = []
+    for word in words:
+        if merged and merged[-1].upper() == "MC":
+            merged[-1] = merged[-1] + word
+        else:
+            merged.append(word)
+    words = merged
     if len(words) > 1 and words[-1].rstrip(".") in STREET_SUFFIX:
         words = words[:-1] + [STREET_SUFFIX[words[-1].rstrip(".")]]
-    return " ".join(w if w in STREET_SUFFIX.values() else w.title() for w in words)
+    return " ".join(w if w in STREET_SUFFIX.values() else _titlecase(w)
+                    for w in words)
+
+
+# Initialisms a reader would never see written as words, and the two shapes
+# `str.title()` gets wrong on this data: an ordinal ("15Th") and a name whose
+# second part carries the capital ("Mc Cree").
+INITIALISMS = {"LBJ", "I", "US", "FM", "SH", "IH", "TX", "NW", "SE", "SW", "NE"}
+ORDINAL = re.compile(r"^(\d+)(ST|ND|RD|TH)$", re.I)
+
+
+def _titlecase(word: str) -> str:
+    """One word of a street name, cased the way it is written on a sign.
+
+    `str.title()` alone gives "Lbj Freeway", "15Th Street" and "Mc Cree Road".
+    The optimiser found all three and wrote instructions into the prompt to
+    correct them by hand, which is the model cleaning up after this function —
+    exactly the arrangement the figures block exists to avoid.
+    """
+    bare = word.rstrip(".")
+    if bare.upper() in INITIALISMS:
+        return bare.upper()
+    # The interstate is written I-30 everywhere but in this data.
+    highway = re.match(r"^(I|IH|US|SH|FM)(\d+)$", bare, re.I)
+    if highway:
+        return f"{highway.group(1).upper()}-{highway.group(2)}"
+    ordinal = ORDINAL.match(bare)
+    if ordinal:
+        return ordinal.group(1) + ordinal.group(2).lower()
+    if bare.upper().startswith("MC") and len(bare) > 2:
+        return "Mc" + bare[2:].capitalize()
+    return bare.title()
 
 
 def area_of(district: str) -> str | None:

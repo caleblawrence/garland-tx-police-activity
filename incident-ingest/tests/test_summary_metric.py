@@ -267,3 +267,19 @@ def test_a_withheld_category_can_be_counted_but_never_placed():
         counted.replace("in west Garland.", "on Maple Road in west Garland."),
         withheld,
     ).publishable
+
+
+def test_street_names_are_cased_the_way_a_sign_writes_them():
+    """`str.title()` alone produced "Lbj Freeway", "15Th Street", "Mc Cree Road".
+
+    The optimiser found all three and wrote instructions into the prompt telling
+    the model to correct them by hand — the model cleaning up after the
+    pipeline, which is the arrangement the figures block exists to prevent.
+    """
+    from garland_tx_data_analysis.districts import street_name
+    assert street_name("1500 LBJ FRWY") == "LBJ Freeway"
+    assert street_name("2100 W 15TH ST") == "15th Street"
+    assert street_name("700 MC CREE RD") == "McCree Road"
+    assert street_name("1 I30 FRWY") == "I-30 Freeway"
+    assert street_name("300 N FIRST ST") == "First Street"
+    assert street_name("ADDRESS CONFIDENTIAL") is None
