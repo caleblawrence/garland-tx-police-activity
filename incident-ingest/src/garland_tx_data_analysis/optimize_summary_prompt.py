@@ -51,6 +51,8 @@ from garland_tx_data_analysis.monthly_summary import (
     generate,
     stats_for,
 )
+from garland_tx_data_analysis.gold_metric import evaluate_against_gold
+from garland_tx_data_analysis.gold_worksheet import load_gold
 from garland_tx_data_analysis.summary_metric import evaluate_summary
 from garland_tx_data_analysis.tools import WORK_DIR, connect, ensure_schema
 
@@ -77,7 +79,7 @@ CONCURRENCY = 6
 VAL_STRIDE = 3
 
 
-def build_trainset(refresh: bool = False) -> list[dict]:
+def build_trainset(refresh: bool = False, gold_only: bool = False) -> list[dict]:
     """The stats block for every ingested month, cached to disk.
 
     Cached because it is the one part of this that needs Postgres, it does not
@@ -85,7 +87,15 @@ def build_trainset(refresh: bool = False) -> list[dict]:
     experiment into a database round trip for no reason.
     """
     if TRAINSET_PATH.exists() and not refresh:
-        return json.loads(TRAINSET_PATH.read_text())
+        cached = json.loads(TRAINSET_PATH.read_text())
+        # A cache written before a field was added to the figures block scores
+        # against data the model is no longer given — it reported two months as
+        # naming a street "not in your figures" when the street was right there.
+        # Cheap to detect: the shape of one block against the shape on disk.
+        if cached and set(cached[0]["stats"]) == set(stats_for(cached[0]["month"])):
+            return cached
+        print("  figures block has changed shape since this cache was written; "
+              "rebuilding it")
 
     with connect() as conn:
         ensure_schema(conn)
@@ -99,6 +109,17 @@ def build_trainset(refresh: bool = False) -> list[dict]:
     TRAINSET_PATH.parent.mkdir(parents=True, exist_ok=True)
     TRAINSET_PATH.write_text(json.dumps(examples, indent=1, default=str))
     return examples
+
+
+def with_gold(examples: list[dict]) -> list[dict]:
+    """Only the months somebody has written a summary for, gold attached.
+
+    Everything else is scored against rules, which say whether a paragraph may
+    be published and nothing about whether it is any good. These say what good
+    looks like, and there is no substitute for them.
+    """
+    gold = load_gold()
+    return [dict(e, gold=gold[e["month"]]) for e in examples if e["month"] in gold]
 
 
 def split(examples: list[dict]) -> tuple[list[dict], list[dict]]:
@@ -123,10 +144,12 @@ def run_prompt(prompt: str, examples: list[dict], model) -> list[dict]:
                 "publishable": False,
                 "feedback": f"The call failed: {exc}",
             }
-        result = evaluate_summary(text, stats)
+        result = (evaluate_against_gold(text, stats, example["gold"])
+                  if example.get("gold") else evaluate_summary(text, stats))
         return {
             "month": example["month"],
             "stats": stats,
+            "gold": example.get("gold"),
             "summary": text,
             "score": result.score,
             "publishable": result.publishable,
@@ -227,13 +250,29 @@ def main(argv: list[str]) -> None:
                         help="max summary generations GEPA may spend (default 300)")
     parser.add_argument("--refresh", action="store_true",
                         help="rebuild the trainset from the database")
+    parser.add_argument("--rules", action="store_true",
+                        help="score against the rule checks instead of the "
+                             "hand-written summaries")
     args = parser.parse_args(argv)
 
     from langchain.chat_models import init_chat_model
 
     examples = build_trainset(refresh=args.refresh)
+    if not args.rules:
+        examples = with_gold(examples)
+        if len(examples) < 6:
+            raise SystemExit(
+                f"Only {len(examples)} months have a hand-written summary. Write "
+                "more in the worksheet, or pass --rules to score against the "
+                "checks instead."
+            )
     train, val = split(examples)
-    print(f"{len(examples)} months  —  {len(train)} train, {len(val)} validation")
+    print(f"{len(examples)} months "
+          f"({'hand-written summaries' if not args.rules else 'rule checks'})"
+          f"  —  {len(train)} train, {len(val)} validation")
+    if not args.rules and len(val) < 5:
+        print(f"  NOTE: {len(val)} validation months is a weak measurement. "
+              "Read the prompt this produces; do not trust its score alone.")
 
     model = init_chat_model(LABEL_MODEL)
     baseline = run_prompt(SYSTEM_PROMPT, val, model)

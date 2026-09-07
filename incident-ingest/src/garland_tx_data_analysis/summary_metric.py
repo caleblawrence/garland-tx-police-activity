@@ -74,14 +74,18 @@ CAUSAL = re.compile(
 # "Do not editorialise about whether a month was good or bad, safe or unsafe."
 # The dramatising verbs are here too: `surged` asserts a character to a change
 # that a count of reported incidents cannot carry.
-# "notable"/"significant" are here because the model actually reached for them:
-# it called sexual assault reports tripling "a significant shift", and scored
-# full marks for it.
+# The rule is the prompt's own: do not characterise a month as good or bad,
+# safe or unsafe. It is not a ban on vivid verbs.
+#
+# It used to be. "dramatic", "notable", "significant", "spiked" and the rest
+# were added here on the reasoning that dramatising a change is editorialising
+# too — and then the hand-written summaries used "spiked by 10 cases", "a
+# dramatic drop of 106" and "notable decreases". An author's taste beats a
+# guess about their taste, so the intensifiers came back out. What stays is the
+# judgment about the month itself, which none of the gold makes.
 EDITORIAL = re.compile(
-    r"\b(?:good|bad|safe|unsafe|dangerous|concerning|alarming|worrying"
-    r"|troubling|encouraging|reassuring|dramatic(?:ally)?|notable|notably"
-    r"|significant(?:ly)?|surge[ds]?|spike[ds]?|plummet(?:ed|ing)?"
-    r"|soar(?:ed|ing)?)\b",
+    r"\b(?:good|bad|safe|unsafe|dangerous|alarming|worrying|troubling"
+    r"|reassuring)\b",
     re.I,
 )
 
@@ -257,12 +261,6 @@ def evaluate_summary(text: str, stats: dict) -> Score:
             "as good, bad, safe or unsafe, and do not dramatise a change."
         )
 
-    if not _mentions_total(text, stats):
-        soft.append(
-            f"Never gave the month's total ({stats.get('incidents_this_month')}). "
-            "It is the first thing a reader wants."
-        )
-
     # A first month has nothing to compare against, so this is not asked of it.
     if stats.get("previous_month") and not _mentions_comparison(text, stats):
         soft.append(
@@ -290,7 +288,7 @@ def evaluate_summary(text: str, stats: dict) -> Score:
 # Soft checks that apply to a month with a predecessor. The first month in the
 # archive is scored out of one fewer, so it is not marked down for a
 # comparison it could not make.
-_SOFT_CHECKS = 6
+_SOFT_CHECKS = 5
 _HARD_CHECKS = 5
 
 

@@ -110,11 +110,21 @@ def test_describing_a_relationship_between_two_figures_is_not_explaining():
     ).publishable
 
 
-def test_dramatising_a_change_costs_score():
-    """Both words the model actually reached for, and scored full marks on."""
-    for word in ["notably", "significantly"]:
-        result = evaluate_summary(CLEAN.replace("up 27", f"up {word} by 27"), STATS)
-        assert result.soft, word
+def test_a_vivid_verb_is_not_editorialising():
+    """The rule bans judging the month, not writing with energy.
+
+    "dramatic", "notable", "significant" and "spiked" were banned here once, on
+    the reasoning that dramatising a change editorialises too. Then the
+    hand-written summaries used all four. An author's taste beats a guess about
+    it, so the intensifiers came out and the judgment stayed.
+    """
+    for word in ["spiked by 27", "a dramatic 27", "a notable 27"]:
+        assert evaluate_summary(CLEAN.replace("up 27", word), STATS).publishable
+        assert not evaluate_summary(CLEAN.replace("up 27", word), STATS).soft
+
+    for judgment in ["an unsafe month", "a bad month", "an alarming month"]:
+        result = evaluate_summary(CLEAN + f" It was {judgment}.", STATS)
+        assert result.soft, judgment
 
 
 def test_every_unpublishable_summary_scores_below_every_publishable_one():
